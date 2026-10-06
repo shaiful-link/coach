@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Habits Coach</title>
+<meta name="description" content="Pick a situation, find out why it happens, then respond well.">
+<meta name="theme-color" content="#ebf1f7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Habits Coach">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+/* ---------- Theme: calm and soft (soft blue, mist, sand) ---------- */
+:root{--bg:#ebf1f7;--bg2:#f2f3f6;--card:#fbfcfe;--ink:#33404d;--mute:#6c7a89;--line:#dce5ee;--acc:#4a7399;--acc-ink:#fff;--soft:#dde8f3;--warm:#f5ecde;--warm-ink:#5c4c38;--bad:#a8645a;--shadow:0 1px 2px rgba(60,80,105,.05),0 8px 24px rgba(60,80,105,.07)}
+@media (prefers-color-scheme:dark){:root{--bg:#191f26;--bg2:#1c2128;--card:#222a33;--ink:#dce3ea;--mute:#96a3b0;--line:#303a45;--acc:#93b8da;--acc-ink:#13202c;--soft:#29343f;--warm:#35302a;--warm-ink:#e8d9c0;--bad:#dda093;--shadow:0 1px 2px rgba(0,0,0,.2)}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;min-height:100vh;min-height:100dvh;background:linear-gradient(180deg,var(--bg),var(--bg2)) fixed;color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+/* ---------- Top bar ---------- */
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:var(--bg)}
+header h1{flex:1;margin:0;font-size:16px;font-weight:600;letter-spacing:.02em;color:var(--mute)}
+.ib{border:0;background:var(--card);color:var(--acc);border-radius:50%;width:44px;height:44px;padding:0;font:inherit;font-size:14px;font-weight:600;box-shadow:var(--shadow)}
+main{max-width:560px;margin:0 auto;padding:14px 18px calc(40px + env(safe-area-inset-bottom))}
+/* ---------- Text ---------- */
+h2{font-size:23px;line-height:1.3;margin:4px 0 12px;font-weight:600;text-wrap:balance}
+h3{font-size:13px;letter-spacing:.06em;color:var(--mute);margin:28px 0 10px;font-weight:600;text-transform:uppercase}
+p{margin:0 0 12px}
+.mute{color:var(--mute);font-size:15px}
+.tag{display:inline-block;font-size:13px;font-weight:600;color:var(--acc);background:var(--soft);border-radius:999px;padding:4px 12px;margin-bottom:12px}
+/* ---------- Lists and cards ---------- */
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);color:var(--ink);border:1.5px solid transparent;border-radius:20px;padding:15px 18px;margin-bottom:12px;font:inherit;min-height:62px;box-shadow:var(--shadow)}
+.row b{display:block;font-weight:600}
+.row small{display:block;color:var(--mute);font-size:14px}
+.row .g{flex:1;min-width:0}
+.row .chev{color:var(--line);font-size:22px}
+.card{background:var(--card);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.warm{background:var(--warm);color:var(--warm-ink)}
+.warm .mute{color:inherit;opacity:.75}
+.say{border-left:3px solid var(--acc);border-radius:2px;padding:4px 0 4px 16px;margin:6px 0 14px;font-size:19px;line-height:1.5}
+.no{border-left-color:var(--bad)}
+.chip{font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;white-space:nowrap;background:var(--line);color:var(--mute)}
+.chip.open{color:var(--acc);background:var(--soft)}
+.chip.tried{color:var(--warm-ink);background:var(--warm)}
+/* ---------- Buttons ---------- */
+.ab{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);color:var(--ink);border:1.5px solid transparent;border-radius:22px;padding:18px;margin-bottom:14px;font:inherit;font-size:18px;min-height:78px;box-shadow:var(--shadow)}
+.ab:active,.row:active{border-color:var(--acc);background:var(--soft)}
+.ab i{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--soft);color:var(--acc);font-style:normal;font-weight:700}
+.btn{display:block;width:100%;border:0;border-radius:999px;padding:16px;margin-top:12px;font:inherit;font-weight:600;background:var(--acc);color:var(--acc-ink);min-height:56px}
+.btn.sec{background:var(--soft);color:var(--acc)}
+.btn.txt{background:transparent;color:var(--mute);font-weight:500;min-height:44px;padding:10px}
+.btn.bad{background:transparent;color:var(--bad);border:1.5px solid var(--bad)}
+.cp{border:0;background:var(--soft);color:var(--acc);border-radius:999px;padding:8px 18px;font:inherit;font-size:14px;font-weight:600;min-height:40px}
+button{transition:background .2s,border-color .2s}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+input[type=text]{width:100%;font:inherit;padding:14px 16px;border:1.5px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink)}
+/* ---------- Progress ---------- */
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 22px}
+.prog div{height:100%;background:var(--acc);border-radius:3px;opacity:.75}
+ul{margin:0 0 12px;padding-left:20px}
+li{margin-bottom:8px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 20px;border-radius:999px;font-size:15px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){#toast,button{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <button class="ib" id="back" data-a="back" aria-label="Back" hidden>&#8592;</button>
+  <h1 id="ttl">Habits Coach</h1>
+  <button class="ib" id="homeb" data-a="home" aria-label="Home" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;margin:auto"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></button>
+  <button class="ib" id="lang" data-a="lang" aria-label="Change language">BM</button>
+</header>
+<main id="app"></main>
+<div id="toast" role="status"></div>
+<input type="file" id="imp" accept="application/json,.json" hidden>
+
+<script>
+/* =====================================================================
+   HABITS COACH
+   Single page, no server. Cases are saved in this phone's browser only.
+   To add a situation: add one line in SIT (section 4) using question
+   ids from Q (section 3). Text is always L("English","Bahasa Melayu").
+   ===================================================================== */
+const L=(en,bm)=>[en,bm];
+
+/* ---------- 1. Habit names ---------- */
+const HABIT={
+ 1:L("Habit 1: Be proactive","Tabiat 1: Jadi proaktif"),
+ 2:L("Habit 2: Begin with the end in mind","Tabiat 2: Mula dengan matlamat akhir"),
+ 3:L("Habit 3: Put first things first","Tabiat 3: Dahulukan yang utama"),
+ 4:L("Habit 4: Think win-win","Tabiat 4: Fikir menang-menang"),
+ 5:L("Habit 5: Seek first to understand","Tabiat 5: Fahami dahulu, baru difahami"),
+ 6:L("Habit 6: Synergize","Tabiat 6: Bersinergi"),
+ 7:L("Habit 7: Sharpen the saw","Tabiat 7: Asah gergaji")
+};
+
+/* ---------- 2. Categories (tone: side = no authority, down = my staff, up = my boss, self) ---------- */
+const CAT={
+ peer:{n:L("Peer or coworker","Rakan sekerja"),d:L("Same level, no authority over them","Sama tahap, tiada kuasa ke atas mereka"),tone:"side",
+  tip:L("You have no authority here. Influence comes from understanding first.","Anda tiada kuasa di sini. Pengaruh datang daripada memahami dahulu.")},
+ report:{n:L("Direct report","Staf bawahan"),d:L("Someone who reports to me","Orang yang melapor kepada saya"),tone:"down",
+  tip:L("Your position makes people say yes too quickly. Ask before you tell.","Jawatan anda membuat orang cepat berkata ya. Tanya dahulu sebelum memberitahu.")},
+ manager:{n:L("Manager","Ketua atau pengurus"),d:L("Someone I report to","Orang yang saya lapor"),tone:"up",
+  tip:L("Bring facts and options, not complaints. Make it easy to say yes.","Bawa fakta dan pilihan, bukan rungutan. Mudahkan mereka berkata ya.")},
+ dept:{n:L("Other department","Jabatan lain"),d:L("Different team, different targets","Pasukan lain, sasaran lain"),tone:"side",
+  tip:L("Different department, different targets. Find the shared goal first.","Jabatan lain, sasaran lain. Cari matlamat bersama dahulu.")},
+ ext:{n:L("Supplier or customer","Pembekal atau pelanggan"),d:L("Outside the company","Di luar syarikat"),tone:"side",
+  tip:L("Stay on facts and the agreement. Protect the long-term relationship.","Kekal pada fakta dan persetujuan. Jaga hubungan jangka panjang.")},
+ self:{n:L("Myself","Diri sendiri"),d:L("My own habits and reactions","Tabiat dan reaksi saya sendiri"),tone:"self",
+  tip:L("Be as fair to yourself as you would be to a friend.","Berlaku adil kepada diri sendiri seperti kepada seorang kawan.")}
+};
+
+/* ---------- 3. Question bank ----------
+   qn(question, answerA, pointsA, answerB, pointsB, followUpAfterA)
+   Points go to a cause id. The cause with most points becomes "Likely why". */
+const qn=(q,a,pa,b,pb,fa)=>({q,a:{t:a,p:pa,f:fa},b:{t:b,p:pb}});
+const Q={
+ who:qn(L("Who do they do this with?","Dengan siapa mereka berkelakuan begini?"),L("Only me","Dengan saya sahaja"),{trust:2,mypart:1},L("Others too","Dengan orang lain juga"),{priorities:1,system:1},"past"),
+ past:qn(L("Was there a disagreement or tension between you before?","Pernahkah ada perselisihan atau ketegangan antara anda berdua?"),L("Yes, there was","Ya, pernah"),{trust:2},L("Not that I know","Setahu saya tiada"),{mypart:2}),
+ clear:qn(L("Do they know exactly what you need and by when?","Adakah mereka tahu dengan tepat apa yang anda perlukan dan bila?"),L("Yes, I said it clearly","Ya, saya beritahu dengan jelas"),{},L("Not sure, or only in passing","Tidak pasti, atau sekadar sepintas lalu"),{unclear:3}),
+ load:qn(L("How is their workload now?","Bagaimana beban kerja mereka sekarang?"),L("Normal","Biasa"),{},L("Heavy, or their boss wants something else","Berat, atau ketua mereka mahu perkara lain"),{priorities:3}),
+ benefit:qn(L("Does doing this benefit them?","Adakah perkara ini memberi manfaat kepada mereka?"),L("Yes, it is a shared goal","Ya, matlamat bersama"),{},L("No, it mainly helps me","Tidak, lebih kepada membantu saya"),{nowin:3}),
+ done:qn(L("Have they done this kind of task well before?","Pernahkah mereka buat kerja seperti ini dengan baik sebelum ini?"),L("Yes","Ya, pernah"),{},L("No, or it is the first time","Belum, atau kali pertama"),{skill:3}),
+ new:qn(L("Is this behaviour new?","Adakah kelakuan ini baru?"),L("New, they were fine before","Baru, dulu mereka okey"),{priorities:2,trust:1},L("It has always been like this","Memang begini dari dulu"),{system:2,skill:1,unclear:1}),
+ tools:qn(L("Do they have the tools, information, access or authority to do it?","Adakah mereka ada alat, maklumat, akses atau kuasa untuk melakukannya?"),L("Yes, they do","Ya, ada"),{},L("No, or it depends on someone else","Tiada, atau bergantung pada orang lain"),{system:3}),
+ how:qn(L("How did you ask or raise it?","Bagaimana anda meminta atau membangkitkannya?"),L("Face to face, with time to discuss","Bersemuka, ada masa berbincang"),{},L("A quick message, or at the last minute","Mesej ringkas, atau pada saat akhir"),{mypart:3}),
+ agree:qn(L("Did they actually agree, in their own words?","Adakah mereka benar-benar bersetuju, dengan kata-kata mereka sendiri?"),L("Yes, they said yes","Ya, mereka kata ya"),{},L("I assumed, or they stayed quiet","Saya andaikan, atau mereka diam sahaja"),{unclear:2,nowin:1}),
+ say:qn(L("When things go wrong, do they tell you early?","Bila ada masalah, adakah mereka beritahu awal?"),L("Yes","Ya"),{},L("No, I find out late","Tidak, saya tahu lewat"),{trust:2,skill:1}),
+ listen:qn(L("Have you asked for their view and really listened first?","Sudahkah anda tanya pandangan mereka dan benar-benar dengar dahulu?"),L("Yes, I have","Sudah"),{},L("Not really","Belum betul-betul"),{mypart:3}),
+ measure:qn(L("Are they measured on different targets from you?","Adakah mereka diukur atas sasaran yang berbeza daripada anda?"),L("Same targets","Sasaran sama"),{},L("Different targets","Sasaran berbeza"),{nowin:2,priorities:2}),
+ safe:qn(L("Is it safe for them to say no or disagree with you?","Adakah selamat untuk mereka berkata tidak atau tidak bersetuju dengan anda?"),L("Yes","Ya"),{},L("Probably not","Mungkin tidak"),{trust:3}),
+ process:qn(L("Is there a clear process or owner for this?","Adakah proses atau pemilik yang jelas untuk perkara ini?"),L("Yes, it is clear","Ya, jelas"),{},L("No, it is a grey area","Tiada, kabur"),{system:3,unclear:1}),
+ facts:qn(L("Did you give facts and examples, or mostly opinion?","Adakah anda beri fakta dan contoh, atau lebih kepada pendapat?"),L("Facts and examples","Fakta dan contoh"),{},L("Mostly how I feel","Lebih kepada perasaan saya"),{mypart:3}),
+ pressure:qn(L("Is this person under pressure from above or elsewhere?","Adakah orang ini sedang ditekan dari atas atau pihak lain?"),L("Not that I can see","Tidak nampak begitu"),{},L("Yes","Ya"),{priorities:3}),
+ context:qn(L("Do they have the full background that you have?","Adakah mereka tahu latar belakang penuh seperti yang anda tahu?"),L("Yes","Ya"),{},L("Probably not","Mungkin tidak"),{unclear:2,skill:1}),
+ update:qn(L("Do you update them before they ask?","Adakah anda beri kemas kini sebelum mereka bertanya?"),L("Yes, regularly","Ya, selalu"),{},L("Usually they have to ask","Biasanya mereka yang perlu tanya"),{mypart:3}),
+ /* --- questions for "Myself" --- */
+ sq1:qn(L("Is the end result clear to you?","Adakah hasil akhir jelas bagi anda?"),L("Yes, clear","Ya, jelas"),{},L("It is vague","Masih kabur"),{s_goal:3}),
+ sq2:qn(L("How many important things are you juggling?","Berapa banyak perkara penting yang anda sedang uruskan?"),L("A few","Beberapa sahaja"),{},L("Too many","Terlalu banyak"),{s_prior:3}),
+ sq3:qn(L("How are your sleep, health and rest lately?","Bagaimana tidur, kesihatan dan rehat anda kebelakangan ini?"),L("Fine","Okey"),{},L("Running low","Semakin kurang"),{s_energy:3}),
+ sq4:qn(L("Is most of this within your control?","Adakah kebanyakan perkara ini dalam kawalan anda?"),L("Yes, mostly","Ya, kebanyakannya"),{},L("No, it depends on others","Tidak, bergantung pada orang lain"),{s_control:3}),
+ sq5:qn(L("Do you know how to do the first step?","Adakah anda tahu cara membuat langkah pertama?"),L("Yes","Ya, tahu"),{},L("Not really","Kurang pasti"),{s_skill:3}),
+ sq6:qn(L("Is urgent work pushing out important work?","Adakah kerja segera menolak ke tepi kerja penting?"),L("No","Tidak"),{},L("Yes","Ya"),{s_prior:2,s_goal:1}),
+ sq7:qn(L("Does this matter to you personally, or only to others?","Adakah perkara ini penting kepada anda sendiri, atau hanya kepada orang lain?"),L("It matters to me","Penting kepada saya"),{},L("Only to others","Hanya kepada orang lain"),{s_goal:2,s_control:1}),
+ sq8:qn(L("When did you last take a proper break?","Bila kali terakhir anda berehat dengan betul?"),L("Recently","Baru-baru ini"),{},L("I can't remember","Tidak ingat"),{s_energy:3})
+};
+
+/* ---------- 4. Situations ----------
+   sit(category, title, example of a fact, example of a label, [question ids]) */
+const sit=(c,n,fact,label,q)=>({c,n,fact,label,q});
+const SIT={
+ p1:sit("peer",L("Coworker is not cooperating","Rakan sekerja tidak bekerjasama"),L("I asked twice for the data. No reply yet.","Saya minta data dua kali. Belum ada jawapan."),L("They refuse to help me.","Mereka enggan tolong saya."),["who","clear","load","benefit"]),
+ p2:sit("peer",L("Says yes, then does not deliver","Kata ya, tetapi tidak buat"),L("They said yes in the meeting. Nothing received after one week.","Mereka kata ya dalam mesyuarat. Selepas seminggu, tiada apa diterima."),L("They can't be trusted.","Mereka tidak boleh dipercayai."),["agree","load","done","tools"]),
+ p3:sit("peer",L("Takes credit for shared work","Mengambil nama atas kerja bersama"),L("The slide showed our joint work with only their name.","Slaid menunjukkan kerja bersama dengan nama mereka sahaja."),L("They steal my work.","Mereka curi kerja saya."),["who","measure","listen","new"]),
+ p4:sit("peer",L("Complains about me to others, not to me","Mengadu tentang saya kepada orang lain"),L("Two people told me they raised it with others, not with me.","Dua orang beritahu, mereka bangkitkan kepada orang lain, bukan kepada saya."),L("They are two-faced.","Mereka bermuka-muka."),["who","safe","new","listen"]),
+ r1:sit("report",L("Keeps missing deadlines","Selalu terlepas tarikh akhir"),L("Three of the last five tasks came after the due date.","Tiga daripada lima tugasan terakhir siap selepas tarikh akhir."),L("They are lazy.","Mereka malas."),["clear","load","done","say"]),
+ r2:sit("report",L("Does the minimum, no initiative","Buat sekadar cukup, tiada inisiatif"),L("They finish what is assigned and suggest nothing further.","Mereka siapkan apa yang diberi dan tidak mencadangkan apa-apa lagi."),L("They don't care.","Mereka tidak peduli."),["new","benefit","safe","done"]),
+ r3:sit("report",L("Resists a change or new way of working","Menolak perubahan atau cara kerja baru"),L("They still use the old form two weeks after the change.","Mereka masih guna borang lama dua minggu selepas perubahan."),L("They are stubborn.","Mereka degil."),["context","benefit","done","listen"]),
+ r4:sit("report",L("Hides problems until it is too late","Menyembunyikan masalah sehingga terlambat"),L("I learned about the defect on the day of shipment.","Saya tahu tentang kecacatan itu pada hari penghantaran."),L("They hide things from me.","Mereka sembunyikan perkara daripada saya."),["safe","done","process","new"]),
+ m1:sit("manager",L("Keeps changing priorities","Selalu menukar keutamaan"),L("The top priority changed three times this month.","Keutamaan utama bertukar tiga kali bulan ini."),L("They don't know what they want.","Mereka tidak tahu apa yang mereka mahu."),["pressure","context","process","facts"]),
+ m2:sit("manager",L("Micromanages my work","Mengawal kerja saya terlalu rapat"),L("They ask for an update every day and recheck my work.","Mereka minta kemas kini setiap hari dan semak semula kerja saya."),L("They don't trust me.","Mereka tidak percaya saya."),["who","new","update","pressure"]),
+ m3:sit("manager",L("Does not give support or a decision","Tidak memberi sokongan atau keputusan"),L("My request has waited two weeks without a decision.","Permintaan saya menunggu dua minggu tanpa keputusan."),L("They don't support me.","Mereka tidak sokong saya."),["clear","load","facts","tools"]),
+ m4:sit("manager",L("Does not listen to my ideas","Tidak mendengar idea saya"),L("I raised the idea twice and the topic moved on.","Saya bangkitkan idea dua kali dan topik beralih."),L("They never listen.","Mereka tidak pernah dengar."),["how","facts","benefit","who"]),
+ d1:sit("dept",L("Slow or no response to my requests","Lambat atau tiada jawapan kepada permintaan saya"),L("My request has been open for five days with no reply.","Permintaan saya terbuka lima hari tanpa jawapan."),L("That department is useless.","Jabatan itu tidak berguna."),["clear","measure","process","how"]),
+ d2:sit("dept",L("Pushes work or blame back to my team","Menolak kerja atau kesalahan kepada pasukan saya"),L("The issue was sent back to us twice without action.","Isu itu dipulangkan kepada kami dua kali tanpa tindakan."),L("They always blame us.","Mereka selalu salahkan kami."),["process","measure","listen","facts"]),
+ d3:sit("dept",L("Will not share data or information","Tidak mahu berkongsi data atau maklumat"),L("I asked for the report and was told it cannot be shared.","Saya minta laporan dan diberitahu ia tidak boleh dikongsi."),L("They hide information.","Mereka sembunyikan maklumat."),["context","benefit","tools","who"]),
+ d4:sit("dept",L("Agreed in the meeting, no follow-through","Setuju dalam mesyuarat, tiada tindakan susulan"),L("The action was agreed on Monday. No update by Friday.","Tindakan dipersetujui pada Isnin. Tiada kemas kini sehingga Jumaat."),L("They just talk.","Mereka cakap sahaja."),["agree","load","process","measure"]),
+ e1:sit("ext",L("Supplier keeps delivering late","Pembekal selalu hantar lewat"),L("Three of the last five deliveries arrived late.","Tiga daripada lima penghantaran terakhir tiba lewat."),L("They are unreliable.","Mereka tidak boleh diharap."),["clear","tools","new","say"]),
+ e2:sit("ext",L("Supplier does not respond to issues","Pembekal tidak membalas isu yang dibangkitkan"),L("Two complaint emails this month have no reply.","Dua emel aduan bulan ini tiada jawapan."),L("They don't care about us.","Mereka tidak peduli tentang kami."),["clear","process","facts","benefit"]),
+ e3:sit("ext",L("Customer keeps changing requirements","Pelanggan selalu menukar keperluan"),L("The specification changed twice after sign-off.","Spesifikasi berubah dua kali selepas disahkan."),L("They don't know what they want.","Mereka tidak tahu apa yang mereka mahu."),["pressure","context","process","agree"]),
+ e4:sit("ext",L("Customer is angry or demanding","Pelanggan marah atau mendesak"),L("They raised their voice and sent three emails in one hour.","Mereka meninggikan suara dan hantar tiga emel dalam sejam."),L("They are unreasonable.","Mereka tidak munasabah."),["listen","new","pressure","context"]),
+ s1:sit("self",L("I keep putting off an important task","Saya asyik menangguh tugasan penting"),L("I moved this task to tomorrow four days in a row.","Saya tangguh tugasan ini ke esok empat hari berturut-turut."),L("I am lazy.","Saya malas."),["sq1","sq5","sq6","sq3"]),
+ s2:sit("self",L("I feel overwhelmed","Saya rasa terbeban"),L("I have 14 open items and worked late three nights.","Saya ada 14 perkara tertunggak dan kerja lewat tiga malam."),L("I can't cope.","Saya tidak mampu."),["sq2","sq4","sq6","sq8"]),
+ s3:sit("self",L("I reacted badly and regret it","Saya bertindak balas dengan buruk dan menyesal"),L("I raised my voice in the meeting.","Saya meninggikan suara dalam mesyuarat."),L("I am a bad person.","Saya orang yang teruk."),["sq3","sq4","sq2","sq7"]),
+ s4:sit("self",L("I have lost motivation","Saya hilang motivasi"),L("I have not started anything new for two weeks.","Saya tidak memulakan apa-apa yang baru selama dua minggu."),L("I am useless.","Saya tidak berguna."),["sq7","sq1","sq8","sq4"])
+};
+
+/* ---------- 5. Causes for other people: why it happens and how to open ----------
+   open has three wordings: side (peer / other dept / external), down (my staff), up (my boss) */
+const CAUSE={
+ unclear:{n:L("Unclear expectation","Jangkaan tidak jelas"),
+  why:L("They may not be refusing. They may not know exactly what you need, by when, or how good is good enough.","Mereka mungkin bukan enggan. Mereka mungkin tidak tahu dengan tepat apa yang anda perlukan, bila, atau sebaik mana yang dikira cukup."),
+  re:L("Not 'they won't do it', but 'we have not agreed what done looks like'.","Bukan 'mereka tak mahu buat', tetapi 'kita belum bersetuju bagaimana rupa siap'."),
+  open:{side:L("I may not have been clear earlier. Can I check what you understood from my request?","Mungkin saya kurang jelas tadi. Boleh saya semak apa yang awak faham daripada permintaan saya?"),
+        down:L("I want to check that I was clear. In your own words, what am I asking for?","Saya nak pastikan saya jelas. Dengan kata-kata awak sendiri, apa yang saya minta?"),
+        up:L("I want to make sure I understood you correctly. What does a good result look like to you?","Saya nak pastikan saya faham dengan betul. Pada pandangan tuan, bagaimana rupa hasil yang baik?")},
+  win:L("Let's write down what, by when and who, so neither of us has to chase.","Jom kita tulis apa, bila dan siapa, supaya tiada siapa perlu kejar."),
+  avoid:L("I already told you.","Saya dah beritahu."),
+  msg:L("Hi, I may not have been clear earlier. What I need is [what] by [when], for [why]. Does that work? Tell me if anything is unclear.","Hai, mungkin saya kurang jelas tadi. Saya perlukan [apa] sebelum [bila], untuk [sebab]. Boleh ke? Beritahu saya jika ada yang kurang jelas."),
+  retry:L("Put it in writing: one line each for what, when and who. Ask them to reply with what they will do.","Tulis secara bertulis: satu baris untuk apa, bila dan siapa. Minta mereka balas dengan apa yang mereka akan buat.")},
+ priorities:{n:L("Competing priorities","Keutamaan bertembung"),
+  why:L("They may not be refusing you. Something else, often from their own boss, comes first.","Mereka mungkin bukan menolak anda. Ada perkara lain, selalunya daripada ketua mereka sendiri, yang didahulukan."),
+  re:L("Not 'they ignore me', but 'my request is losing to another priority'.","Bukan 'mereka abaikan saya', tetapi 'permintaan saya kalah kepada keutamaan lain'."),
+  open:{side:L("I know you have a lot on. What is taking most of your time this week?","Saya tahu awak banyak kerja. Apa yang paling banyak ambil masa awak minggu ini?"),
+        down:L("What is on your plate right now? Which items are fighting for the same time?","Apa kerja yang awak pegang sekarang? Yang mana berebut masa yang sama?"),
+        up:L("I can see things are moving fast. What is the most important thing for you this week?","Saya nampak keadaan bergerak laju. Apa yang paling penting bagi tuan minggu ini?")},
+  win:L("If I prepare [part], would that make it quicker for you? Or which date is realistic?","Kalau saya sediakan [bahagian], adakah lebih cepat untuk awak? Atau tarikh mana yang realistik?"),
+  avoid:L("It only takes five minutes.","Lima minit je pun."),
+  msg:L("Hi, I know you are loaded. I need [what] by [when]. If that date is hard, which date can work? I can prepare [part] to make it faster.","Hai, saya tahu awak sibuk. Saya perlukan [apa] sebelum [bila]. Kalau tarikh itu susah, tarikh mana yang boleh? Saya boleh sediakan [bahagian] supaya lebih cepat."),
+  retry:L("Ask which date they can commit to, and take the smallest useful piece first. If it truly cannot fit, agree together who should decide the priority.","Tanya tarikh mana yang mereka boleh janji, dan ambil bahagian terkecil yang berguna dahulu. Jika memang tidak muat, setuju bersama siapa yang patut tentukan keutamaan.")},
+ nowin:{n:L("No win for them","Tiada manfaat untuk mereka"),
+  why:L("The task helps you but costs them time or risk. People put effort where they see a benefit.","Tugasan itu membantu anda tetapi memakan masa atau risiko mereka. Orang beri usaha di tempat mereka nampak manfaat."),
+  re:L("Not 'they are selfish', but 'I have not shown what is in it for them'.","Bukan 'mereka pentingkan diri', tetapi 'saya belum tunjuk apa manfaatnya untuk mereka'."),
+  open:{side:L("I realise this is extra work for you. What would make it worth your time?","Saya sedar ini kerja tambahan untuk awak. Apa yang boleh menjadikannya berbaloi untuk awak?"),
+        down:L("Which part of this feels like it brings you nothing? I want to hear it honestly.","Bahagian mana yang awak rasa tidak memberi apa-apa kepada awak? Saya nak dengar dengan jujur."),
+        up:L("I want this to support your targets too. Which of your goals should it help?","Saya mahu ini turut menyokong sasaran tuan. Matlamat tuan yang mana patut ia bantu?")},
+  win:L("What if we do it this way: you get [benefit], and I get [what I need]?","Bagaimana kalau begini: awak dapat [manfaat], dan saya dapat [apa yang saya perlukan]?"),
+  avoid:L("It is your job.","Itu memang kerja awak."),
+  msg:L("Hi, I know [what] is extra work for you. I'd like to find a way that helps you too, for example [benefit]. Can we talk for 10 minutes?","Hai, saya tahu [apa] kerja tambahan untuk awak. Saya nak cari cara yang turut bantu awak, contohnya [manfaat]. Boleh kita bincang 10 minit?"),
+  retry:L("Ask what they are measured on and link your request to it. If there is truly no benefit for them, ask for less, or let both managers set the priority.","Tanya apa yang mereka diukur dan kaitkan permintaan anda dengannya. Jika memang tiada manfaat untuk mereka, kurangkan permintaan, atau biar kedua-dua pengurus tentukan keutamaan.")},
+ trust:{n:L("Trust or a past issue","Isu kepercayaan atau kisah lama"),
+  why:L("The problem may be between the two of you, not the task. A past incident or low trust makes people hold back.","Masalahnya mungkin antara anda berdua, bukan tugasan itu. Kejadian lama atau kurang percaya membuat orang menahan diri."),
+  re:L("Not 'they are difficult', but 'something between us needs repair'.","Bukan 'mereka susah', tetapi 'ada sesuatu antara kami yang perlu dibaiki'."),
+  open:{side:L("I feel things are not smooth between us, and I may have a part in it. Can we talk about it?","Saya rasa hubungan kita kurang lancar, dan mungkin saya ada bahagian dalam hal ini. Boleh kita bincang?"),
+        down:L("I want you to be able to tell me things, even bad news. Is there anything I do that makes that hard?","Saya mahu awak boleh beritahu saya apa sahaja, walaupun berita buruk. Ada apa-apa yang saya buat yang menyukarkannya?"),
+        up:L("I want to work well with you. Is there anything I did that reduced your confidence in me?","Saya mahu bekerja dengan baik bersama tuan. Ada apa-apa yang saya buat yang mengurangkan keyakinan tuan terhadap saya?")},
+  win:L("What is one thing I can do differently? I will also share one thing that would help me.","Apa satu perkara yang saya boleh ubah? Saya juga akan kongsi satu perkara yang boleh bantu saya."),
+  avoid:L("What is your problem with me?","Apa masalah awak dengan saya?"),
+  msg:L("Hi, I feel things between us are not smooth and I'd like to fix that. Can we have coffee and talk for 15 minutes?","Hai, saya rasa hubungan kita kurang lancar dan saya nak perbaikinya. Boleh kita minum kopi dan berbual 15 minit?"),
+  retry:L("Do not push for an answer in one talk. Keep one small promise to them this week, then ask again. Trust returns through small kept promises.","Jangan desak jawapan dalam satu perbualan. Tunaikan satu janji kecil kepada mereka minggu ini, kemudian tanya semula. Kepercayaan pulih melalui janji kecil yang ditunaikan.")},
+ skill:{n:L("Skill, confidence or information gap","Jurang kemahiran, keyakinan atau maklumat"),
+  why:L("They may want to do it but not know how, or be afraid of doing it wrong. Many people hide this rather than ask.","Mereka mungkin mahu buat tetapi tidak tahu caranya, atau takut tersalah. Ramai orang menyembunyikannya daripada bertanya."),
+  re:L("Not 'they are lazy', but 'they may be stuck and not saying so'.","Bukan 'mereka malas', tetapi 'mereka mungkin tersekat dan tidak memberitahu'."),
+  open:{side:L("Which part of this is the trickiest? I got stuck on it myself the first time.","Bahagian mana yang paling rumit? Saya sendiri tersekat masa kali pertama."),
+        down:L("Which part are you confident about, and which part are you less sure of?","Bahagian mana yang awak yakin, dan bahagian mana yang awak kurang pasti?"),
+        up:L("Would it help if I prepare the background and options, so the decision is easier?","Adakah membantu jika saya sediakan latar belakang dan pilihan, supaya keputusan lebih mudah?")},
+  win:L("Let's do the first one together, then you do the next one and I check.","Jom buat yang pertama bersama, kemudian awak buat yang seterusnya dan saya semak."),
+  avoid:L("It's easy, anyone can do it.","Senang je, semua orang boleh buat."),
+  msg:L("Hi, about [what]: if any part is unclear or new, tell me. I can go through the first one with you.","Hai, tentang [apa]: jika ada bahagian yang kurang jelas atau baru, beritahu saya. Saya boleh buat yang pertama bersama awak."),
+  retry:L("Break it into a smaller first step and show an example of a finished one. Check after the first step, not at the deadline.","Pecahkan kepada langkah pertama yang lebih kecil dan tunjuk satu contoh yang sudah siap. Semak selepas langkah pertama, bukan pada tarikh akhir.")},
+ system:{n:L("System or process barrier","Halangan sistem atau proses"),
+  why:L("The person may be willing, but the process, tool, access or approval is in the way. Anyone in that seat would behave the same.","Orang itu mungkin sanggup, tetapi proses, alat, akses atau kelulusan menjadi penghalang. Sesiapa di tempat itu akan berkelakuan sama."),
+  re:L("Not 'they are slow', but 'the system makes this hard to do'.","Bukan 'mereka lambat', tetapi 'sistem menyukarkan perkara ini'."),
+  open:{side:L("What gets in the way on your side? Is there something in the process I don't see?","Apa yang menghalang di pihak awak? Ada sesuatu dalam proses yang saya tidak nampak?"),
+        down:L("What is blocking you? Tools, access, approval, or waiting on someone?","Apa yang menghalang awak? Alat, akses, kelulusan, atau menunggu seseorang?"),
+        up:L("I think the blocker is in the process, not the people. Can I show you where it gets stuck?","Saya rasa halangannya pada proses, bukan pada orang. Boleh saya tunjuk di mana ia tersekat?")},
+  win:L("If we fix this blocker together, it saves both of us time every time. Who else do we need?","Kalau kita selesaikan halangan ini bersama, kita berdua jimat masa setiap kali. Siapa lagi yang kita perlukan?"),
+  avoid:L("Just find a way.","Cari jalan je la."),
+  msg:L("Hi, I think [what] is getting stuck somewhere in the process. Can you tell me where it stops on your side? I'd like to help remove the blocker.","Hai, saya rasa [apa] tersekat di mana-mana dalam proses. Boleh beritahu di mana ia terhenti di pihak awak? Saya nak bantu buang halangan itu."),
+  retry:L("Go through the steps together and mark where it stops. Take that one blocker to the process owner, with an example.","Lalui langkah-langkah itu bersama dan tandakan di mana ia terhenti. Bawa satu halangan itu kepada pemilik proses, dengan contoh.")},
+ mypart:{n:L("My own part","Bahagian saya sendiri"),
+  why:L("How, when or where you asked may be part of it. A rushed message, a late request or a sharp tone can create resistance.","Cara, masa atau tempat anda meminta mungkin sebahagian puncanya. Mesej tergesa-gesa, permintaan lewat atau nada keras boleh menimbulkan penolakan."),
+  re:L("Not 'what is wrong with them', but 'what can I change in how I ask'.","Bukan 'apa masalah mereka', tetapi 'apa yang saya boleh ubah dalam cara saya meminta'."),
+  open:{side:L("I think I rushed you last time, sorry about that. Can I start again and explain properly?","Saya rasa saya menggesa awak hari itu, maaf ya. Boleh saya mula semula dan terangkan dengan betul?"),
+        down:L("I may not have given you enough time or detail. What would help you if I did it differently?","Mungkin saya tidak beri masa atau butiran yang cukup. Apa yang boleh bantu awak jika saya buat cara lain?"),
+        up:L("I may not have explained this well before. Can I have 10 minutes to go through it properly?","Mungkin saya kurang terangkan dengan baik sebelum ini. Boleh saya ambil 10 minit untuk terangkan dengan betul?")},
+  win:L("Tell me the best way and time to bring requests to you, and I will stick to it.","Beritahu saya cara dan masa terbaik untuk bawa permintaan kepada awak, dan saya akan ikut."),
+  avoid:L("I'm sorry, but you...","Saya minta maaf, tapi awak..."),
+  msg:L("Hi, I think I rushed my earlier request, sorry. Here it is properly: I need [what] by [when] because [why]. What do you think?","Hai, saya rasa permintaan saya tadi tergesa-gesa, maaf. Ini yang sebenarnya: saya perlukan [apa] sebelum [bila] kerana [sebab]. Apa pendapat awak?"),
+  retry:L("Change one thing: the timing, the channel or the amount of notice. Ask them directly how they prefer to be asked.","Ubah satu perkara: masa, saluran atau tempoh notis. Tanya terus bagaimana mereka lebih suka diminta.")},
+
+ /* ---------- 6. Causes for "Myself": steps are [habit number, title, what to do] ---------- */
+ s_goal:{n:L("Unclear end result","Hasil akhir tidak jelas"),
+  why:L("It is hard to start when you cannot picture what finished looks like.","Sukar untuk bermula apabila anda tidak dapat bayangkan rupa siap."),
+  re:L("Not 'I am lazy', but 'I have not defined done'.","Bukan 'saya malas', tetapi 'saya belum tentukan apa itu siap'."),
+  steps:[[2,L("Define done","Tentukan apa itu siap"),L("Write one sentence: this is finished when ...","Tulis satu ayat: perkara ini siap apabila ...")],
+         [3,L("Pick the first step","Pilih langkah pertama"),L("Choose a step small enough to do in 15 minutes. Do only that.","Pilih langkah yang cukup kecil untuk dibuat dalam 15 minit. Buat itu sahaja.")],
+         [1,L("Start before you feel ready","Mula sebelum rasa bersedia"),L("Set a 15-minute timer and begin. Motivation follows action.","Set pemasa 15 minit dan mula. Motivasi datang selepas tindakan.")],
+         [7,L("Review","Semak semula"),L("At the end of the day, note what moved and pick tomorrow's step.","Pada hujung hari, catat apa yang bergerak dan pilih langkah esok.")]],
+  avoid:L("I will start when I feel ready.","Saya akan mula bila rasa bersedia."),
+  retry:L("Ask the person who will receive the work what they actually need. The picture is often smaller than you fear.","Tanya orang yang akan menerima kerja itu apa yang mereka benar-benar perlukan. Gambarannya selalunya lebih kecil daripada yang anda takutkan.")},
+ s_prior:{n:L("Too many priorities","Terlalu banyak keutamaan"),
+  why:L("Urgent things are crowding out the important ones. Everything feels equal, so nothing moves.","Perkara segera menolak ke tepi perkara penting. Semuanya terasa sama berat, jadi tiada yang bergerak."),
+  re:L("Not 'I can't cope', but 'I have not chosen what comes first'.","Bukan 'saya tidak mampu', tetapi 'saya belum pilih apa yang didahulukan'."),
+  steps:[[3,L("List and sort","Senarai dan asingkan"),L("Write everything down. Mark each one: important or not, urgent or not.","Tulis semuanya. Tandakan setiap satu: penting atau tidak, segera atau tidak.")],
+         [3,L("Choose three","Pilih tiga"),L("Pick the three important items for this week. The rest wait.","Pilih tiga perkara penting untuk minggu ini. Yang lain tunggu.")],
+         [4,L("Renegotiate","Runding semula"),L("For items that cannot fit, tell the owner early and offer a new date.","Bagi perkara yang tidak muat, beritahu pemiliknya awal dan tawarkan tarikh baru.")],
+         [3,L("Protect the time","Lindungi masa"),L("Block time in your calendar for the top item and treat it like a meeting.","Tempah masa dalam kalendar untuk perkara teratas dan anggap ia seperti mesyuarat.")]],
+  avoid:L("Everything is urgent.","Semuanya segera."),
+  retry:L("Show your list to your manager and ask which should come first. Let them help you choose.","Tunjuk senarai anda kepada ketua dan tanya yang mana patut didahulukan. Biar mereka bantu anda memilih.")},
+ s_energy:{n:L("Running low on energy","Kekurangan tenaga"),
+  why:L("Tired people react faster and think narrower. This may be a fuel problem, not a character problem.","Orang yang penat lebih cepat melenting dan berfikir sempit. Ini mungkin masalah tenaga, bukan masalah peribadi."),
+  re:L("Not 'I am weak', but 'I need to recharge to do this well'.","Bukan 'saya lemah', tetapi 'saya perlu cas semula untuk buat dengan baik'."),
+  steps:[[7,L("Body","Badan"),L("Sleep, food, movement. Fix the most neglected one tonight.","Tidur, makan, pergerakan. Baiki yang paling terabai malam ini.")],
+         [7,L("Mind","Minda"),L("Take a real break today, away from the screen, even for 15 minutes.","Ambil rehat sebenar hari ini, jauh dari skrin, walau 15 minit.")],
+         [7,L("Heart","Hati"),L("Spend time with someone who gives you energy.","Luangkan masa dengan seseorang yang memberi anda tenaga.")],
+         [3,L("Plan it","Rancang"),L("Put rest in your week like a task. It will not happen by itself.","Masukkan rehat dalam minggu anda seperti satu tugasan. Ia tidak berlaku dengan sendiri.")]],
+  avoid:L("I will rest when this is over.","Saya akan rehat bila semua ini selesai."),
+  retry:L("If rest does not help after a couple of weeks, talk to someone you trust or to a doctor. That is being proactive, not weak.","Jika rehat tidak membantu selepas beberapa minggu, berbual dengan orang yang anda percaya atau doktor. Itu proaktif, bukan lemah.")},
+ s_control:{n:L("Focused on what I cannot control","Tertumpu pada perkara di luar kawalan"),
+  why:L("Energy spent on other people's choices or decisions above you leaves less for what you can actually change.","Tenaga yang dihabiskan pada pilihan orang lain atau keputusan pihak atasan mengurangkan tenaga untuk perkara yang anda boleh ubah."),
+  re:L("Not 'nothing can be done', but 'which part of this is mine to act on'.","Bukan 'tiada apa boleh dibuat', tetapi 'bahagian mana yang saya boleh bertindak'."),
+  steps:[[1,L("Split it","Asingkan"),L("Make two lists: what I control, and what I do not.","Buat dua senarai: apa yang saya kawal, dan apa yang tidak.")],
+         [1,L("Act on your list","Bertindak atas senarai anda"),L("Pick one item you control and do it today.","Pilih satu perkara yang anda kawal dan buat hari ini.")],
+         [5,L("Influence the rest","Pengaruhi yang lain"),L("For what you do not control, who decides? Ask to understand their view first.","Bagi perkara di luar kawalan, siapa yang memutuskan? Minta untuk faham pandangan mereka dahulu.")],
+         [1,L("Let go","Lepaskan"),L("For what you can neither control nor influence, decide how you will respond, then stop replaying it.","Bagi perkara yang tidak boleh dikawal atau dipengaruhi, putuskan bagaimana anda akan bertindak balas, kemudian berhenti mengulangnya dalam fikiran.")]],
+  avoid:L("If only they would ...","Kalaulah mereka ..."),
+  retry:L("Change the language: from 'I have to' to 'I choose to', from 'they make me' to 'I respond by'. Then pick one small action.","Ubah bahasa: daripada 'saya terpaksa' kepada 'saya pilih', daripada 'mereka buat saya' kepada 'saya bertindak balas dengan'. Kemudian pilih satu tindakan kecil.")},
+ s_skill:{n:L("Not sure how to do it","Tidak pasti cara melakukannya"),
+  why:L("Avoiding a task is often a sign that you do not know the first step, or fear doing it badly.","Mengelak tugasan selalunya tanda anda tidak tahu langkah pertama, atau takut buat dengan teruk."),
+  re:L("Not 'I am not good enough', but 'I have not learned this yet'.","Bukan 'saya tidak cukup bagus', tetapi 'saya belum belajar perkara ini'."),
+  steps:[[1,L("Name the gap","Namakan jurangnya"),L("What exactly do I not know? Write it as a question.","Apa sebenarnya yang saya tidak tahu? Tulis sebagai soalan.")],
+         [5,L("Ask","Tanya"),L("Find one person who has done it and ask how they started.","Cari seorang yang pernah buat dan tanya bagaimana mereka bermula.")],
+         [3,L("Do a rough first version","Buat versi kasar dahulu"),L("Make a quick, imperfect draft. It is easier to improve than to start.","Buat draf pantas yang tidak sempurna. Lebih mudah memperbaiki daripada memulakan.")],
+         [7,L("Learn","Belajar"),L("Note what you learned, so next time is faster.","Catat apa yang anda belajar, supaya lain kali lebih cepat.")]],
+  avoid:L("I should already know this.","Saya sepatutnya dah tahu benda ni."),
+  retry:L("Ask for a worked example, or do the first one together with someone. Asking early costs less than failing late.","Minta satu contoh yang sudah siap, atau buat yang pertama bersama seseorang. Bertanya awal lebih murah daripada gagal lewat.")}
+};
+/* Order used to break ties, and the fallback when no answer points anywhere */
+const ORDER=["unclear","priorities","nowin","trust","skill","system","mypart"], DEF=["mypart","trust","priorities"];
+const SORDER=["s_goal","s_prior","s_energy","s_control","s_skill"], SDEF=["s_energy","s_control","s_prior"];
+
+/* ---------- 7. Wording that depends on who you talk to ---------- */
+const TONE={
+ side:{need:L("What I need is [what] by [when], because [why].","Apa yang saya perlukan ialah [apa] sebelum [bila], kerana [sebab]."),
+       next:L("So you will do [action] by [date], and I will do [my action]. OK?","Jadi awak akan buat [tindakan] sebelum [tarikh], dan saya akan buat [tindakan saya]. Okey?"),
+       esc:L("Escalate only when you have tried at least twice, the impact is real, and you have facts: dates, what was asked, what happened. Tell them first that you will raise it. Ask the managers to help set the priority, not to find who is wrong.","Bawa ke atas hanya apabila anda sudah cuba sekurang-kurangnya dua kali, kesannya nyata, dan anda ada fakta: tarikh, apa yang diminta, apa yang berlaku. Beritahu mereka dahulu bahawa anda akan bangkitkannya. Minta pengurus bantu tentukan keutamaan, bukan cari siapa yang salah.")},
+ down:{need:L("What I need from you is [what] by [when]. What might get in the way?","Apa yang saya perlukan daripada awak ialah [apa] sebelum [bila]. Apa yang mungkin menghalang?"),
+       next:L("So what will you do by [date]? I will check in with you on [day], not before.","Jadi apa yang awak akan buat sebelum [tarikh]? Saya akan semak dengan awak pada [hari], bukan sebelum itu."),
+       esc:L("With your own staff, clarify before you escalate. Put the expectation in writing with dates, review it weekly, and offer support. If the pattern continues, talk to HR about the proper next step.","Dengan staf sendiri, jelaskan dahulu sebelum bawa ke atas. Tulis jangkaan dengan tarikh, semak setiap minggu, dan tawarkan sokongan. Jika corak itu berterusan, bincang dengan HR tentang langkah seterusnya yang betul.")},
+ up:{need:L("To deliver [goal], I need your [decision or support] on [what] by [when].","Untuk capai [matlamat], saya perlukan [keputusan atau sokongan] tuan tentang [apa] sebelum [bila]."),
+     next:L("So I will go ahead with [option] and update you on [day]. Is that right?","Jadi saya akan teruskan dengan [pilihan] dan beri kemas kini pada [hari]. Betul begitu?"),
+     esc:L("Going above your manager is the last resort. First ask once more with facts and options. If it still blocks important work, ask a trusted senior person or HR for advice, and tell your manager that you are doing so.","Pergi ke pihak lebih atas ialah pilihan terakhir. Mula-mula, minta sekali lagi dengan fakta dan pilihan. Jika ia masih menghalang kerja penting, minta nasihat orang kanan yang dipercayai atau HR, dan beritahu ketua anda bahawa anda berbuat demikian.")}
+};
+
+/* ---------- 8. Fixed screen text ---------- */
+const T={
+ app:L("Habits Coach","Jurulatih Tabiat"),
+ intro:L("Pick a situation. Find out why it happens before you react.","Pilih satu situasi. Ketahui kenapa ia berlaku sebelum anda bertindak balas."),
+ mine:L("My cases","Kes saya"), whoabout:L("Who is it about?","Tentang siapa?"), pick:L("What is happening?","Apa yang berlaku?"),
+ st_open:L("Open","Terbuka"), st_tried:L("Tried","Dicuba"), st_resolved:L("Resolved","Selesai"),
+ h_q:L("Answering questions","Sedang menjawab soalan"), h_why:L("See the likely reason","Lihat punca yang mungkin"), h_respond:L("Preparing the response","Menyediakan respons"), h_react:L("Tell me how it went","Beritahu bagaimana ia berjalan"), h_done:L("Closed","Ditutup"),
+ pause:L("Pause first","Berhenti sejenak"),
+ pause_t:L("Before the questions, separate what happened from what you think it means.","Sebelum soalan, asingkan apa yang berlaku daripada apa yang anda fikir maksudnya."),
+ fact:L("Fact","Fakta"), lab:L("Label","Label"),
+ pause_n:L("A fact can be checked. A label is a judgement, and it closes the door to finding out why.","Fakta boleh disemak. Label ialah penghakiman, dan ia menutup pintu untuk mencari punca."),
+ lbl:L("Name this case (optional)","Namakan kes ini (pilihan)"), lbl_p:L("e.g. Report data, AZ","cth. Data laporan, AZ"),
+ lbl_n:L("Use initials or a nickname, not a full name.","Guna singkatan atau nama panggilan, bukan nama penuh."),
+ start:L("Start the questions","Mula soalan"), of:L("of","daripada"),
+ why1:L("Likely why","Kemungkinan punca"), why2:L("Also possible","Mungkin juga"), reframe:L("See it this way","Lihat begini"),
+ flat:L("Your answers do not point to one clear cause, so start by checking your own part and asking them directly.","Jawapan anda tidak menunjuk kepada satu punca yang jelas, jadi mula dengan menyemak bahagian anda sendiri dan bertanya terus kepada mereka."),
+ guess:L("This is a likely reason, not a verdict. The first step is to confirm it with them.","Ini punca yang mungkin, bukan keputusan muktamad. Langkah pertama ialah mengesahkannya dengan mereka."),
+ torespond:L("How to respond","Cara memberi respons"), other:L("Not this. Show the next reason","Bukan ini. Tunjuk punca seterusnya"),
+ calm:L("Am I calm enough to talk now?","Adakah saya cukup tenang untuk berbincang sekarang?"), calm_a:L("Yes, I can listen","Ya, saya boleh mendengar"), calm_b:L("Not yet","Belum lagi"),
+ reset:L("Not now, and that is fine","Bukan sekarang, dan itu tidak mengapa"),
+ reset_l:[L("Breathe out slowly five times.","Hembus nafas perlahan lima kali."),L("Write down what you saw, not what you felt.","Tulis apa yang anda lihat, bukan apa yang anda rasa."),L("Talk when you are ready to listen, not to win.","Berbincang apabila anda bersedia untuk mendengar, bukan untuk menang.")],
+ calmnow:L("I am calm now, continue","Saya sudah tenang, teruskan"), later:L("Save and come back later","Simpan dan kembali kemudian"),
+ s_open:L("Open by understanding","Buka dengan memahami"), s_need:L("Say your need clearly","Nyatakan keperluan dengan jelas"), s_win:L("Find the win for both","Cari kemenangan untuk kedua-dua pihak"), s_next:L("Agree the next step","Setuju langkah seterusnya"),
+ sayit:L("What to say","Apa yang perlu dikata"), brackets:L("Replace the [brackets] with your details.","Gantikan [kurungan] dengan butiran anda."),
+ copy:L("Copy","Salin"), copied:L("Copied","Disalin"), next:L("Next","Seterusnya"), step:L("Step","Langkah"),
+ ready:L("You are ready","Anda sudah bersedia"), avoid:L("Avoid saying","Elakkan berkata"), avoid_s:L("Avoid telling yourself","Elakkan berkata kepada diri sendiri"),
+ asmsg:L("Sending a message instead?","Mahu hantar mesej sahaja?"), remember:L("Remember","Ingat"),
+ savego:L("Save. I will come back after","Simpan. Saya akan kembali selepas itu"), savego_n:L("After you have talked to them, open this case from the home screen and tell me how it went.","Selepas anda berbincang dengan mereka, buka kes ini dari skrin utama dan beritahu bagaimana ia berjalan."),
+ savego_ns:L("After you have tried it, open this case from the home screen and tell me how it went.","Selepas anda mencubanya, buka kes ini dari skrin utama dan beritahu bagaimana ia berjalan."),
+ react:L("How did they react?","Bagaimana reaksi mereka?"), react_a:L("They opened up","Mereka terbuka"), react_b:L("Defensive, or avoided it","Defensif, atau mengelak"),
+ react_s:L("Did it help?","Adakah ia membantu?"), react_sa:L("Yes, it is better","Ya, lebih baik"), react_sb:L("Not really","Tidak begitu"),
+ again:L("See the steps again","Lihat langkah semula"),
+ good:L("Good. Now follow through","Bagus. Sekarang teruskan"),
+ good_l:[L("Do what you promised, on time.","Buat apa yang anda janji, tepat pada masa."),L("Thank them for being open.","Ucap terima kasih kerana mereka terbuka."),L("Check in once on the agreed date.","Semak sekali pada tarikh yang dipersetujui."),L("Note what worked, for next time.","Catat apa yang berkesan, untuk lain kali.")],
+ good_s:L("Good. Keep the one thing that worked and repeat it this week.","Bagus. Kekalkan satu perkara yang berkesan dan ulang minggu ini."),
+ retry:L("Try once more, softer","Cuba sekali lagi, lebih lembut"), retry_s:L("Try a different angle","Cuba sudut lain"),
+ nextr:L("Try the next likely reason","Cuba punca seterusnya"), esc:L("When to escalate","Bila perlu bawa ke atas"),
+ close:L("Save and close","Simpan dan tutup"), home:L("Back to home","Kembali ke utama"), del:L("Delete this case","Padam kes ini"), del_q:L("Delete this case?","Padam kes ini?"),
+ data:L("Backup and data","Sandaran dan data"),
+ data_t:L("Cases are saved in this browser on this phone only. Nothing is sent anywhere. If you clear browser data, the cases are deleted, so export a backup first.","Kes disimpan dalam pelayar pada telefon ini sahaja. Tiada apa dihantar ke mana-mana. Jika anda kosongkan data pelayar, kes akan terpadam, jadi eksport sandaran dahulu."),
+ exp:L("Export backup file","Eksport fail sandaran"), imp:L("Import backup file","Import fail sandaran"), imp_q:L("Replace the cases on this phone with the backup?","Gantikan kes dalam telefon ini dengan sandaran?"), imp_ok:L("Backup imported","Sandaran diimport"), imp_bad:L("This file is not a valid backup","Fail ini bukan sandaran yang sah"),
+ clear:L("Delete all cases","Padam semua kes"), clear_q:L("Delete all cases on this phone?","Padam semua kes dalam telefon ini?"), nocase:L("No cases saved yet.","Belum ada kes disimpan."),
+ a2hs:L("Tip: add this page to your home screen from the browser menu to open it like an app.","Petua: tambah halaman ini ke skrin utama dari menu pelayar untuk membukanya seperti aplikasi."),
+ credit:L("Inspired by the seven habits framework of Stephen R. Covey. Own wording, not affiliated. A thinking aid, not professional advice.","Diilhamkan oleh rangka kerja tujuh tabiat Stephen R. Covey. Perkataan sendiri, tiada kaitan rasmi. Alat bantu berfikir, bukan nasihat profesional.")
+};
+
+/* =====================================================================
+   9. State and storage
+   ===================================================================== */
+const KEY="habitsCoach.v1";
+let S={lang:"en",cases:[]};      // saved state
+let V={name:"home"};             // current screen
+let C=null;                      // current case
+let COPY=[];                     // texts for the copy buttons on this screen
+try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&Array.isArray(r.cases))S=r;}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+const t=x=>x[S.lang==="bm"?1:0];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $=id=>document.getElementById(id);
+const isSelf=c=>CAT[c.cat].tone==="self";
+
+/* ---------- Question queue: follow-up questions are inserted after the answer that triggers them ---------- */
+function queue(c){
+  const q=[...SIT[c.sit].q];
+  for(let i=0;i<c.ans.length&&i<q.length;i++){
+    const f=Q[q[i]][c.ans[i]].f;
+    if(f&&!q.includes(f))q.splice(i+1,0,f);
+  }
+  return q;
+}
+/* ---------- Scoring: add the points of every answer, highest cause first ---------- */
+function rank(c){
+  const order=isSelf(c)?SORDER:ORDER, def=isSelf(c)?SDEF:DEF, sc={}, q=queue(c);
+  order.forEach(k=>sc[k]=0);
+  c.ans.forEach((a,i)=>{const p=Q[q[i]][a].p;for(const k in p)sc[k]+=p[k];});
+  const top=Math.max(...order.map(k=>sc[k]));
+  c.flat=top===0;
+  c.rank=c.flat?def.concat(order.filter(k=>!def.includes(k))):order.slice().sort((x,y)=>sc[y]-sc[x]);
+  c.second=!c.flat&&sc[c.rank[1]]>0;
+  c.ci=0;
+}
+/* ---------- Response steps for the current cause ---------- */
+function steps(c){
+  const cz=CAUSE[c.rank[c.ci]], tone=CAT[c.cat].tone;
+  if(tone==="self")return cz.steps.map(s=>({h:s[0],t:s[1],x:s[2],say:false}));
+  return [{h:5,t:T.s_open,x:cz.open[tone],say:true},{h:2,t:T.s_need,x:TONE[tone].need,say:true},
+          {h:4,t:T.s_win,x:cz.win,say:true},{h:3,t:T.s_next,x:TONE[tone].next,say:true}];
+}
+/* ---------- Which screen a saved case should open on ---------- */
+function viewOf(c){
+  if(c.stage==="q")return "q";
+  if(c.stage==="why")return "why";
+  if(c.stage==="respond")return c.step<0?"calm":c.step>=steps(c).length?"ready":"step";
+  if(c.stage==="react")return "react";
+  return "good";
+}
+const go=n=>{V={name:n};render();};
+const goCase=()=>{save();go(viewOf(C));};
+
+/* =====================================================================
+   10. Screens
+   ===================================================================== */
+const row=(a,b,small,right)=>`<button class="row" data-a="${a}"><span class="g"><b>${b}</b>${small?`<small>${small}</small>`:""}</span>${right||'<span class="chev">&#8250;</span>'}</button>`;
+const ab=(a,k,txt)=>`<button class="ab" data-a="${a}"><i>${k}</i><span>${txt}</span></button>`;
+const sayBox=(txt,cls)=>{COPY.push(txt);return `<div class="say ${cls||""}">${esc(txt)}</div>`;};
+const copyBtn=()=>`<button class="cp" data-a="copy:${COPY.length-1}">${t(T.copy)}</button>`;
+const fmtDate=ts=>new Date(ts).toLocaleDateString(S.lang==="bm"?"ms-MY":"en-GB",{day:"numeric",month:"short"});
+
+function render(){
+  COPY=[];let h="";const v=V.name;
+  document.documentElement.lang=S.lang==="bm"?"ms":"en";
+  $("ttl").textContent=t(T.app);$("lang").textContent=S.lang==="bm"?"EN":"BM";$("back").hidden=v==="home";
+  $("homeb").hidden=v==="home";                    // Home button: leave to the home screen from anywhere, the case stays saved
+  $("homeb").setAttribute("aria-label",t(T.home));
+
+  if(v==="home"){
+    h+=`<h2>${t(T.intro)}</h2>`;
+    if(S.cases.length){
+      h+=`<h3>${t(T.mine)}</h3>`;
+      S.cases.slice().sort((a,b)=>b.ts-a.ts).forEach(c=>{
+        const hint=t(T["h_"+(c.stage==="done"?"done":c.stage)]);
+        h+=row("open:"+c.id,esc(c.label||t(SIT[c.sit].n)),`${t(CAT[c.cat].n)} · ${fmtDate(c.ts)} · ${hint}`,`<span class="chip ${c.status}">${t(T["st_"+c.status])}</span>`);
+      });
+    }
+    h+=`<h3>${t(T.whoabout)}</h3>`;
+    for(const k in CAT)h+=row("cat:"+k,t(CAT[k].n),t(CAT[k].d));
+    h+=`<button class="btn txt" data-a="data">${t(T.data)}</button><p class="mute">${t(T.a2hs)}</p><p class="mute">${t(T.credit)}</p>`;
+  }
+
+  else if(v==="cat"){
+    h+=`<span class="tag">${t(CAT[V.cat].n)}</span><h2>${t(T.pick)}</h2>`;
+    for(const k in SIT)if(SIT[k].c===V.cat)h+=row("sit:"+k,t(SIT[k].n));
+  }
+
+  else if(v==="pause"){
+    const s=SIT[V.sit];
+    h+=`<span class="tag">${t(HABIT[1])}</span><h2>${t(T.pause)}</h2><p>${t(T.pause_t)}</p>
+    <div class="card"><p class="mute">${t(T.fact)}</p><div class="say">${t(s.fact)}</div><p class="mute">${t(T.lab)}</p><div class="say no" style="margin-bottom:0">${t(s.label)}</div></div>
+    <p class="mute">${t(T.pause_n)}</p>
+    <h3><label for="lbl">${t(T.lbl)}</label></h3><input type="text" id="lbl" maxlength="30" placeholder="${t(T.lbl_p)}" autocomplete="off"><p class="mute" style="margin-top:6px">${t(T.lbl_n)}</p>
+    <button class="btn" data-a="start">${t(T.start)}</button>`;
+  }
+
+  else if(v==="q"){
+    const q=queue(C), i=C.ans.length, qq=Q[q[i]];
+    h+=`<p class="mute">${esc(C.label||t(SIT[C.sit].n))} · ${i+1} ${t(T.of)} ${q.length}</p><div class="prog"><div style="width:${Math.round(i/q.length*100)}%"></div></div>
+    <h2>${t(qq.q)}</h2>${ab("ans:a","A",t(qq.a.t))}${ab("ans:b","B",t(qq.b.t))}`;
+  }
+
+  else if(v==="why"){
+    const cz=CAUSE[C.rank[C.ci]];
+    h+=`<span class="tag">${t(HABIT[5])}</span>`;
+    if(C.flat&&C.ci===0)h+=`<p class="mute">${t(T.flat)}</p>`;
+    h+=`<div class="card warm"><p class="mute">${t(T.why1)}</p><h2>${t(cz.n)}</h2><p style="margin:0">${t(cz.why)}</p></div>
+    <div class="card"><p class="mute">${t(T.reframe)}</p><p style="margin:0">${t(cz.re)}</p></div>`;
+    if(C.second&&C.ci===0)h+=`<p class="mute">${t(T.why2)}: <b>${t(CAUSE[C.rank[1]].n)}</b></p>`;
+    h+=`<p class="mute">${t(T.guess)}</p><button class="btn" data-a="respond">${t(T.torespond)}</button><button class="btn sec" data-a="nextr">${t(T.other)}</button>`;
+  }
+
+  else if(v==="calm"){
+    h+=`<span class="tag">${t(HABIT[1])}</span><h2>${t(T.calm)}</h2>${ab("calm:a","A",t(T.calm_a))}${ab("calm:b","B",t(T.calm_b))}`;
+  }
+
+  else if(v==="reset"){
+    h+=`<span class="tag">${t(HABIT[1])}</span><h2>${t(T.reset)}</h2><div class="card"><ul>${T.reset_l.map(x=>`<li>${t(x)}</li>`).join("")}</ul></div>
+    <button class="btn" data-a="calm:a">${t(T.calmnow)}</button><button class="btn sec" data-a="home">${t(T.later)}</button>`;
+  }
+
+  else if(v==="step"){
+    const st=steps(C), s=st[C.step];
+    h+=`<p class="mute">${t(T.step)} ${C.step+1} ${t(T.of)} ${st.length} · ${t(CAUSE[C.rank[C.ci]].n)}</p><div class="prog"><div style="width:${Math.round((C.step+1)/st.length*100)}%"></div></div>
+    <span class="tag">${t(HABIT[s.h])}</span><h2>${t(s.t)}</h2>`;
+    if(s.say)h+=`<div class="card"><p class="mute">${t(T.sayit)}</p>${sayBox(t(s.x))}${copyBtn()}</div>${/\[/.test(t(s.x))?`<p class="mute">${t(T.brackets)}</p>`:""}`;
+    else h+=`<div class="card"><p style="margin:0;font-size:19px">${t(s.x)}</p></div>`;
+    h+=`<button class="btn" data-a="next">${t(T.next)}</button>`;
+  }
+
+  else if(v==="ready"){
+    const cz=CAUSE[C.rank[C.ci]], self=isSelf(C);
+    h+=`<h2>${t(T.ready)}</h2><div class="card"><p class="mute">${t(self?T.avoid_s:T.avoid)}</p><div class="say no" style="margin-bottom:0">${t(cz.avoid)}</div></div>`;
+    if(!self)h+=`<div class="card"><p class="mute">${t(T.asmsg)}</p>${sayBox(t(cz.msg))}${copyBtn()}</div>`;
+    h+=`<div class="card warm"><p class="mute">${t(T.remember)}</p><p style="margin:0">${t(CAT[C.cat].tip)}</p></div>
+    <button class="btn" data-a="savego">${t(T.savego)}</button><p class="mute" style="margin-top:10px">${t(self?T.savego_ns:T.savego_n)}</p>`;
+  }
+
+  else if(v==="react"){
+    const self=isSelf(C);
+    h+=`<p class="mute">${esc(C.label||t(SIT[C.sit].n))} · ${t(CAUSE[C.rank[C.ci]].n)}</p><h2>${t(self?T.react_s:T.react)}</h2>
+    ${ab("react:a","A",t(self?T.react_sa:T.react_a))}${ab("react:b","B",t(self?T.react_sb:T.react_b))}
+    <button class="btn txt" data-a="again">${t(T.again)}</button><button class="btn txt" data-a="del:${C.id}">${t(T.del)}</button>`;
+  }
+
+  else if(v==="good"){
+    const self=isSelf(C);
+    h+=`<span class="tag">${t(HABIT[7])}</span><h2>${t(self?T.st_resolved:T.good)}</h2>
+    <div class="card">${self?`<p style="margin:0">${t(T.good_s)}</p>`:`<ul style="margin:0">${T.good_l.map(x=>`<li>${t(x)}</li>`).join("")}</ul>`}</div>
+    <p class="mute">${t(T.why1)}: <b>${t(CAUSE[C.rank[C.ci]].n)}</b></p>
+    <button class="btn" data-a="home">${t(T.home)}</button><button class="btn txt" data-a="del:${C.id}">${t(T.del)}</button>`;
+  }
+
+  else if(v==="retry"){
+    const cz=CAUSE[C.rank[C.ci]], self=isSelf(C), nx=CAUSE[C.rank[(C.ci+1)%C.rank.length]];
+    h+=`<span class="tag">${t(HABIT[self?1:5])}</span><h2>${t(self?T.retry_s:T.retry)}</h2><div class="card"><p style="margin:0">${t(cz.retry)}</p></div>`;
+    if(V.esc)h+=`<div class="card warm"><p class="mute">${t(T.esc)}</p><p style="margin:0">${t(TONE[CAT[C.cat].tone].esc)}</p></div>`;
+    h+=`<button class="btn" data-a="nextr">${t(T.nextr)}: ${t(nx.n)}</button>`;
+    if(!self&&!V.esc)h+=`<button class="btn sec" data-a="esc">${t(T.esc)}</button>`;
+    h+=`<button class="btn txt" data-a="home">${t(T.close)}</button>`;
+  }
+
+  else if(v==="data"){
+    h+=`<h2>${t(T.data)}</h2><p>${t(T.data_t)}</p><p class="mute">${S.cases.length?S.cases.length+" "+t(T.mine).toLowerCase():t(T.nocase)}</p>
+    <button class="btn" data-a="exp">${t(T.exp)}</button><button class="btn sec" data-a="imp">${t(T.imp)}</button><button class="btn bad" data-a="clear">${t(T.clear)}</button>`;
+  }
+
+  $("app").innerHTML=h;
+  window.scrollTo(0,0);
+}
+
+/* =====================================================================
+   11. Actions
+   ===================================================================== */
+function toast(m){const e=$("toast");e.textContent=m;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),1500);}
+function copyText(s){
+  const ok=()=>toast(t(T.copied));
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(ok,()=>fallback());}else fallback();
+  function fallback(){const a=document.createElement("textarea");a.value=s;document.body.appendChild(a);a.select();try{document.execCommand("copy");ok();}catch(e){}a.remove();}
+}
+function removeCase(id){S.cases=S.cases.filter(c=>c.id!==id);save();}
+
+function act(a){
+  const i=a.indexOf(":"), name=i<0?a:a.slice(0,i), arg=i<0?"":a.slice(i+1);
+  switch(name){
+    case "lang": S.lang=S.lang==="bm"?"en":"bm";save();render();break;
+    case "home": save();C=null;go("home");break;
+    case "data": go("data");break;
+    case "cat": V={name:"cat",cat:arg};render();break;
+    case "sit": V={name:"pause",sit:arg,cat:SIT[arg].c};render();break;
+    case "start":                                  // create and save a new case
+      C={id:Date.now().toString(36),cat:SIT[V.sit].c,sit:V.sit,label:$("lbl").value.trim(),ts:Date.now(),ans:[],rank:[],ci:0,stage:"q",step:0,status:"open"};
+      S.cases.push(C);goCase();break;
+    case "ans":                                    // record A or B, then score when all are answered
+      C.ans.push(arg);
+      if(C.ans.length>=queue(C).length){rank(C);C.stage="why";}
+      goCase();break;
+    case "respond": C.stage="respond";C.step=isSelf(C)?0:-1;goCase();break;
+    case "calm": if(arg==="a"){C.step=0;goCase();}else go("reset");break;
+    case "next": C.step++;goCase();break;
+    case "savego": C.stage="react";save();C=null;go("home");break;
+    case "open": C=S.cases.find(c=>c.id===arg);if(C)go(viewOf(C));break;
+    case "again": C.stage="respond";C.step=0;goCase();break;
+    case "react":
+      if(arg==="a"){C.status="resolved";C.stage="done";goCase();}
+      else{C.status="tried";save();go("retry");}
+      break;
+    case "nextr": C.ci=(C.ci+1)%C.rank.length;C.stage="why";goCase();break;
+    case "esc": V={name:"retry",esc:true};render();break;
+    case "copy": copyText(COPY[+arg]);break;
+    case "del": if(confirm(t(T.del_q))){removeCase(arg);C=null;go("home");}break;
+    case "clear": if(S.cases.length&&confirm(t(T.clear_q))){S.cases=[];save();render();}break;
+    case "exp":{                                   // download the cases as a small JSON file
+      const b=new Blob([JSON.stringify(S,null,1)],{type:"application/json"}),u=URL.createObjectURL(b),l=document.createElement("a");
+      l.href=u;l.download="habits-coach-backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);break;}
+    case "imp": $("imp").click();break;
+    case "back": back();break;
+  }
+}
+/* ---------- Back button: one step back on every screen ---------- */
+function back(){
+  const v=V.name;
+  if(v==="cat"||v==="data"||v==="react"||v==="good")return act("home");
+  if(v==="pause"){V={name:"cat",cat:V.cat};return render();}
+  if(v==="q"){
+    if(C.ans.length){C.ans.pop();return goCase();}
+    const s=C.sit;removeCase(C.id);C=null;V={name:"pause",sit:s,cat:SIT[s].c};return render();   // nothing answered yet: drop the empty case
+  }
+  if(v==="why"){
+    if(C.ci>0){C.ci--;return goCase();}
+    C.ans.pop();C.stage="q";return goCase();
+  }
+  if(v==="calm"){C.stage="why";return goCase();}
+  if(v==="reset")return go("calm");
+  if(v==="step"){
+    if(C.step>0)C.step--;else if(!isSelf(C))C.step=-1;else C.stage="why";
+    return goCase();
+  }
+  if(v==="ready"){C.step=steps(C).length-1;return goCase();}
+  if(v==="retry")return go("react");
+  act("home");
+}
+
+/* ---------- Wire up ---------- */
+document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b)act(b.dataset.a);});
+$("imp").addEventListener("change",e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      const good=d&&Array.isArray(d.cases)&&d.cases.every(c=>c&&SIT[c.sit]&&CAT[c.cat]&&Array.isArray(c.ans)&&Array.isArray(c.rank)&&c.rank.every(k=>CAUSE[k]));
+      if(!good)throw 0;
+      if(confirm(t(T.imp_q))){S={lang:S.lang,cases:d.cases};save();C=null;go("home");toast(t(T.imp_ok));}
+    }catch(x){toast(t(T.imp_bad));}
+    e.target.value="";
+  };
+  r.readAsText(f);
+});
+/* Offline support: only works when the page is served over https (GitHub Pages) */
+if("serviceWorker" in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").catch(()=>{});
+render();
+</script>
+</body>
+</html>
