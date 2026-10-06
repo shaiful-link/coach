@@ -1,7 +1,7 @@
 /* Habits Coach offline support.
    Change the version number below every time you upload a new index.html,
    so phones pick up the new version. */
-const CACHE = "habits-coach-v9";
+const CACHE = "habits-coach-v10";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 
 self.addEventListener("install", e => {
