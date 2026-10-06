@@ -36,6 +36,11 @@ p{margin:0 0 12px}
 .row small{display:block;color:var(--mute);font-size:14px}
 .row .g{flex:1;min-width:0}
 .row .chev{color:var(--mute);font-size:20px}
+.crow{display:flex;gap:8px;align-items:stretch;margin-bottom:10px}
+.crow .row{flex:1;min-width:0;margin-bottom:0}
+.crow .row .chev{display:none}
+.del{flex:none;width:52px;display:grid;place-items:center;background:var(--card);color:var(--bad);border:1px solid var(--line);border-radius:14px;padding:0}
+.del:active{border-color:var(--bad)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
 .warm{background:var(--warm);color:var(--warm-ink);border-color:transparent}
 .warm .mute{color:inherit;opacity:.8}
@@ -437,8 +442,11 @@ function render(){
       h+=`<h3>${t(T.mine)}</h3>`;
       S.cases.slice().sort((a,b)=>b.ts-a.ts).forEach(c=>{
         const hint=t(T["h_"+(c.stage==="done"?"done":c.stage)]);
-        h+=row("open:"+c.id,esc(c.label||t(SIT[c.sit].n)),`${t(CAT[c.cat].n)} · ${fmtDate(c.ts)} · ${hint}`,`<span class="chip ${c.status}">${t(T["st_"+c.status])}</span>`);
+        // each case: the row opens it, the bin button beside it deletes it
+        h+=`<div class="crow">`+row("open:"+c.id,esc(c.label||t(SIT[c.sit].n)),`${t(CAT[c.cat].n)} · ${fmtDate(c.ts)} · ${hint}`,`<span class="chip ${c.status}">${t(T["st_"+c.status])}</span>`)
+          +`<button class="del" data-a="del:${c.id}" aria-label="${t(T.del)}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></svg></button></div>`;
       });
+      if(S.cases.length>1)h+=`<button class="btn txt" style="margin-top:0" data-a="clear">${t(T.clear)}</button>`;
     }
     h+=`<h3>${t(T.whoabout)}</h3>`;
     for(const k in CAT)h+=row("cat:"+k,t(CAT[k].n),t(CAT[k].d));
