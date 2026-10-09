@@ -12,15 +12,28 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
-/* ---------- Theme: blue background, white cards, dark text ---------- */
+/* ---------- Theme: white cards and dark text on a soft background that changes by section ---------- */
 :root{--bg:#c5daf0;--bg2:#d0e1f3;--card:#ffffff;--ink:#1c2836;--mute:#44535f;--line:#a9c1da;--acc:#2c5c88;--acc-ink:#fff;--soft:#e1ecf7;--warm:#fbefd9;--warm-ink:#4a3a22;--bad:#a04538;--shadow:0 1px 2px rgba(40,65,95,.10),0 6px 18px rgba(40,65,95,.10)}
 @media (prefers-color-scheme:dark){:root{--bg:#10161d;--bg2:#121820;--card:#222d3a;--ink:#f0f4f8;--mute:#b3c0cd;--line:#3b4a5b;--acc:#a3c9ec;--acc-ink:#0f1c29;--soft:#2f3e4f;--warm:#40382a;--warm-ink:#f5e6c8;--bad:#f0a898;--shadow:0 1px 2px rgba(0,0,0,.3)}}
+/* Section backgrounds: home = blue, questions = teal, likely why = lavender, respond = green, follow-up = peach, data = grey */
+:root[data-sec=q]{--bg:#c4e3de;--line:#9fcac3}
+:root[data-sec=why]{--bg:#d9d3ef;--line:#b9b0de}
+:root[data-sec=respond]{--bg:#cde5cf;--line:#a8cfab}
+:root[data-sec=follow]{--bg:#f2d9c6;--line:#ddbba1}
+:root[data-sec=data]{--bg:#d9dee5;--line:#b9c3cf}
+@media (prefers-color-scheme:dark){
+:root[data-sec=q]{--bg:#0e1b1b;--line:#2f4a48}
+:root[data-sec=why]{--bg:#171429;--line:#40395f}
+:root[data-sec=respond]{--bg:#0f1b12;--line:#33503a}
+:root[data-sec=follow]{--bg:#20160f;--line:#5a4332}
+:root[data-sec=data]{--bg:#15181c;--line:#3a4048}
+}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html{-webkit-text-size-adjust:100%;background:var(--bg)}
-body{margin:0;min-height:100vh;min-height:100dvh;background:linear-gradient(180deg,var(--bg),var(--bg2)) fixed;color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;background:var(--bg);transition:background-color .35s}
+body{margin:0;min-height:100vh;min-height:100dvh;background:var(--bg);transition:background-color .35s;color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
 /* ---------- Top bar ---------- */
-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:var(--bg)}
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:var(--bg);transition:background-color .35s}
 header h1{flex:1;margin:0;font-size:16px;font-weight:600;letter-spacing:.02em;color:var(--ink)}
 .ib{border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:50%;width:44px;height:44px;padding:0;font:inherit;font-size:14px;font-weight:600;box-shadow:var(--shadow)}
 main{max-width:560px;margin:0 auto;padding:14px 18px calc(40px + env(safe-area-inset-bottom))}
@@ -69,7 +82,7 @@ ul{margin:0 0 12px;padding-left:20px}
 li{margin-bottom:8px}
 #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 20px;border-radius:999px;font-size:15px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s}
 #toast.on{opacity:1}
-@media (prefers-reduced-motion:reduce){#toast,button{transition:none}}
+@media (prefers-reduced-motion:reduce){#toast,button,html,body,header{transition:none}}
 </style>
 </head>
 <body>
@@ -181,82 +194,106 @@ const SIT={
  s1:sit("self",L("I keep putting off an important task","Saya asyik menangguh tugasan penting"),L("I moved this task to tomorrow four days in a row.","Saya tangguh tugasan ini ke esok empat hari berturut-turut."),L("I am lazy.","Saya malas."),["sq1","sq5","sq6","sq3"]),
  s2:sit("self",L("I feel overwhelmed","Saya rasa terbeban"),L("I have 14 open items and worked late three nights.","Saya ada 14 perkara tertunggak dan kerja lewat tiga malam."),L("I can't cope.","Saya tidak mampu."),["sq2","sq4","sq6","sq8"]),
  s3:sit("self",L("I reacted badly and regret it","Saya bertindak balas dengan buruk dan menyesal"),L("I raised my voice in the meeting.","Saya meninggikan suara dalam mesyuarat."),L("I am a bad person.","Saya orang yang teruk."),["sq3","sq4","sq2","sq7"]),
- s4:sit("self",L("I have lost motivation","Saya hilang motivasi"),L("I have not started anything new for two weeks.","Saya tidak memulakan apa-apa yang baru selama dua minggu."),L("I am useless.","Saya tidak berguna."),["sq7","sq1","sq8","sq4"])
+ s4:sit("self",L("I have lost motivation","Saya hilang motivasi"),L("I have not started anything new for two weeks.","Saya tidak memulakan apa-apa yang baru selama dua minggu."),L("I am useless.","Saya tidak berguna."),["sq7","sq1","sq8","sq4"]),
+ p5:sit("peer",L("Often late for or misses our meetings","Selalu lewat atau tidak hadir mesyuarat kami"),L("They joined late for three of the last four meetings.","Mereka masuk lewat dalam tiga daripada empat mesyuarat terakhir."),L("They don't respect my time.","Mereka tak hormat masa saya."),["who", "load", "benefit", "how"]),
+ p6:sit("peer",L("Rejects my ideas in front of others","Menolak idea saya di depan orang lain"),L("In the meeting, they said my proposal would not work before I finished explaining.","Dalam mesyuarat, mereka kata cadangan saya tak akan berjaya sebelum saya habis terangkan."),L("They want to make me look bad.","Mereka nak jatuhkan saya."),["who", "listen", "facts", "measure"]),
+ p7:sit("peer",L("Passes their work to me","Menolak kerja mereka kepada saya"),L("Twice this month they asked me to finish their part.","Dua kali bulan ini mereka minta saya siapkan bahagian mereka."),L("They are taking advantage of me.","Mereka ambil kesempatan atas saya."),["load", "done", "process", "new"]),
+ p8:sit("peer",L("Replies late or ignores my messages","Lambat balas atau tidak balas mesej saya"),L("Three messages this week had no reply after two days.","Tiga mesej minggu ini tiada balasan selepas dua hari."),L("They are ignoring me.","Mereka sengaja abaikan saya."),["who", "how", "load", "clear"]),
+ r5:sit("report",L("Keeps repeating the same mistakes","Asyik mengulang kesilapan yang sama"),L("The same error appeared in three reports this month.","Kesilapan yang sama muncul dalam tiga laporan bulan ini."),L("They are careless.","Mereka cuai."),["done", "clear", "load", "tools"]),
+ r6:sit("report",L("Often comes late or is absent","Selalu datang lewat atau tidak hadir"),L("They came late four times in the last two weeks.","Mereka datang lewat empat kali dalam dua minggu lepas."),L("They have no discipline.","Mereka tiada disiplin."),["new", "say", "safe", "load"]),
+ r7:sit("report",L("Does not speak up in meetings","Tidak bersuara dalam mesyuarat"),L("They said nothing in the last three team meetings.","Mereka tidak berkata apa-apa dalam tiga mesyuarat pasukan terakhir."),L("They have no ideas.","Mereka tiada idea."),["safe", "who", "listen", "done"]),
+ r8:sit("report",L("Two team members are in conflict","Dua ahli pasukan berkonflik"),L("Two of my staff have not spoken to each other this week.","Dua staf saya tidak bercakap antara satu sama lain minggu ini."),L("They are being childish.","Mereka berperangai macam budak-budak."),["process", "measure", "new", "listen"]),
+ m5:sit("manager",L("Gives unclear instructions","Memberi arahan yang tidak jelas"),L("The request was one line, with no deadline or expected output.","Arahan itu satu baris sahaja, tanpa tarikh akhir atau hasil yang dijangka."),L("They don't know how to explain.","Mereka tak pandai terangkan."),["pressure", "context", "how", "process"]),
+ m6:sit("manager",L("Criticises me in front of others","Menegur saya di depan orang lain"),L("They pointed out my mistake in front of the whole team.","Mereka sebut kesilapan saya di depan seluruh pasukan."),L("They want to embarrass me.","Mereka nak malukan saya."),["who", "new", "pressure", "update"]),
+ m7:sit("manager",L("Gives work at the last minute","Memberi kerja pada saat akhir"),L("Three urgent tasks came in after 5 pm this month.","Tiga tugasan segera masuk selepas pukul 5 petang bulan ini."),L("They don't care about my time.","Mereka tak kisah masa saya."),["pressure", "process", "update", "who"]),
+ m8:sit("manager",L("Does not recognise my work","Tidak menghargai kerja saya"),L("My project was presented without mentioning my part.","Projek saya dibentangkan tanpa menyebut bahagian saya."),L("They don't appreciate me.","Mereka tak hargai saya."),["update", "facts", "who", "pressure"]),
+ d5:sit("dept",L("Changes the request after agreeing","Menukar permintaan selepas bersetuju"),L("The request changed twice after the scope was confirmed.","Permintaan berubah dua kali selepas skop disahkan."),L("They keep changing their minds.","Mereka asyik tukar fikiran."),["agree", "pressure", "context", "process"]),
+ d6:sit("dept",L("Goes straight to my manager, not to me","Terus pergi kepada ketua saya, bukan saya"),L("They raised the issue with my manager before talking to me.","Mereka bangkitkan isu itu kepada ketua saya sebelum bercakap dengan saya."),L("They are going behind my back.","Mereka main belakang."),["who", "listen", "update", "process"]),
+ d7:sit("dept",L("Does not attend our meetings","Tidak hadir mesyuarat kami"),L("No one from that team attended the last three meetings.","Tiada wakil pasukan itu hadir dalam tiga mesyuarat terakhir."),L("They don't take us seriously.","Mereka tak ambil serius tentang kami."),["benefit", "load", "clear", "measure"]),
+ d8:sit("dept",L("We disagree on who owns the task","Tidak sepakat siapa pemilik tugasan"),L("Both teams said the task belongs to the other.","Kedua-dua pasukan kata tugasan itu milik pasukan satu lagi."),L("They are pushing work away.","Mereka tolak kerja."),["process", "measure", "tools", "agree"]),
+ e5:sit("ext",L("Supplier quality keeps failing","Kualiti pembekal asyik gagal"),L("Two of the last four lots were rejected at incoming inspection.","Dua daripada empat lot terakhir ditolak semasa pemeriksaan masuk."),L("They are careless.","Mereka cuai."),["clear", "tools", "new", "say"]),
+ e6:sit("ext",L("Supplier raises the price suddenly","Pembekal menaikkan harga secara tiba-tiba"),L("They announced a price increase effective next month.","Mereka umumkan kenaikan harga berkuat kuasa bulan depan."),L("They are taking advantage of us.","Mereka ambil kesempatan atas kami."),["pressure", "context", "benefit", "new"]),
+ e7:sit("ext",L("Customer pays late","Pelanggan lewat membayar"),L("Three invoices are more than 30 days overdue.","Tiga invois sudah lewat lebih 30 hari."),L("They don't want to pay.","Mereka tak mahu bayar."),["process", "clear", "new", "pressure"]),
+ e8:sit("ext",L("Goes over my head to my superior","Melangkau saya terus kepada pihak atasan"),L("They emailed my director without copying me.","Mereka emel pengarah saya tanpa salinan kepada saya."),L("They don't respect me.","Mereka tak hormat saya."),["who", "update", "listen", "facts"]),
+ s5:sit("self",L("I find it hard to say no","Saya susah nak kata tidak"),L("I accepted four extra requests this week.","Saya terima empat permintaan tambahan minggu ini."),L("I am a pushover.","Saya mudah dipijak."),["sq2", "sq7", "sq4", "sq6"]),
+ s6:sit("self",L("I keep avoiding a difficult conversation","Saya asyik mengelak perbualan yang sukar"),L("I postponed this conversation three times.","Saya tangguh perbualan ini tiga kali."),L("I am a coward.","Saya penakut."),["sq5", "sq1", "sq4", "sq3"]),
+ s7:sit("self",L("I keep working late","Saya asyik kerja sampai lewat"),L("I left after 8 pm on four days this week.","Saya balik selepas pukul 8 malam empat hari minggu ini."),L("I am bad at my job.","Saya tak pandai buat kerja."),["sq6", "sq2", "sq8", "sq4"]),
+ s8:sit("self",L("I take feedback badly","Saya sukar menerima teguran"),L("I went quiet and defensive after the review.","Saya jadi diam dan defensif selepas sesi semakan."),L("I am too sensitive.","Saya terlalu sensitif."),["sq3", "sq7", "sq4", "sq5"])
 };
 
-/* Spoken lines (open, win, avoid, msg, need, next) are written in everyday Malaysian style, not textbook. */
+/* Spoken lines (open, win, avoid, msg, need, next) use a normal Malaysian office register: not textbook, not pasar. */
 /* ---------- 5. Causes for other people: why it happens and how to open ----------
    open has three wordings: side (peer / other dept / external), down (my staff), up (my boss) */
 const CAUSE={
  unclear:{n:L("Unclear expectation","Jangkaan tidak jelas"),
   why:L("They may not be refusing. They may not know exactly what you need, by when, or how good is good enough.","Mereka mungkin bukan enggan. Mereka mungkin tidak tahu dengan tepat apa yang anda perlukan, bila, atau sebaik mana yang dikira cukup."),
   re:L("Not 'they won't do it', but 'we have not agreed what done looks like'.","Bukan 'mereka tak mahu buat', tetapi 'kita belum bersetuju bagaimana rupa siap'."),
-  open:{side:L("Eh, I think I wasn't clear just now. Can I check with you, what did you understand from my request?","Eh, rasa saya tak clear tadi. Nak check dengan awak, apa yang awak faham dari request saya?"),
-        down:L("I want to check if I explained clearly or not. Can you tell me back, what am I asking for?","Saya nak pastikan saya explain jelas ke tak. Cuba awak cerita balik, apa yang saya minta?"),
-        up:L("Boss, I want to make sure I got it right. For you, what does a good result look like?","Boss, saya nak pastikan saya faham betul. Bagi boss, hasil yang okay tu macam mana?")},
-  win:L("Let's just write it down: what, when, who. Then nobody needs to chase anybody.","Jom kita tulis je: apa, bila, siapa. Lepas tu tak payah siapa-siapa kejar."),
-  avoid:L("I told you already what.","Kan saya dah cakap."),
-  msg:L("Hi, sorry ah, I think I wasn't clear just now. I need [what] by [when], for [why]. Can or not? Anything not clear, just let me know.","Hai, sorry ya, rasa saya tak clear tadi. Saya perlukan [apa] sebelum [bila], untuk [sebab]. Boleh tak? Kalau ada yang tak jelas, bagitahu je."),
+  open:{side:L("I think I wasn't very clear earlier. Can I check what you understood from my request?","Saya rasa saya kurang jelas tadi. Boleh saya semak, apa yang awak faham daripada permintaan saya?"),
+        down:L("I just want to check that I explained it clearly. Could you tell me how you understand the request?","Saya nak pastikan penerangan saya jelas. Boleh awak terangkan semula, apa yang awak faham tentang permintaan ini?"),
+        up:L("I'd like to make sure I understood correctly. What would a good result look like for you?","Saya nak pastikan saya faham dengan betul. Hasil yang baik itu macam mana ya?")},
+  win:L("Let's write it down: what, by when, and who. That way nobody has to chase.","Apa kata kita tulis: apa, bila dan siapa. Jadi tak ada siapa perlu kejar."),
+  avoid:L("I already told you.","Saya dah beritahu tadi."),
+  msg:L("Hi, I think I wasn't very clear earlier. I need [what] by [when], for [why]. Is that okay? Let me know if anything is unclear.","Hai, saya rasa saya kurang jelas tadi. Saya perlukan [apa] sebelum [bila], untuk [sebab]. Boleh ke? Beritahu saya kalau ada yang kurang jelas."),
   retry:L("Put it in writing: one line each for what, when and who. Ask them to reply with what they will do.","Tulis secara bertulis: satu baris untuk apa, bila dan siapa. Minta mereka balas dengan apa yang mereka akan buat.")},
  priorities:{n:L("Competing priorities","Keutamaan bertembung"),
   why:L("They may not be refusing you. Something else, often from their own boss, comes first.","Mereka mungkin bukan menolak anda. Ada perkara lain, selalunya daripada ketua mereka sendiri, yang didahulukan."),
   re:L("Not 'they ignore me', but 'my request is losing to another priority'.","Bukan 'mereka abaikan saya', tetapi 'permintaan saya kalah kepada keutamaan lain'."),
-  open:{side:L("I know you've got a lot on your plate. What's taking up most of your time this week?","Saya tahu awak tengah banyak kerja. Minggu ni apa yang paling makan masa awak?"),
-        down:L("What are you handling right now? Which ones are clashing?","Sekarang awak tengah pegang kerja apa? Yang mana bertembung?"),
-        up:L("Boss, I can see everything is moving fast. This week, which one is most important for you?","Boss, saya nampak semua benda tengah laju. Minggu ni, yang mana paling penting bagi boss?")},
-  win:L("If I prepare [part] first, will it be faster for you? Or which date is more realistic?","Kalau saya siapkan [bahagian] dulu, lagi cepat tak untuk awak? Atau tarikh mana yang lebih realistik?"),
-  avoid:L("Five minutes only what.","Lima minit je kot."),
-  msg:L("Hi, I know you're busy. I need [what] by [when]. If that date cannot, which date can? I can prepare [part] first to make it faster.","Hai, saya tahu awak busy. Saya perlukan [apa] sebelum [bila]. Kalau tarikh tu tak sempat, bila yang boleh? Saya boleh siapkan [bahagian] dulu supaya cepat sikit."),
+  open:{side:L("I know you have a lot on your plate. What is taking most of your time this week?","Saya tahu awak banyak kerja sekarang. Minggu ini, apa yang paling banyak ambil masa awak?"),
+        down:L("What are you working on right now? Which tasks are competing for the same time?","Apa kerja yang awak sedang buat sekarang? Yang mana bertembung masa?"),
+        up:L("I can see things are moving fast. Which one is the top priority for you this week?","Saya nampak banyak perkara bergerak serentak. Minggu ini, yang mana paling utama?")},
+  win:L("If I prepare [part] first, would that make it faster for you? Or which date is realistic?","Kalau saya sediakan [bahagian] dulu, lebih cepat tak untuk awak? Atau tarikh mana yang realistik?"),
+  avoid:L("It only takes five minutes.","Lima minit saja."),
+  msg:L("Hi, I know you're busy. I need [what] by [when]. If that date is difficult, which date works for you? I can prepare [part] first to speed things up.","Hai, saya tahu awak sibuk. Saya perlukan [apa] sebelum [bila]. Kalau tarikh itu susah, tarikh mana yang sesuai? Saya boleh sediakan [bahagian] dulu supaya lebih cepat."),
   retry:L("Ask which date they can commit to, and take the smallest useful piece first. If it truly cannot fit, agree together who should decide the priority.","Tanya tarikh mana yang mereka boleh janji, dan ambil bahagian terkecil yang berguna dahulu. Jika memang tidak muat, setuju bersama siapa yang patut tentukan keutamaan.")},
  nowin:{n:L("No win for them","Tiada manfaat untuk mereka"),
   why:L("The task helps you but costs them time or risk. People put effort where they see a benefit.","Tugasan itu membantu anda tetapi memakan masa atau risiko mereka. Orang beri usaha di tempat mereka nampak manfaat."),
   re:L("Not 'they are selfish', but 'I have not shown what is in it for them'.","Bukan 'mereka pentingkan diri', tetapi 'saya belum tunjuk apa manfaatnya untuk mereka'."),
-  open:{side:L("I know this one is extra work for you. What would make it worth your time?","Saya tahu ni kerja tambahan untuk awak. Macam mana baru berbaloi untuk awak?"),
-        down:L("Which part of this feels like no benefit to you? Just tell me straight, it's okay.","Bahagian mana yang awak rasa tak ada faedah untuk awak? Cakap je terus, tak apa."),
-        up:L("Boss, I want this to help your targets also. Which of your goals should it support?","Boss, saya nak benda ni tolong target boss juga. Goal boss yang mana patut dia support?")},
-  win:L("How about like this: you get [benefit], I get [what I need]. Okay?","Macam mana kalau macam ni: awak dapat [manfaat], saya dapat [apa yang saya perlukan]. Okay tak?"),
-  avoid:L("This is your job what.","Ni memang kerja awak kan."),
-  msg:L("Hi, I know [what] is extra work for you. I want to find a way that helps you also, for example [benefit]. Can we talk 10 minutes?","Hai, saya tahu [apa] kerja tambahan untuk awak. Saya nak cari cara yang tolong awak juga, contohnya [manfaat]. Boleh kita sembang 10 minit?"),
+  open:{side:L("I understand this is extra work for you. What would make it worth your time?","Saya faham ini kerja tambahan untuk awak. Apa yang boleh buat ia berbaloi untuk awak?"),
+        down:L("Which part of this feels like it doesn't benefit you? You can be open with me.","Bahagian mana yang awak rasa tak memberi manfaat kepada awak? Awak boleh berterus terang dengan saya."),
+        up:L("I'd like this to support your targets as well. Which of your goals should it help?","Saya nak perkara ini turut menyokong sasaran jabatan. Matlamat yang mana patut ia bantu?")},
+  win:L("How about this: you get [benefit], and I get [what I need]. Does that work?","Macam mana kalau begini: awak dapat [manfaat], saya dapat [apa yang saya perlukan]. Okey tak?"),
+  avoid:L("It's your job.","Ini memang kerja awak."),
+  msg:L("Hi, I understand [what] is extra work for you. I'd like to find a way that helps you too, for example [benefit]. Can we talk for 10 minutes?","Hai, saya faham [apa] kerja tambahan untuk awak. Saya nak cari cara yang membantu awak juga, contohnya [manfaat]. Boleh kita bincang 10 minit?"),
   retry:L("Ask what they are measured on and link your request to it. If there is truly no benefit for them, ask for less, or let both managers set the priority.","Tanya apa yang mereka diukur dan kaitkan permintaan anda dengannya. Jika memang tiada manfaat untuk mereka, kurangkan permintaan, atau biar kedua-dua pengurus tentukan keutamaan.")},
  trust:{n:L("Trust or a past issue","Isu kepercayaan atau kisah lama"),
   why:L("The problem may be between the two of you, not the task. A past incident or low trust makes people hold back.","Masalahnya mungkin antara anda berdua, bukan tugasan itu. Kejadian lama atau kurang percaya membuat orang menahan diri."),
   re:L("Not 'they are difficult', but 'something between us needs repair'.","Bukan 'mereka susah', tetapi 'ada sesuatu antara kami yang perlu dibaiki'."),
-  open:{side:L("I feel like things are not so smooth between us, and maybe part of it is me. Can we talk a bit?","Saya rasa kita macam tak berapa smooth, dan mungkin ada salah saya juga. Boleh kita sembang kejap?"),
-        down:L("I want you to feel okay to tell me anything, even bad news. Is there anything I do that makes it hard?","Saya nak awak rasa okay nak bagitahu saya apa-apa, berita tak best pun tak apa. Ada tak benda saya buat yang buat awak susah nak cakap?"),
-        up:L("Boss, I want to work well with you. Did I do anything that made you less confident in me?","Boss, saya nak kerja elok dengan boss. Ada tak benda saya buat yang buat boss kurang yakin dengan saya?")},
-  win:L("Tell me one thing I can do differently. I'll also share one thing that would help me.","Bagitahu satu benda yang saya boleh ubah. Saya pun kongsi satu benda yang boleh tolong saya."),
-  avoid:L("What's your problem with me ah?","Awak ada masalah apa dengan saya?"),
-  msg:L("Hi, I feel like things between us are not so smooth, and I want to fix it. Free for coffee, 15 minutes?","Hai, saya rasa kita macam tak berapa smooth, saya nak betulkan. Free tak minum kopi 15 minit?"),
+  open:{side:L("I feel things haven't been smooth between us, and I may have a part in that. Can we talk about it?","Saya rasa hubungan kerja kita kurang lancar, dan mungkin saya pun ada silap. Boleh kita bincang sekejap?"),
+        down:L("I want you to feel comfortable telling me anything, including bad news. Is there anything I do that makes that difficult?","Saya nak awak selesa beritahu saya apa sahaja, termasuk berita kurang baik. Ada tak apa-apa yang saya buat yang menyukarkan awak?"),
+        up:L("I want us to work well together. Is there anything I did that affected your confidence in me?","Saya nak kerja kita berjalan dengan baik. Ada tak apa-apa yang saya buat yang menjejaskan keyakinan terhadap saya?")},
+  win:L("Tell me one thing I could do differently. I'll also share one thing that would help me.","Beritahu satu perkara yang saya boleh ubah. Saya juga akan kongsi satu perkara yang boleh membantu saya."),
+  avoid:L("What's your problem with me?","Apa masalah awak dengan saya?"),
+  msg:L("Hi, I feel things haven't been smooth between us and I'd like to fix that. Are you free for a coffee, about 15 minutes?","Hai, saya rasa hubungan kerja kita kurang lancar dan saya nak perbaikinya. Awak free tak untuk minum kopi, dalam 15 minit?"),
   retry:L("Do not push for an answer in one talk. Keep one small promise to them this week, then ask again. Trust returns through small kept promises.","Jangan desak jawapan dalam satu perbualan. Tunaikan satu janji kecil kepada mereka minggu ini, kemudian tanya semula. Kepercayaan pulih melalui janji kecil yang ditunaikan.")},
  skill:{n:L("Skill, confidence or information gap","Jurang kemahiran, keyakinan atau maklumat"),
   why:L("They may want to do it but not know how, or be afraid of doing it wrong. Many people hide this rather than ask.","Mereka mungkin mahu buat tetapi tidak tahu caranya, atau takut tersalah. Ramai orang menyembunyikannya daripada bertanya."),
   re:L("Not 'they are lazy', but 'they may be stuck and not saying so'.","Bukan 'mereka malas', tetapi 'mereka mungkin tersekat dan tidak memberitahu'."),
-  open:{side:L("Which part is the most tricky? First time I did it, I also got stuck.","Bahagian mana yang paling leceh? Saya pun stuck masa first time buat."),
-        down:L("Which part are you okay with, and which part you're not so sure?","Bahagian mana yang awak okay, bahagian mana yang awak kurang sure?"),
-        up:L("Boss, if I prepare the background and options first, will it be easier to decide?","Boss, kalau saya siapkan background dengan option dulu, senang sikit tak nak decide?")},
-  win:L("We do the first one together, then you try the next one and I check. Okay?","Yang first kita buat sama-sama, lepas tu awak cuba yang seterusnya, saya check. Okay?"),
-  avoid:L("So easy, anyone can do one.","Senang je ni, semua orang boleh buat."),
-  msg:L("Hi, about [what]: if any part is not clear or new to you, just tell me. I can go through the first one with you.","Hai, pasal [apa]: kalau ada bahagian yang tak clear atau baru bagi awak, bagitahu je. Saya boleh buat yang first sama-sama dengan awak."),
+  open:{side:L("Which part is the trickiest? I got stuck on it too the first time.","Bahagian mana yang paling rumit? Saya pun tersekat masa kali pertama buat."),
+        down:L("Which part are you comfortable with, and which part are you less sure about?","Bahagian mana yang awak yakin, dan bahagian mana yang awak kurang pasti?"),
+        up:L("Would it help if I prepare the background and options first, so it's easier to decide?","Kalau saya sediakan latar belakang dan pilihan dulu, adakah lebih mudah untuk buat keputusan?")},
+  win:L("Let's do the first one together, then you try the next one and I'll check. Okay?","Kita buat yang pertama sama-sama, lepas itu awak cuba yang seterusnya dan saya semak. Okey?"),
+  avoid:L("It's easy, anyone can do it.","Senang saja, semua orang boleh buat."),
+  msg:L("Hi, about [what]: if any part is unclear or new to you, just let me know. I can go through the first one with you.","Hai, tentang [apa]: kalau ada bahagian yang kurang jelas atau baru bagi awak, beritahu saya. Saya boleh buat yang pertama bersama awak."),
   retry:L("Break it into a smaller first step and show an example of a finished one. Check after the first step, not at the deadline.","Pecahkan kepada langkah pertama yang lebih kecil dan tunjuk satu contoh yang sudah siap. Semak selepas langkah pertama, bukan pada tarikh akhir.")},
  system:{n:L("System or process barrier","Halangan sistem atau proses"),
   why:L("The person may be willing, but the process, tool, access or approval is in the way. Anyone in that seat would behave the same.","Orang itu mungkin sanggup, tetapi proses, alat, akses atau kelulusan menjadi penghalang. Sesiapa di tempat itu akan berkelakuan sama."),
   re:L("Not 'they are slow', but 'the system makes this hard to do'.","Bukan 'mereka lambat', tetapi 'sistem menyukarkan perkara ini'."),
-  open:{side:L("On your side, what's blocking it? Maybe there's something in the process I can't see.","Kat pihak awak, apa yang sangkut? Mungkin ada benda dalam proses yang saya tak nampak."),
-        down:L("What's blocking you? Tools, access, approval, or waiting for someone?","Apa yang sangkut? Tools, access, approval, atau tunggu orang?"),
-        up:L("Boss, I think the problem is the process, not the people. Can I show you where it gets stuck?","Boss, saya rasa masalah dia kat proses, bukan orang. Boleh saya tunjuk kat mana dia sangkut?")},
-  win:L("If we settle this blocker together, both of us save time every time. Who else do we need to pull in?","Kalau kita settle sama-sama benda yang sangkut ni, dua-dua jimat masa setiap kali. Siapa lagi kita kena ajak?"),
-  avoid:L("Just find a way lah.","Cari jalan je lah."),
-  msg:L("Hi, I think [what] is stuck somewhere in the process. On your side, where does it stop? I want to help clear it.","Hai, saya rasa [apa] sangkut kat mana-mana dalam proses. Kat pihak awak, dia berhenti kat mana? Saya nak tolong settle."),
+  open:{side:L("What is holding it up on your side? There may be something in the process I'm not seeing.","Apa yang menghalang di pihak awak? Mungkin ada sesuatu dalam proses yang saya tak nampak."),
+        down:L("What is holding you up? Tools, access, approval, or waiting for someone?","Apa yang menghalang awak? Peralatan, akses, kelulusan, atau menunggu seseorang?"),
+        up:L("I think the issue is in the process, not the people. Can I show you where it gets stuck?","Saya rasa masalahnya pada proses, bukan pada orang. Boleh saya tunjukkan di mana ia tersekat?")},
+  win:L("If we fix this together, it saves both of us time every time. Who else should we involve?","Kalau kita selesaikan sama-sama, kita berdua jimat masa setiap kali. Siapa lagi yang perlu kita libatkan?"),
+  avoid:L("Just find a way.","Cari jalan sendiri."),
+  msg:L("Hi, I think [what] is stuck somewhere in the process. Where does it stop on your side? I'd like to help clear it.","Hai, saya rasa [apa] tersekat di mana-mana dalam proses. Di pihak awak, ia terhenti di mana? Saya nak bantu selesaikan."),
   retry:L("Go through the steps together and mark where it stops. Take that one blocker to the process owner, with an example.","Lalui langkah-langkah itu bersama dan tandakan di mana ia terhenti. Bawa satu halangan itu kepada pemilik proses, dengan contoh.")},
  mypart:{n:L("My own part","Bahagian saya sendiri"),
   why:L("How, when or where you asked may be part of it. A rushed message, a late request or a sharp tone can create resistance.","Cara, masa atau tempat anda meminta mungkin sebahagian puncanya. Mesej tergesa-gesa, permintaan lewat atau nada keras boleh menimbulkan penolakan."),
   re:L("Not 'what is wrong with them', but 'what can I change in how I ask'.","Bukan 'apa masalah mereka', tetapi 'apa yang saya boleh ubah dalam cara saya meminta'."),
-  open:{side:L("I think I rushed you the other day, sorry ah. Can I start again and explain properly?","Saya rasa hari tu saya gesa awak, sorry ya. Boleh saya start balik dan explain elok-elok?"),
-        down:L("Maybe I didn't give you enough time or details. What can I do differently to help you?","Mungkin saya tak bagi masa atau detail yang cukup. Apa yang saya boleh ubah supaya senang untuk awak?"),
-        up:L("Boss, I think I didn't explain properly last time. Can I get 10 minutes to go through it again?","Boss, rasa saya tak explain elok hari tu. Boleh bagi saya 10 minit untuk terangkan balik?")},
-  win:L("Tell me the best way and time to pass requests to you, I'll follow.","Bagitahu cara dan masa paling sesuai untuk saya bagi request kat awak, saya ikut."),
-  avoid:L("Sorry lah, but you also...","Sorry lah, tapi awak pun..."),
-  msg:L("Hi, sorry ah, my request just now was a bit rushed. Properly: I need [what] by [when] because [why]. What do you think?","Hai, sorry ya, request saya tadi kelam-kabut sikit. Yang betulnya: saya perlukan [apa] sebelum [bila] sebab [sebab]. Awak rasa macam mana?"),
+  open:{side:L("I think I rushed you the other day, sorry about that. Can I start again and explain properly?","Saya rasa saya terlalu mendesak hari itu, minta maaf. Boleh saya mula semula dan terangkan dengan betul?"),
+        down:L("I may not have given you enough time or detail. What could I do differently to make it easier for you?","Mungkin saya tak beri masa atau maklumat yang cukup. Apa yang saya boleh ubah supaya lebih mudah untuk awak?"),
+        up:L("I don't think I explained this well last time. Could I have 10 minutes to go through it again?","Saya rasa penerangan saya kurang jelas hari itu. Boleh saya ambil 10 minit untuk terangkan semula?")},
+  win:L("Let me know the best way and time to bring requests to you, and I'll follow that.","Beritahu saya cara dan masa yang paling sesuai untuk saya kemukakan permintaan, dan saya akan ikut."),
+  avoid:L("I'm sorry, but you also...","Saya minta maaf, tapi awak pun..."),
+  msg:L("Hi, sorry, my earlier request was a bit rushed. To be clear: I need [what] by [when] because [why]. What do you think?","Hai, maaf, permintaan saya tadi agak tergesa-gesa. Supaya jelas: saya perlukan [apa] sebelum [bila] kerana [sebab]. Apa pendapat awak?"),
   retry:L("Change one thing: the timing, the channel or the amount of notice. Ask them directly how they prefer to be asked.","Ubah satu perkara: masa, saluran atau tempoh notis. Tanya terus bagaimana mereka lebih suka diminta.")},
 
  /* ---------- 6. Causes for "Myself": steps are [habit number, title, what to do] ---------- */
@@ -312,14 +349,14 @@ const SORDER=["s_goal","s_prior","s_energy","s_control","s_skill"], SDEF=["s_ene
 
 /* ---------- 7. Wording that depends on who you talk to ---------- */
 const TONE={
- side:{need:L("I need [what] by [when], because [why]. Can or not?","Saya perlukan [apa] sebelum [bila], sebab [sebab]. Boleh tak?"),
-       next:L("Okay, so you do [action] by [date], I do [my action]. Can?","Okay, jadi awak buat [tindakan] sebelum [tarikh], saya buat [tindakan saya]. Boleh?"),
+ side:{need:L("I need [what] by [when], because [why]. Is that possible?","Saya perlukan [apa] sebelum [bila], kerana [sebab]. Boleh tak?"),
+       next:L("Okay, so you'll do [action] by [date], and I'll do [my action]. Agreed?","Okey, jadi awak buat [tindakan] sebelum [tarikh], dan saya buat [tindakan saya]. Setuju?"),
        esc:L("Escalate only when you have tried at least twice, the impact is real, and you have facts: dates, what was asked, what happened. Tell them first that you will raise it. Ask the managers to help set the priority, not to find who is wrong.","Bawa ke atas hanya apabila anda sudah cuba sekurang-kurangnya dua kali, kesannya nyata, dan anda ada fakta: tarikh, apa yang diminta, apa yang berlaku. Beritahu mereka dahulu bahawa anda akan bangkitkannya. Minta pengurus bantu tentukan keutamaan, bukan cari siapa yang salah.")},
- down:{need:L("What I need from you is [what] by [when]. Anything that might get in the way?","Saya perlukan [apa] dari awak sebelum [bila]. Ada apa-apa yang mungkin sangkut?"),
-       next:L("So what can you do by [date]? I'll check with you on [day], not before that.","Jadi apa yang awak boleh buat sebelum [tarikh]? Saya check dengan awak hari [hari], sebelum tu saya tak kacau."),
+ down:{need:L("What I need from you is [what] by [when]. Is there anything that might get in the way?","Saya perlukan [apa] daripada awak sebelum [bila]. Ada apa-apa yang mungkin menghalang?"),
+       next:L("So what can you get done by [date]? I'll check in with you on [day], not before.","Jadi apa yang awak boleh siapkan sebelum [tarikh]? Saya akan semak dengan awak pada [hari], bukan sebelum itu."),
        esc:L("With your own staff, clarify before you escalate. Put the expectation in writing with dates, review it weekly, and offer support. If the pattern continues, talk to HR about the proper next step.","Dengan staf sendiri, jelaskan dahulu sebelum bawa ke atas. Tulis jangkaan dengan tarikh, semak setiap minggu, dan tawarkan sokongan. Jika corak itu berterusan, bincang dengan HR tentang langkah seterusnya yang betul.")},
- up:{need:L("Boss, to deliver [goal], I need your [decision or support] on [what] by [when].","Boss, untuk capai [matlamat], saya perlukan [keputusan atau sokongan] boss pasal [apa] sebelum [bila]."),
-     next:L("Okay boss, so I proceed with [option] and update you on [day]. Correct?","Okay boss, jadi saya teruskan dengan [pilihan] dan update boss hari [hari]. Betul?"),
+ up:{need:L("To deliver [goal], I need your [decision or support] on [what] by [when].","Untuk capai [matlamat], saya perlukan [keputusan atau sokongan] tentang [apa] sebelum [bila]."),
+     next:L("So I'll proceed with [option] and update you on [day]. Is that right?","Jadi saya teruskan dengan [pilihan] dan beri update pada [hari]. Betul ya?"),
      esc:L("Going above your manager is the last resort. First ask once more with facts and options. If it still blocks important work, ask a trusted senior person or HR for advice, and tell your manager that you are doing so.","Pergi ke pihak lebih atas ialah pilihan terakhir. Mula-mula, minta sekali lagi dengan fakta dan pilihan. Jika ia masih menghalang kerja penting, minta nasihat orang kanan yang dipercayai atau HR, dan beritahu ketua anda bahawa anda berbuat demikian.")}
 };
 
@@ -431,12 +468,17 @@ const sayBox=(txt,cls)=>{COPY.push(txt);return `<div class="say ${cls||""}">${es
 const copyBtn=()=>`<button class="cp" data-a="copy:${COPY.length-1}">${t(T.copy)}</button>`;
 const fmtDate=ts=>new Date(ts).toLocaleDateString(S.lang==="bm"?"ms-MY":"en-GB",{day:"numeric",month:"short"});
 
+/* Which section each screen belongs to (sets the background colour) */
+const SEC={home:"home",cat:"home",pause:"q",q:"q",why:"why",calm:"respond",reset:"respond",step:"respond",ready:"respond",react:"follow",retry:"follow",good:"follow",data:"data"};
 function render(){
   COPY=[];let h="";const v=V.name;
   document.documentElement.lang=S.lang==="bm"?"ms":"en";
   $("ttl").textContent=t(T.app);$("lang").textContent=S.lang==="bm"?"EN":"BM";$("back").hidden=v==="home";
   $("homeb").hidden=v==="home";                    // Home button: leave to the home screen from anywhere, the case stays saved
   $("homeb").setAttribute("aria-label",t(T.home));
+  // background colour follows the section, and the phone status bar colour follows it too
+  document.documentElement.dataset.sec=SEC[v]||"home";
+  const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
 
   if(v==="home"){
     h+=`<h2>${t(T.intro)}</h2>`;
