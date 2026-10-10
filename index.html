@@ -13,20 +13,22 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
 /* ---------- Theme: white cards and dark text on a soft background that changes by section ---------- */
-:root{--bg:#c5daf0;--bg2:#d0e1f3;--card:#ffffff;--ink:#1c2836;--mute:#44535f;--line:#a9c1da;--acc:#2c5c88;--acc-ink:#fff;--soft:#e1ecf7;--warm:#fbefd9;--warm-ink:#4a3a22;--bad:#a04538;--shadow:0 1px 2px rgba(40,65,95,.10),0 6px 18px rgba(40,65,95,.10)}
-@media (prefers-color-scheme:dark){:root{--bg:#10161d;--bg2:#121820;--card:#222d3a;--ink:#f0f4f8;--mute:#b3c0cd;--line:#3b4a5b;--acc:#a3c9ec;--acc-ink:#0f1c29;--soft:#2f3e4f;--warm:#40382a;--warm-ink:#f5e6c8;--bad:#f0a898;--shadow:0 1px 2px rgba(0,0,0,.3)}}
+:root{--bg:#c5daf0;--bg2:#d0e1f3;--card:#ffffff;--ink:#1c2836;--mute:#44535f;--line:#a9c1da;--acc:#2c5c88;--acc-ink:#fff;--soft:#e1ecf7;--warm:#fbefd9;--warm-ink:#4a3a22;--bad:#a8392a;--stop:#fde3de;--shadow:0 1px 2px rgba(40,65,95,.10),0 6px 18px rgba(40,65,95,.10)}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--bg2:#121820;--card:#222d3a;--ink:#f0f4f8;--mute:#b3c0cd;--line:#3b4a5b;--acc:#a3c9ec;--acc-ink:#0f1c29;--soft:#2f3e4f;--warm:#40382a;--warm-ink:#f5e6c8;--bad:#f0a898;--stop:#3d1d19;--shadow:0 1px 2px rgba(0,0,0,.3)}}
 /* Section backgrounds: home = blue, questions = teal, likely why = lavender, respond = green, follow-up = peach, data = grey */
 :root[data-sec=q]{--bg:#c4e3de;--line:#9fcac3}
 :root[data-sec=why]{--bg:#d9d3ef;--line:#b9b0de}
 :root[data-sec=respond]{--bg:#cde5cf;--line:#a8cfab}
 :root[data-sec=follow]{--bg:#f2d9c6;--line:#ddbba1}
 :root[data-sec=data]{--bg:#d9dee5;--line:#b9c3cf}
+:root[data-sec=style]{--bg:#efd5df;--line:#d9b3c2}
 @media (prefers-color-scheme:dark){
 :root[data-sec=q]{--bg:#0e1b1b;--line:#2f4a48}
 :root[data-sec=why]{--bg:#171429;--line:#40395f}
 :root[data-sec=respond]{--bg:#0f1b12;--line:#33503a}
 :root[data-sec=follow]{--bg:#20160f;--line:#5a4332}
 :root[data-sec=data]{--bg:#15181c;--line:#3a4048}
+:root[data-sec=style]{--bg:#201219;--line:#563a48}
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -60,6 +62,10 @@ p{margin:0 0 12px}
 .warm .mute{color:inherit;opacity:.85}
 .say{border-left:3px solid var(--acc);border-radius:2px;padding:4px 0 4px 16px;margin:6px 0 14px;font-size:19px;line-height:1.5}
 .no{border-left-color:var(--bad)}
+/* "Avoid saying" card: red tint, red outline and a stop sign so it is not missed */
+.stop{background:var(--stop);border:2px solid var(--bad)}
+.stop .lab{display:flex;align-items:center;gap:8px;margin:0 0 10px;color:var(--bad);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.stop .say{border-left-width:4px;font-weight:600}
 .chip{font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;white-space:nowrap;background:var(--line);color:var(--mute)}
 .chip.open{color:var(--acc);background:var(--soft)}
 .chip.tried{color:var(--warm-ink);background:var(--warm)}
@@ -75,6 +81,23 @@ p{margin:0 0 12px}
 button{transition:background .2s,border-color .2s}
 button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 input[type=text]{width:100%;font:inherit;padding:14px 16px;border:1.5px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink)}
+/* ---------- Conflict style test ---------- */
+.badge{flex:none;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--acc);color:var(--acc-ink);font-size:22px;font-weight:700;letter-spacing:.02em}
+.badge.sm{width:40px;height:40px;font-size:13px;background:var(--soft);color:var(--acc)}
+.hero{display:flex;align-items:center;gap:16px}
+.hero h2{margin:0 0 2px}
+.meter{display:grid;grid-template-columns:118px 1fr 18px;align-items:center;gap:10px;font-size:14px;color:var(--mute);margin-top:10px}
+.meter span:last-child{text-align:right}
+.meter .bar{height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.meter .bar div{height:100%;background:var(--acc);border-radius:5px}
+.meter b{color:var(--ink)}
+.srow{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+.srow:first-of-type{border-top:0;padding-top:0}
+.srow:last-child{padding-bottom:0}
+.srow p{margin:0}
+.tipc{display:flex;gap:10px;align-items:center}
+.tipc p{margin:0;flex:1}
+.tipc .cp{flex:none}
 /* ---------- Progress ---------- */
 .prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 22px}
 .prog div{height:100%;background:var(--acc);border-radius:3px}
@@ -407,6 +430,123 @@ const T={
 };
 
 /* =====================================================================
+   CONFLICT STYLE TEST (the five well-known conflict modes: competing, collaborating,
+   compromising, avoiding, accommodating). Own questions and wording.
+   Each question offers two statements from two different styles. Every pair of styles
+   meets twice, so each style can score 0 to 8.
+   ===================================================================== */
+/* Each style: name, short, qs = 4 test statements, wk = when it works, co = cost when overused,
+   me = one thing to practise, wi = how to respond to a person using it,
+   tips = one tip for each response step (open, need, win, next) when the OTHER person uses this style */
+const STYLE={
+ CP:{n:L("Competing","Bersaing"),sh:L("I push for my position. My goal comes first.","Saya pertahankan pendirian saya. Matlamat saya didahulukan."),
+  qs:[L("Push for what I think is right","Pertahankan apa yang saya rasa betul"),L("Stand firm until my point is accepted","Bertegas sehingga pandangan saya diterima"),L("Argue my case strongly","Hujahkan pendirian saya dengan kuat"),L("Make the decision myself to move things forward","Buat keputusan sendiri supaya perkara bergerak")],
+  wk:[L("Emergencies that need a fast decision","Kecemasan yang perlukan keputusan pantas"),L("Safety, quality or compliance issues where you must hold firm","Isu keselamatan, kualiti atau pematuhan yang perlu ketegasan"),L("When someone is taking advantage","Bila ada pihak yang mengambil kesempatan")],
+  co:[L("People stop sharing ideas or bad news","Orang berhenti berkongsi idea atau berita buruk"),L("You win the point but damage the relationship","Anda menang hujah tetapi menjejaskan hubungan"),L("Others comply but do not commit","Orang lain patuh tetapi tidak komited")],
+  me:L("Before giving your view, ask one question and summarise what you heard.","Sebelum memberi pandangan, tanya satu soalan dan rumuskan apa yang anda dengar."),
+  wi:L("Stay calm and do not match their force. Acknowledge their goal, then state your need with facts. Ask what result matters most to them.","Kekal tenang dan jangan lawan dengan kekerasan yang sama. Akui matlamat mereka, kemudian nyatakan keperluan anda dengan fakta. Tanya hasil apa yang paling penting bagi mereka."),
+  tips:[L("Do not fight for airtime. Let them finish, then summarise their point in one line.","Jangan berebut bercakap. Biar mereka habis, kemudian rumuskan pandangan mereka dalam satu ayat."),L("Be brief and firm. State your need and the fact behind it once, without apologising.","Ringkas dan tegas. Nyatakan keperluan anda dan faktanya sekali, tanpa meminta maaf."),L("Link your request to the result they want.","Kaitkan permintaan anda dengan hasil yang mereka mahu."),L("Get the agreement in specific terms: who, what and when.","Dapatkan persetujuan yang khusus: siapa, apa dan bila.")]},
+ CL:{n:L("Collaborating","Bekerjasama"),sh:L("I look for a solution that fully works for both sides.","Saya cari penyelesaian yang benar-benar sesuai untuk kedua-dua pihak."),
+  qs:[L("Put all concerns on the table and work through them together","Bentangkan semua kebimbangan dan selesaikan bersama"),L("Look for a solution that fully meets both our needs","Cari penyelesaian yang memenuhi keperluan kedua-dua pihak sepenuhnya"),L("Ask what they really need, then share what I really need","Tanya apa yang mereka benar-benar perlukan, kemudian kongsi keperluan saya"),L("Keep discussing until we find a better option for both","Terus berbincang sehingga jumpa pilihan yang lebih baik untuk kedua-dua pihak")],
+  wk:[L("Important issues where both sides' needs matter","Isu penting yang melibatkan keperluan kedua-dua pihak"),L("When you need real commitment, not just compliance","Bila anda perlukan komitmen sebenar, bukan sekadar patuh"),L("Long-term working relationships","Hubungan kerja jangka panjang")],
+  co:[L("Takes time and energy, too much for small issues","Memakan masa dan tenaga, berlebihan untuk isu kecil"),L("Can delay a decision that only needs a quick call","Boleh melambatkan keputusan yang hanya perlukan tindakan pantas"),L("Others may take advantage of your openness","Orang lain mungkin mengambil kesempatan atas keterbukaan anda")],
+  me:L("Save it for what matters. For small issues, decide quickly or compromise.","Simpan untuk perkara yang penting. Untuk isu kecil, putuskan cepat atau bertolak ansur."),
+  wi:L("Be open about your real needs and limits. Bring ideas, not just positions. Agree a time limit so the discussion ends in a decision.","Berterus terang tentang keperluan dan had anda. Bawa idea, bukan sekadar pendirian. Tetapkan had masa supaya perbincangan berakhir dengan keputusan."),
+  tips:[L("Share openly. They want the full picture.","Kongsi secara terbuka. Mereka mahu gambaran penuh."),L("State your real need and what is flexible.","Nyatakan keperluan sebenar anda dan apa yang boleh dilentur."),L("Build the option together. Ask what would work for both of you.","Bina pilihan bersama. Tanya apa yang sesuai untuk kedua-dua pihak."),L("Set a date to decide, so the discussion does not run on.","Tetapkan tarikh untuk memutuskan, supaya perbincangan tidak berlarutan.")]},
+ CM:{n:L("Compromising","Bertolak ansur"),sh:L("I look for a fair middle. Each side gives a little.","Saya cari jalan tengah yang adil. Setiap pihak beri sedikit."),
+  qs:[L("Suggest we meet halfway","Cadangkan kita bertemu di tengah"),L("Give up something if they give up something too","Lepaskan sesuatu jika mereka juga lepaskan sesuatu"),L("Look for a quick, fair middle ground","Cari jalan tengah yang cepat dan adil"),L("Trade: I accept one point, they accept another","Bertukar: saya terima satu perkara, mereka terima satu lagi")],
+  wk:[L("When time is short and a workable answer is enough","Bila masa suntuk dan jawapan yang boleh diguna sudah memadai"),L("Both sides have equal say and different goals","Kedua-dua pihak sama kuasa dan berbeza matlamat"),L("As a fallback when collaborating does not work","Sebagai pilihan kedua bila bekerjasama tidak berjaya")],
+  co:[L("Nobody is fully satisfied","Tiada siapa berpuas hati sepenuhnya"),L("You may trade away something important too quickly","Anda mungkin terlalu cepat melepaskan sesuatu yang penting"),L("The real cause stays unsolved","Punca sebenar tidak diselesaikan")],
+  me:L("Before splitting the difference, ask what each side really needs. A better option may exist.","Sebelum membahagi dua, tanya apa yang setiap pihak benar-benar perlukan. Mungkin ada pilihan yang lebih baik."),
+  wi:L("Know in advance what you can give and what you cannot. Ask what matters most to them before trading.","Tahu lebih awal apa yang anda boleh beri dan apa yang tidak. Tanya apa yang paling penting bagi mereka sebelum bertukar."),
+  tips:[L("Ask what matters most to them, before any trade.","Tanya apa yang paling penting bagi mereka, sebelum sebarang pertukaran."),L("Say clearly which part you cannot give up.","Nyatakan dengan jelas bahagian yang anda tidak boleh lepaskan."),L("Offer a fair exchange: I give this, you give that.","Tawarkan pertukaran yang adil: saya beri ini, awak beri itu."),L("Confirm in writing what each side agreed to give.","Sahkan secara bertulis apa yang setiap pihak setuju untuk beri.")]},
+ AV:{n:L("Avoiding","Mengelak"),sh:L("I stay out of the conflict or postpone it.","Saya menjauhi konflik atau menangguhkannya."),
+  qs:[L("Let it cool down and deal with it later","Biar reda dulu dan uruskan kemudian"),L("Stay out of it if I can","Tidak masuk campur jika boleh"),L("Change the subject to avoid tension","Tukar topik untuk elak ketegangan"),L("Keep my disagreement to myself","Simpan rasa tidak setuju dalam hati")],
+  wk:[L("Small issues that are not worth the energy","Isu kecil yang tidak berbaloi tenaganya"),L("When emotions are high and people need to cool down","Bila emosi tinggi dan orang perlu bertenang"),L("When you need more information first","Bila anda perlukan lebih maklumat dulu")],
+  co:[L("The problem grows while nobody talks about it","Masalah membesar sementara tiada siapa membincangkannya"),L("Others decide without you","Orang lain membuat keputusan tanpa anda"),L("Resentment builds up silently","Rasa tidak puas hati terpendam")],
+  me:L("If you postpone, say when you will come back to it.","Jika anda menangguh, nyatakan bila anda akan kembali kepada perkara itu."),
+  wi:L("Make it safe and low-pressure. Raise it one-to-one, not in front of others. Ask small, specific questions and agree a time to continue.","Jadikan ia selamat dan tanpa tekanan. Bangkitkan secara bersemuka berdua, bukan di depan orang lain. Tanya soalan kecil yang khusus dan setuju masa untuk sambung."),
+  tips:[L("Talk one-to-one, in a calm place. Start with a small, easy question.","Berbincang berdua, di tempat yang tenang. Mula dengan soalan kecil yang mudah."),L("Keep it to one issue. Too much at once makes them withdraw.","Hadkan kepada satu isu. Terlalu banyak sekaligus membuat mereka menarik diri."),L("Show that talking now prevents a bigger problem later.","Tunjukkan bahawa berbincang sekarang mengelak masalah lebih besar kemudian."),L("Agree one small step and a specific date, then follow up.","Setuju satu langkah kecil dan tarikh yang khusus, kemudian buat susulan.")]},
+ AC:{n:L("Accommodating","Mengalah"),sh:L("I give in to keep the peace. The relationship comes first.","Saya mengalah demi keharmonian. Hubungan didahulukan."),
+  qs:[L("Go along with what they want","Ikut sahaja apa yang mereka mahu"),L("Put their needs before mine to keep the peace","Dahulukan keperluan mereka demi menjaga keharmonian"),L("Give in if it matters a lot to them","Mengalah jika ia sangat penting bagi mereka"),L("Agree so the relationship stays good","Bersetuju supaya hubungan kekal baik")],
+  wk:[L("When the issue matters more to them than to you","Bila isu itu lebih penting bagi mereka daripada anda"),L("When you realise you are wrong","Bila anda sedar anda yang silap"),L("To build goodwill for later","Untuk membina muhibah bagi masa depan")],
+  co:[L("Your own needs and ideas go unheard","Keperluan dan idea anda sendiri tidak didengari"),L("People may expect you to always give in","Orang mungkin menjangka anda sentiasa mengalah"),L("You agree outside but feel unhappy inside","Anda setuju di luar tetapi tidak puas hati di dalam")],
+  me:L("State your own need once, clearly, before you decide to give in.","Nyatakan keperluan anda sekali, dengan jelas, sebelum anda memilih untuk mengalah."),
+  wi:L("Do not take the first yes as real agreement. Ask what they need and wait for the answer. Make it easy to disagree.","Jangan anggap ya yang pertama sebagai persetujuan sebenar. Tanya apa yang mereka perlukan dan tunggu jawapannya. Mudahkan mereka untuk tidak bersetuju."),
+  tips:[L("Ask for their view first, and wait. They may hold back to be polite.","Tanya pandangan mereka dulu, dan tunggu. Mereka mungkin menahan diri kerana menjaga adab."),L("Invite pushback. Ask what worries them about your request.","Galakkan bantahan. Tanya apa yang merisaukan mereka tentang permintaan anda."),L("Make sure they also gain something, because they will not ask for it.","Pastikan mereka juga mendapat sesuatu, kerana mereka tidak akan memintanya."),L("Ask them to say the plan in their own words, and check that it is truly okay.","Minta mereka sebut pelan itu dengan kata-kata sendiri, dan pastikan ia benar-benar okey.")]}
+};
+const SORD=["CP", "CL", "CM", "AV", "AC"], DMAX=8;
+/* Test questions: [style of answer A, statement number, style of answer B, statement number] */
+const DQ=[["CM", 2, "AV", 3],["AV", 2, "CL", 2],["CP", 1, "CM", 1],["AC", 3, "CM", 3],["CM", 2, "AV", 2],["AC", 1, "CL", 3],["AV", 3, "AC", 0],["AC", 0, "CP", 3],["CL", 1, "CM", 2],["CL", 0, "CP", 0],["AV", 3, "AC", 3],["AV", 1, "CL", 2],["CL", 3, "AC", 2],["AC", 2, "CM", 3],["CP", 3, "AC", 1],["AV", 0, "CP", 2],["CP", 1, "CM", 0],["AV", 1, "CP", 2],["CL", 1, "CM", 1],["CL", 1, "CP", 0]];
+/* Pair advice: PAIR[my style][their style] = what tends to happen between the two, and what to do */
+const PAIR={
+ CP:{CP:L("Two people pushing turns into a contest. Lower your voice, ask one question first, and look for the result you both want.","Dua orang yang sama-sama mendesak akan jadi pertandingan. Rendahkan suara, tanya satu soalan dulu, dan cari hasil yang kedua-dua pihak mahu."),
+     CL:L("They want to explore, you want to decide. Give them time to lay out the options, then agree a deadline to decide.","Mereka mahu meneroka, anda mahu memutuskan. Beri mereka masa bentangkan pilihan, kemudian setuju tarikh untuk memutuskan."),
+     CM:L("They will offer a middle. Do not take more just because you can. Check what they really need.","Mereka akan menawarkan jalan tengah. Jangan ambil lebih hanya kerana anda boleh. Semak apa yang mereka benar-benar perlukan."),
+     AV:L("Your push makes them withdraw more. Slow down, ask small questions, and give them time to answer.","Desakan anda membuat mereka lebih menarik diri. Perlahankan, tanya soalan kecil, dan beri mereka masa menjawab."),
+     AC:L("They will give in quickly, and you may think it is settled. Ask what they really think before you close.","Mereka akan cepat mengalah, dan anda mungkin sangka ia sudah selesai. Tanya apa yang mereka benar-benar fikir sebelum menutup perbincangan.")},
+ CL:{CP:L("They push, you explore. Be brief: state your need and one fact first, then invite them to solve it together.","Mereka mendesak, anda meneroka. Ringkaskan: nyatakan keperluan dan satu fakta dulu, kemudian ajak mereka selesaikan bersama."),
+     CL:L("A good match. The risk is talking too long. Set a time limit and end with a decision.","Padanan yang baik. Risikonya ialah berbincang terlalu lama. Tetapkan had masa dan akhiri dengan keputusan."),
+     CM:L("They will suggest halfway early. Ask one more question about their real need before accepting the middle.","Mereka akan cepat mencadangkan jalan tengah. Tanya satu lagi soalan tentang keperluan sebenar mereka sebelum menerimanya."),
+     AV:L("A long discussion feels heavy to them. Keep it short, one issue, and offer to continue later.","Perbincangan panjang terasa berat bagi mereka. Pendekkan, satu isu sahaja, dan tawarkan untuk sambung kemudian."),
+     AC:L("They may agree just to please you. Ask what they would change, and wait for the answer.","Mereka mungkin bersetuju hanya untuk menyenangkan anda. Tanya apa yang mereka mahu ubah, dan tunggu jawapannya.")},
+ CM:{CP:L("You may give too much too soon. Decide beforehand what you will not trade.","Anda mungkin memberi terlalu banyak terlalu awal. Tentukan lebih awal apa yang anda tidak akan lepaskan."),
+     CL:L("They are willing to dig deeper. Do not rush to split the difference. A better option for both may exist.","Mereka sanggup menggali lebih dalam. Jangan tergesa-gesa membahagi dua. Mungkin ada pilihan yang lebih baik untuk kedua-dua pihak."),
+     CM:L("You will agree fast. Check that the middle really solves the problem and does not just end the talk.","Anda berdua akan cepat bersetuju. Pastikan jalan tengah itu benar-benar menyelesaikan masalah, bukan sekadar menamatkan perbincangan."),
+     AV:L("A trade needs two people talking. First get them to say what they need, then offer the middle.","Pertukaran perlukan dua pihak yang berbincang. Dapatkan dulu apa yang mereka perlukan, kemudian tawarkan jalan tengah."),
+     AC:L("They will accept any offer. Make sure the deal is fair to them, or the issue will come back later.","Mereka akan terima apa sahaja tawaran. Pastikan ia adil untuk mereka, jika tidak isu ini akan timbul semula.")},
+ AV:{CP:L("They push and you step back, so they decide. Prepare one sentence stating your need, and say it.","Mereka mendesak dan anda berundur, jadi mereka yang memutuskan. Sediakan satu ayat yang menyatakan keperluan anda, dan sebutkan."),
+     CL:L("They want to talk it through, which is safe for you. Accept the conversation and share your real concern.","Mereka mahu berbincang dengan baik, dan itu selamat untuk anda. Terima perbincangan itu dan kongsi kebimbangan sebenar anda."),
+     CM:L("They will offer a deal. Do not accept just to end it. Say what matters to you first.","Mereka akan menawarkan persetujuan. Jangan terima hanya untuk menamatkannya. Nyatakan dulu apa yang penting bagi anda."),
+     AV:L("Nobody raises it, so nothing changes. One of you must start. Send a short message to set a time.","Tiada siapa membangkitkannya, jadi tiada apa berubah. Salah seorang perlu mulakan. Hantar mesej ringkas untuk tetapkan masa."),
+     AC:L("Both of you keep the peace and the issue stays. Name the issue gently and ask for their view.","Kedua-dua pihak menjaga keharmonian dan isu itu kekal. Sebut isu itu dengan lembut dan tanya pandangan mereka.")},
+ AC:{CP:L("They push and you give in. State your need once, clearly, before you decide anything.","Mereka mendesak dan anda mengalah. Nyatakan keperluan anda sekali, dengan jelas, sebelum memutuskan apa-apa."),
+     CL:L("They want your real view. Give it. They will not be offended.","Mereka mahu pandangan sebenar anda. Berikan. Mereka tidak akan tersinggung."),
+     CM:L("They offer a trade. Ask for your part too, not only theirs.","Mereka menawarkan pertukaran. Minta bahagian anda juga, bukan hanya bahagian mereka."),
+     AV:L("You give in, they stay silent, and nothing is really agreed. Ask a direct question and confirm the next step.","Anda mengalah, mereka diam, dan tiada apa yang benar-benar dipersetujui. Tanya soalan terus dan sahkan langkah seterusnya."),
+     AC:L("Both of you give in to each other, and the real need is never said. Each say one thing you actually want.","Kedua-dua pihak saling mengalah, dan keperluan sebenar tidak pernah disebut. Masing-masing nyatakan satu perkara yang benar-benar dimahukan.")}
+};
+/* Guess the other person's style from two observations: do they push for their own need, do they consider yours */
+const styleOf=(push,consider)=>push?(consider?"CL":"CP"):(consider?"AC":"AV");
+/* Score the test: count how often each style was chosen. top = most used (ties kept), low = least used */
+function scoreStyle(ans){
+  const n={};SORD.forEach(k=>n[k]=0);
+  ans.forEach((a,i)=>{n[DQ[i][a==="a"?0:2]]++;});
+  const mx=Math.max(...SORD.map(k=>n[k])),mn=Math.min(...SORD.map(k=>n[k]));
+  const top=SORD.filter(k=>n[k]===mx),low=SORD.filter(k=>n[k]===mn);
+  return {style:top[0],top,low,n,ts:Date.now()};
+}
+/* Screen text for the conflict style test */
+const TD={
+ home:L("About me","Tentang saya"),row:L("My conflict style","Gaya konflik saya"),row_new:L("20 quick questions","20 soalan ringkas"),
+ intro_h:L("How do I handle conflict?","Bagaimana saya mengendalikan konflik?"),
+ intro_t:L("20 quick A or B questions. Each shows two ways to react in a disagreement. Pick the one you are more likely to do, not the one you think is correct.","20 soalan ringkas A atau B. Setiap satu menunjukkan dua cara bertindak balas dalam perselisihan. Pilih yang anda lebih cenderung lakukan, bukan yang anda rasa betul."),
+ intro_n:L("No style is wrong. Each one fits some situations. Your result is saved on this phone only.","Tiada gaya yang salah. Setiap satu sesuai untuk situasi tertentu. Keputusan disimpan dalam telefon ini sahaja."),
+ q:L("In a disagreement at work, I am more likely to...","Dalam perselisihan di tempat kerja, saya lebih cenderung untuk..."),
+ start:L("Start the test","Mula ujian"),mine:L("My most used style","Gaya yang paling kerap saya guna"),tie:L("Used about equally with","Diguna hampir sama kerap dengan"),
+ scores:L("How often I chose each style","Kekerapan saya memilih setiap gaya"),
+ wk:L("Works well for","Sesuai untuk"),co:L("The cost if I use it too much","Kesannya jika terlalu kerap diguna"),me:L("One thing to practise","Satu perkara untuk dilatih"),
+ low:L("My least used style","Gaya yang paling jarang saya guna"),low_t:L("Worth trying when the situation is:","Patut dicuba bila situasinya:"),
+ key:L("No style is wrong. The skill is choosing the one that fits. For important issues with people you work with long-term, collaborating is the win-win of Habit 4.","Tiada gaya yang salah. Kemahirannya ialah memilih yang sesuai. Untuk isu penting dengan orang yang anda bekerja dalam jangka panjang, bekerjasama ialah menang-menang dalam Tabiat 4."),
+ wi:L("How to respond to each style","Cara memberi respons kepada setiap gaya"),same:L("your most used","paling kerap anda guna"),
+ retake:L("Take the test again","Ambil ujian semula"),clear:L("Remove my result","Buang keputusan saya"),clear_q:L("Remove your conflict style result?","Buang keputusan gaya konflik anda?"),
+ note:L("Based on the well-known five conflict modes, with our own questions. For self-reflection only. It is not the official Thomas-Kilmann instrument and not a professional assessment.","Berdasarkan lima mod konflik yang terkenal, dengan soalan kami sendiri. Untuk muhasabah diri sahaja. Ia bukan instrumen rasmi Thomas-Kilmann dan bukan penilaian profesional."),
+ their_h:L("How are they handling this conflict?","Bagaimana mereka mengendalikan konflik ini?"),their_t:L("Pick what you see them doing now. This adds a tip to each step.","Pilih apa yang anda nampak mereka lakukan sekarang. Ini menambah petua pada setiap langkah."),
+ guess:L("Not sure. Help me guess","Tidak pasti. Bantu saya teka"),skip:L("Skip this","Langkau"),
+ tq1:L("How hard do they push for what they want?","Sekuat mana mereka mendesak apa yang mereka mahu?"),tq1a:L("Strongly","Kuat"),tq1b:L("Not much","Tidak sangat"),
+ tq2:L("How much do they consider what you need?","Sejauh mana mereka mengambil kira keperluan anda?"),tq2a:L("Quite a lot","Agak banyak"),tq2b:L("Very little","Sangat sedikit"),
+ tip:L("When they are","Bila mereka"),theirs:L("Their conflict style","Gaya konflik mereka"),change:L("Change","Tukar"),unknown:L("Not set","Belum ditetapkan"),set:L("Set","Tetapkan"),
+ yours:L("Your usual style","Gaya biasa anda"),
+ mine_h:L("And what is your own style?","Dan apakah gaya anda sendiri?"),
+ mine_t:L("Pick how you usually handle a disagreement. The coach uses both styles to advise you. You only need to do this once.","Pilih cara anda biasanya mengendalikan perselisihan. Jurulatih menggunakan kedua-dua gaya untuk menasihati anda. Anda hanya perlu buat ini sekali."),
+ mine_test:L("Not sure. Take the 20-question test","Tidak pasti. Ambil ujian 20 soalan"),
+ pair:L("You and them","Anda dan mereka"),you:L("You","Anda"),them:L("Them","Mereka"),
+ picked:L("You picked this style yourself. Take the test to check it and see your scores.","Anda memilih gaya ini sendiri. Ambil ujian untuk menyemaknya dan melihat skor anda."),
+ saved:L("Your style is saved","Gaya anda disimpan")
+};
+const sname=k=>t(STYLE[k].n);
+
+/* =====================================================================
    9. State and storage
    ===================================================================== */
 const KEY="habitsCoach.v1";
@@ -415,6 +555,8 @@ let V={name:"home"};             // current screen
 let C=null;                      // current case
 let COPY=[];                     // texts for the copy buttons on this screen
 try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&Array.isArray(r.cases))S=r;}catch(e){}
+if(S.me&&!(STYLE[S.me.style]&&Array.isArray(S.me.top)&&Array.isArray(S.me.low)))delete S.me;   // drop a result saved in an older format
+S.cases.forEach(c=>{if(c.their&&!STYLE[c.their])delete c.their;});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
 const t=x=>x[S.lang==="bm"?1:0];
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -452,7 +594,7 @@ function steps(c){
 function viewOf(c){
   if(c.stage==="q")return "q";
   if(c.stage==="why")return "why";
-  if(c.stage==="respond")return c.step<0?"calm":c.step>=steps(c).length?"ready":"step";
+  if(c.stage==="respond")return c.step===-2?"their":c.step===-3?"mine":c.step<0?"calm":c.step>=steps(c).length?"ready":"step";
   if(c.stage==="react")return "react";
   return "good";
 }
@@ -469,7 +611,7 @@ const copyBtn=()=>`<button class="cp" data-a="copy:${COPY.length-1}">${t(T.copy)
 const fmtDate=ts=>new Date(ts).toLocaleDateString(S.lang==="bm"?"ms-MY":"en-GB",{day:"numeric",month:"short"});
 
 /* Which section each screen belongs to (sets the background colour) */
-const SEC={home:"home",cat:"home",pause:"q",q:"q",why:"why",calm:"respond",reset:"respond",step:"respond",ready:"respond",react:"follow",retry:"follow",good:"follow",data:"data"};
+const SEC={home:"home",cat:"home",pause:"q",q:"q",why:"why",calm:"respond",reset:"respond",step:"respond",ready:"respond",react:"follow",retry:"follow",good:"follow",data:"data",disc:"style",dq:"style",their:"respond",tq:"respond",mine:"respond"};
 function render(){
   COPY=[];let h="";const v=V.name;
   document.documentElement.lang=S.lang==="bm"?"ms":"en";
@@ -494,6 +636,7 @@ function render(){
     }
     h+=`<h3>${t(T.whoabout)}</h3>`;
     for(const k in CAT)h+=row("cat:"+k,t(CAT[k].n),t(CAT[k].d));
+    h+=`<h3>${t(TD.home)}</h3>`+row("disc",t(TD.row),S.me?sname(S.me.style):t(TD.row_new));
     h+=`<button class="btn txt" data-a="data">${t(T.data)}</button><p class="mute">${t(T.a2hs)}</p><p class="mute">${t(T.credit)}</p>`;
   }
 
@@ -541,14 +684,22 @@ function render(){
     h+=`<p class="mute">${t(T.step)} ${C.step+1} ${t(T.of)} ${st.length} · ${t(CAUSE[C.rank[C.ci]].n)}</p><div class="prog"><div style="width:${Math.round((C.step+1)/st.length*100)}%"></div></div>
     <span class="tag">${t(HABIT[s.h])}</span><h2>${t(s.t)}</h2>`;
     if(s.say)h+=`<div class="card"><p class="mute">${t(T.sayit)}</p>${sayBox(t(s.x))}${copyBtn()}</div>${/\[/.test(t(s.x))?`<p class="mute">${t(T.brackets)}</p>`:""}`;
+    // tip tailored to the other person's conflict style, when it has been set for this case
+    if(s.say&&C.their)h+=`<div class="card warm tipc"><span class="badge sm">${C.their}</span><p><span class="mute">${t(TD.tip)} ${sname(C.their)}</span><br>${t(STYLE[C.their].tips[C.step])}</p></div>`;
     else h+=`<div class="card"><p style="margin:0;font-size:19px">${t(s.x)}</p></div>`;
     h+=`<button class="btn" data-a="next">${t(T.next)}</button>`;
   }
 
   else if(v==="ready"){
     const cz=CAUSE[C.rank[C.ci]], self=isSelf(C);
-    h+=`<h2>${t(T.ready)}</h2><div class="card"><p class="mute">${t(self?T.avoid_s:T.avoid)}</p><div class="say no" style="margin-bottom:0">${t(cz.avoid)}</div></div>`;
+    h+=`<h2>${t(T.ready)}</h2><div class="card stop"><p class="lab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg>${t(self?T.avoid_s:T.avoid)}</p><div class="say no" style="margin-bottom:0">${t(cz.avoid)}</div></div>`;
     if(!self)h+=`<div class="card"><p class="mute">${t(T.asmsg)}</p>${sayBox(t(cz.msg))}${copyBtn()}</div>`;
+    // conflict styles: theirs (set per case) and yours (from the test)
+    if(!self)h+=`<div class="card tipc"><span class="badge sm">${C.their||"?"}</span><p><span class="mute">${t(TD.theirs)}</span><br>${C.their?t(STYLE[C.their].n):t(TD.unknown)}</p><button class="cp" data-a="tchange">${t(C.their?TD.change:TD.set)}</button></div>`;
+    if(S.me)h+=`<div class="card tipc"><span class="badge sm">${S.me.style}</span><p><span class="mute">${t(TD.yours)}: ${sname(S.me.style)}</span><br>${t(STYLE[S.me.style].me)}</p></div>`;
+    else if(!self)h+=`<div class="card tipc"><span class="badge sm">?</span><p><span class="mute">${t(TD.yours)}</span><br>${t(TD.unknown)}</p><button class="cp" data-a="mchange">${t(TD.set)}</button></div>`;
+    // both styles known: what tends to happen between the two, and what to do about it
+    if(!self&&S.me&&C.their)h+=`<div class="card warm"><p class="mute">${t(TD.pair)}</p><div class="tipc" style="margin-bottom:10px"><span class="badge sm">${S.me.style}</span><p class="mute" style="flex:none">${t(TD.you)}</p><span class="badge sm">${C.their}</span><p class="mute">${t(TD.them)}</p></div><p style="margin:0">${t(PAIR[S.me.style][C.their])}</p></div>`;
     h+=`<div class="card warm"><p class="mute">${t(T.remember)}</p><p style="margin:0">${t(CAT[C.cat].tip)}</p></div>
     <button class="btn" data-a="savego">${t(T.savego)}</button><p class="mute" style="margin-top:10px">${t(self?T.savego_ns:T.savego_n)}</p>`;
   }
@@ -577,6 +728,51 @@ function render(){
     h+=`<button class="btn txt" data-a="home">${t(T.close)}</button>`;
   }
 
+  else if(v==="disc"){
+    const m=S.me, li=a=>`<ul style="margin:0">${a.map(x=>`<li>${t(x)}</li>`).join("")}</ul>`;
+    if(!m){
+      h+=`<span class="tag">${t(HABIT[4])}</span><h2>${t(TD.intro_h)}</h2><p>${t(TD.intro_t)}</p>
+      <div class="card">${SORD.map(k=>`<div class="srow"><span class="badge sm">${k}</span><p><b>${t(STYLE[k].n)}</b><br><span class="mute">${t(STYLE[k].sh)}</span></p></div>`).join("")}</div>
+      <p class="mute">${t(TD.intro_n)}</p><button class="btn" data-a="dstart">${t(TD.start)}</button><p class="mute" style="margin-top:14px">${t(TD.note)}</p>`;
+    }else{
+      const z=STYLE[m.style], others=m.top.slice(1), lw=m.low.filter(k=>!m.top.includes(k))[0];
+      h+=`<span class="tag">${t(TD.mine)}</span><div class="card"><div class="hero"><span class="badge">${m.style}</span><div><h2>${t(z.n)}</h2><p style="margin:0">${t(z.sh)}</p></div></div>
+      ${others.length?`<p class="mute" style="margin:12px 0 0">${t(TD.tie)} <b>${others.map(sname).join(", ")}</b></p>`:""}</div>
+      ${m.n?`<div class="card"><p class="mute">${t(TD.scores)}</p>${SORD.map(k=>`<div class="meter"><span>${m.top.includes(k)?`<b>${t(STYLE[k].n)}</b>`:t(STYLE[k].n)}</span><div class="bar" role="img" aria-label="${t(STYLE[k].n)}: ${m.n[k]} / ${DMAX}"><div style="width:${Math.round(m.n[k]/DMAX*100)}%"></div></div><span>${m.n[k]}</span></div>`).join("")}</div>`:`<div class="card"><p style="margin:0">${t(TD.picked)}</p><button class="btn" data-a="dstart">${t(TD.start)}</button></div>`}
+      <div class="card"><p class="mute">${t(TD.wk)}</p>${li(z.wk)}</div>
+      <div class="card"><p class="mute">${t(TD.co)}</p>${li(z.co)}</div>
+      <div class="card warm"><p class="mute">${t(TD.me)}</p><p style="margin:0">${t(z.me)}</p></div>`;
+      if(lw)h+=`<div class="card"><p class="mute">${t(TD.low)}</p><div class="tipc" style="margin-bottom:10px"><span class="badge sm">${lw}</span><p><b>${t(STYLE[lw].n)}</b></p></div><p class="mute">${t(TD.low_t)}</p>${li(STYLE[lw].wk)}</div>`;
+      h+=`<p>${t(TD.key)}</p>
+      <h3>${t(TD.wi)}</h3><div class="card">${SORD.map(k=>`<div class="srow"><span class="badge sm">${k}</span><p><b>${t(STYLE[k].n)}</b>${k===m.style?` <span class="mute">(${t(TD.same)})</span>`:""}<br>${t(STYLE[k].wi)}</p></div>`).join("")}</div>
+      <button class="btn sec" data-a="dstart">${t(TD.retake)}</button><button class="btn txt" data-a="dclear">${t(TD.clear)}</button><p class="mute">${t(TD.note)}</p>`;
+    }
+  }
+
+  else if(v==="dq"){
+    const i=V.ans.length, d=DQ[i];
+    h+=`<p class="mute">${t(TD.row)} · ${i+1} ${t(T.of)} ${DQ.length}</p><div class="prog"><div style="width:${Math.round(i/DQ.length*100)}%"></div></div>
+    <h2>${t(TD.q)}</h2>${ab("dans:a","A",t(STYLE[d[0]].qs[d[1]]))}${ab("dans:b","B",t(STYLE[d[2]].qs[d[3]]))}`;
+  }
+
+  else if(v==="their"){
+    h+=`<span class="tag">${t(HABIT[5])}</span><h2>${t(TD.their_h)}</h2><p>${t(TD.their_t)}</p>`;
+    SORD.forEach(k=>{h+=`<button class="row" data-a="their:${k}"><span class="badge sm">${k}</span><span class="g"><b>${t(STYLE[k].n)}</b><small>${t(STYLE[k].sh).replace(/\bI\b/g,"They").replace(/\bMy\b/g,"Their").replace(/\bmy\b/g,"their").replace(/\bSaya\b/g,"Mereka").replace(/\bsaya\b/g,"mereka")}</small></span></button>`;});
+    h+=`<button class="btn sec" data-a="tguess">${t(TD.guess)}</button><button class="btn txt" data-a="their:">${t(TD.skip)}</button>`;
+  }
+
+  else if(v==="mine"){
+    h+=`<span class="tag">${t(HABIT[1])}</span><h2>${t(TD.mine_h)}</h2><p>${t(TD.mine_t)}</p>`;
+    SORD.forEach(k=>{h+=`<button class="row" data-a="mine:${k}"><span class="badge sm">${k}</span><span class="g"><b>${t(STYLE[k].n)}</b><small>${t(STYLE[k].sh)}</small></span></button>`;});
+    h+=`<button class="btn sec" data-a="mtest">${t(TD.mine_test)}</button><button class="btn txt" data-a="mine:">${t(TD.skip)}</button>`;
+  }
+
+  else if(v==="tq"){
+    const i=V.ans.length;
+    h+=`<p class="mute">${t(TD.their_h)} · ${i+1} ${t(T.of)} 2</p><div class="prog"><div style="width:${i*50}%"></div></div>
+    <h2>${t(i?TD.tq2:TD.tq1)}</h2>${ab("tans:a","A",t(i?TD.tq2a:TD.tq1a))}${ab("tans:b","B",t(i?TD.tq2b:TD.tq1b))}`;
+  }
+
   else if(v==="data"){
     h+=`<h2>${t(T.data)}</h2><p>${t(T.data_t)}</p><p class="mute">${S.cases.length?S.cases.length+" "+t(T.mine).toLowerCase():t(T.nocase)}</p>
     <button class="btn" data-a="exp">${t(T.exp)}</button><button class="btn sec" data-a="imp">${t(T.imp)}</button><button class="btn bad" data-a="clear">${t(T.clear)}</button>`;
@@ -597,6 +793,8 @@ function copyText(s){
 }
 function removeCase(id){S.cases=S.cases.filter(c=>c.id!==id);save();}
 
+/* After their style is set: ask my own style if it is not known yet, otherwise go to the calm check */
+const afterTheir=()=>(!S.me&&!C.mq)?-3:-1;
 function act(a){
   const i=a.indexOf(":"), name=i<0?a:a.slice(0,i), arg=i<0?"":a.slice(i+1);
   switch(name){
@@ -612,7 +810,7 @@ function act(a){
       C.ans.push(arg);
       if(C.ans.length>=queue(C).length){rank(C);C.stage="why";}
       goCase();break;
-    case "respond": C.stage="respond";C.step=isSelf(C)?0:-1;goCase();break;
+    case "respond": C.stage="respond";C.step=isSelf(C)?0:(C.their===undefined?-2:afterTheir());goCase();break;   // first time: ask their conflict style
     case "calm": if(arg==="a"){C.step=0;goCase();}else go("reset");break;
     case "next": C.step++;goCase();break;
     case "savego": C.stage="react";save();C=null;go("home");break;
@@ -631,13 +829,42 @@ function act(a){
       const b=new Blob([JSON.stringify(S,null,1)],{type:"application/json"}),u=URL.createObjectURL(b),l=document.createElement("a");
       l.href=u;l.download="habits-coach-backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);break;}
     case "imp": $("imp").click();break;
+    /* --- conflict style test --- */
+    case "disc": go("disc");break;
+    case "dstart": V={name:"dq",ans:[]};render();break;
+    case "dans":
+      V.ans.push(arg);
+      if(V.ans.length>=DQ.length){
+        const ret=V.ret&&C;S.me=scoreStyle(V.ans);save();
+        if(ret){C.mq=1;C.step=-1;toast(t(TD.saved)+": "+sname(S.me.style));goCase();}else go("disc");
+      }else render();
+      break;
+    case "dclear": if(confirm(t(TD.clear_q))){delete S.me;save();render();}break;
+    /* --- the other person's conflict style, per case ("" means skipped) --- */
+    case "their": C.their=arg;C.step=afterTheir();goCase();break;
+    /* --- my own style, asked once when the test has not been taken ("" means skipped for this case) --- */
+    case "mine":
+      if(arg){S.me={style:arg,top:[arg],low:[],n:null,ts:Date.now()};toast(t(TD.saved));}
+      C.mq=1;C.step=-1;goCase();break;
+    case "mtest": save();V={name:"dq",ans:[],ret:1};render();break;   // take the test, then come back to this case
+    case "mchange": C.stage="respond";C.mq=0;C.step=-3;goCase();break;
+    case "tguess": V={name:"tq",ans:[]};render();break;
+    case "tans":
+      V.ans.push(arg);
+      if(V.ans.length>=2){C.their=styleOf(V.ans[0]==="a",V.ans[1]==="a");C.step=afterTheir();goCase();}else render();
+      break;
+    case "tchange": C.stage="respond";C.step=-2;goCase();break;
     case "back": back();break;
   }
 }
 /* ---------- Back button: one step back on every screen ---------- */
 function back(){
   const v=V.name;
-  if(v==="cat"||v==="data"||v==="react"||v==="good")return act("home");
+  if(v==="cat"||v==="data"||v==="react"||v==="good"||v==="disc")return act("home");
+  if(v==="dq"){if(V.ans.length){V.ans.pop();return render();}if(V.ret&&C)return goCase();return go("disc");}
+  if(v==="mine"){C.step=-2;return goCase();}
+  if(v==="their"){C.stage="why";return goCase();}
+  if(v==="tq"){if(V.ans.length){V.ans.pop();return render();}return go("their");}
   if(v==="pause"){V={name:"cat",cat:V.cat};return render();}
   if(v==="q"){
     if(C.ans.length){C.ans.pop();return goCase();}
@@ -666,9 +893,9 @@ $("imp").addEventListener("change",e=>{
   r.onload=()=>{
     try{
       const d=JSON.parse(r.result);
-      const good=d&&Array.isArray(d.cases)&&d.cases.every(c=>c&&SIT[c.sit]&&CAT[c.cat]&&Array.isArray(c.ans)&&Array.isArray(c.rank)&&c.rank.every(k=>CAUSE[k]));
+      const good=d&&Array.isArray(d.cases)&&d.cases.every(c=>c&&SIT[c.sit]&&CAT[c.cat]&&Array.isArray(c.ans)&&Array.isArray(c.rank)&&c.rank.every(k=>CAUSE[k])&&(!c.their||STYLE[c.their]));
       if(!good)throw 0;
-      if(confirm(t(T.imp_q))){S={lang:S.lang,cases:d.cases};save();C=null;go("home");toast(t(T.imp_ok));}
+      if(confirm(t(T.imp_q))){const me=d.me&&STYLE[d.me.style]&&Array.isArray(d.me.top)&&Array.isArray(d.me.low)?d.me:S.me;S={lang:S.lang,cases:d.cases};if(me)S.me=me;save();C=null;go("home");toast(t(T.imp_ok));}
     }catch(x){toast(t(T.imp_bad));}
     e.target.value="";
   };
