@@ -84,6 +84,14 @@ p{margin:0 0 12px}
 button{transition:background .2s,border-color .2s}
 button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 input[type=text]{width:100%;font:inherit;padding:14px 16px;border:1.5px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink)}
+/* ---------- Icons ---------- */
+.badge svg{width:34px;height:34px}
+.badge.sm svg{width:22px;height:22px}
+.bigic{flex:none;display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:var(--card);color:var(--acc);border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:12px}
+.bigic svg{width:30px;height:30px}
+.hero .bigic{margin-bottom:0}
+.il{display:flex;align-items:center;gap:8px}
+.il svg{flex:none;width:18px;height:18px}
 /* ---------- Conflict style test ---------- */
 .badge{flex:none;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--acc);color:var(--acc-ink);font-size:22px;font-weight:700;letter-spacing:.02em}
 .badge.sm{width:40px;height:40px;font-size:13px;background:var(--soft);color:var(--acc)}
@@ -550,6 +558,56 @@ const TD={
 const sname=k=>t(STYLE[k].n);
 
 /* =====================================================================
+   ICONS: simple line drawings (24 x 24) used beside key text.
+   ic("name") returns the icon. To change a picture, edit its shapes here.
+   ===================================================================== */
+const ICON={
+ /* who it is about */
+ peer:"<circle cx='8' cy='8' r='3'/><circle cx='17' cy='9' r='2.5'/><path d='M2.5 20c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5'/><path d='M15.5 14.700c.5-.1 1-.2 1.5-.2 2.6 0 4.5 1.9 4.5 4.5'/>",
+ report:"<circle cx='10' cy='8' r='3'/><path d='M3.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6'/><path d='M20 4v7M17.5 8.5L20 11l2.5-2.5'/>",
+ manager:"<circle cx='12' cy='10.5' r='3'/><path d='M5.5 21.5c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6'/><path d='M8 2.5l1.5 2.5L12 2.5 14.5 5 16 2.5'/>",
+ dept:"<rect x='4' y='3' width='10' height='18' rx='1'/><path d='M14 9h5a1 1 0 0 1 1 1v11'/><path d='M7.5 7h3M7.5 11h3M7.5 15h3M2.5 21h19'/>",
+ ext:"<path d='M2 6h11v10H2z'/><path d='M13 9h4.5L21 12.5V16h-8z'/><circle cx='6.5' cy='17.5' r='1.8'/><circle cx='17' cy='17.5' r='1.8'/>",
+ self:"<circle cx='12' cy='8' r='3.5'/><path d='M4.5 20.5c0-4 3.3-6.5 7.5-6.5s7.5 2.5 7.5 6.5'/>",
+ /* likely reasons */
+ unclear:"<circle cx='12' cy='12' r='9'/><path d='M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.700'/><path d='M12 16.8v.2'/>",
+ priorities:"<path d='M12 3l9 4.5-9 4.5-9-4.5z'/><path d='M3 12l9 4.5 9-4.5'/><path d='M3 16.5L12 21l9-4.5'/>",
+ nowin:"<path d='M12 4v16M7 20h10'/><path d='M4 8.5l16-3'/><path d='M4 8.5L1.8 14h4.4z'/><path d='M20 5.5L17.8 11h4.4z'/>",
+ trust:"<path d='M9.5 14.5l-2 2a3.2 3.2 0 0 1-4.5-4.5l3-3'/><path d='M14.5 9.5l2-2a3.2 3.2 0 0 1 4.5 4.5l-3 3'/><path d='M8 4v2M4 8h2M16 20v-2M20 16h-2'/>",
+ skill:"<path d='M12 6.5C10 5 7 4.5 3 5v13c4-.5 7 0 9 1.5 2-1.5 5-2 9-1.5V5c-4-.5-7 0-9 1.5z'/><path d='M12 6.5v13'/>",
+ system:"<circle cx='12' cy='12' r='3'/><circle cx='12' cy='12' r='6.5'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.700l2.1-2.1M16.6 7.4l2.1-2.1'/>",
+ mypart:"<ellipse cx='12' cy='10' rx='6' ry='7.5'/><path d='M12 17.5V22M8.5 22h7'/><path d='M9.3 8.5c.6-1.3 1.6-2.1 2.9-2.4'/>",
+ s_goal:"<circle cx='12' cy='12' r='9'/><circle cx='12' cy='12' r='5'/><circle cx='12' cy='12' r='1'/>",
+ s_energy:"<rect x='2.5' y='7' width='16' height='10' rx='2'/><path d='M21.5 10.5v3'/><path d='M6 10v4'/>",
+ s_control:"<circle cx='12' cy='12' r='9' stroke-dasharray='3 3'/><circle cx='12' cy='12' r='4'/>",
+ /* response steps and habits */
+ ear:"<path d='M7 9.5a5 5 0 0 1 10 0c0 3-2.5 3.5-3 6-.4 2-1.6 3.5-3.5 3.5A3.5 3.5 0 0 1 7 15.5'/><path d='M10 10a2 2 0 0 1 4 0c0 1.2-1.2 1.5-1.700 2.5'/>",
+ win:"<circle cx='9' cy='12' r='6'/><circle cx='15' cy='12' r='6'/>",
+ next:"<rect x='3.5' y='5' width='17' height='15.5' rx='2'/><path d='M3.5 10h17M8 3v4M16 3v4'/><path d='M9 15l2 2 4-4'/>",
+ go:"<circle cx='12' cy='12' r='9'/><path d='M8 12h8M13 8.5l3.5 3.5-3.5 3.5'/>",
+ recharge:"<path d='M20 12a8 8 0 1 1-2.6-5.9'/><path d='M20 3.5V8h-4.5'/>",
+ calm:"<path d='M3 9h10a3 3 0 1 0-3-3'/><path d='M3 14h15a3 3 0 1 1-3 3'/>",
+ check:"<circle cx='12' cy='12' r='9'/><path d='M8 12.5l3 3 5-6'/>",
+ /* labels */
+ fact:"<path d='M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z'/><circle cx='12' cy='12' r='3'/>",
+ label:"<path d='M3 12V4h8l10 10-8 8z'/><circle cx='7.5' cy='8.5' r='1.3'/>",
+ msg:"<path d='M4 5h16v11H9l-5 4z'/>",
+ bulb:"<path d='M9.5 18h5M10.5 21h3'/><path d='M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z'/>",
+ reframe:"<path d='M4 12a8 8 0 0 1 14-5.3L20 9'/><path d='M20 4v5h-5'/><path d='M20 12a8 8 0 0 1-14 5.3L4 15'/><path d='M4 20v-5h5'/>",
+ /* conflict styles: push, both win, meet halfway, turn away, yield */
+ CP:"<path d='M3 12h13M11 6l6 6-6 6'/><path d='M21 4v16'/>",
+ CL:"<circle cx='9' cy='12' r='6'/><circle cx='15' cy='12' r='6'/>",
+ CM:"<path d='M12 3v18' stroke-dasharray='2 3'/><path d='M2 12h7M6 9l3 3-3 3'/><path d='M22 12h-7M18 9l-3 3 3 3'/>",
+ AV:"<path d='M19 20V9A5 5 0 0 0 9 9v10'/><path d='M5 15.5l4 4 4-4'/>",
+ AC:"<path d='M5 21V4'/><path d='M5 5c3-2 6 2 9 0s5-1 5-1v9s-2-1-5 1-6-2-9 0'/>"
+};
+ICON.s_prior=ICON.priorities;ICON.s_skill=ICON.skill;ICON.target=ICON.s_goal;
+const ic=n=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]||""}</svg>`;
+const big=n=>`<span class="bigic">${ic(n)}</span>`;                                        // large round icon above a heading
+const sb=(k,lg)=>`<span class="badge${lg?"":" sm"}">${STYLE[k]?ic(k):"?"}</span>`;          // conflict style badge
+const HIC={1:"go",2:"target",3:"priorities",4:"win",5:"ear",6:"win",7:"recharge"};       // icon for each habit
+
+/* =====================================================================
    9. State and storage
    ===================================================================== */
 const KEY="habitsCoach.v1";
@@ -589,9 +647,9 @@ function rank(c){
 /* ---------- Response steps for the current cause ---------- */
 function steps(c){
   const cz=CAUSE[c.rank[c.ci]], tone=CAT[c.cat].tone;
-  if(tone==="self")return cz.steps.map(s=>({h:s[0],t:s[1],x:s[2],say:false}));
-  return [{h:5,t:T.s_open,x:cz.open[tone],say:true},{h:2,t:T.s_need,x:TONE[tone].need,say:true},
-          {h:4,t:T.s_win,x:cz.win,say:true},{h:3,t:T.s_next,x:TONE[tone].next,say:true}];
+  if(tone==="self")return cz.steps.map(s=>({h:s[0],t:s[1],x:s[2],say:false,ic:HIC[s[0]]}));
+  return [{h:5,t:T.s_open,x:cz.open[tone],say:true,ic:"ear"},{h:2,t:T.s_need,x:TONE[tone].need,say:true,ic:"target"},
+          {h:4,t:T.s_win,x:cz.win,say:true,ic:"win"},{h:3,t:T.s_next,x:TONE[tone].next,say:true,ic:"next"}];
 }
 /* ---------- Which screen a saved case should open on ---------- */
 function viewOf(c){
@@ -607,7 +665,7 @@ const goCase=()=>{save();go(viewOf(C));};
 /* =====================================================================
    10. Screens
    ===================================================================== */
-const row=(a,b,small,right)=>`<button class="row" data-a="${a}"><span class="g"><b>${b}</b>${small?`<small>${small}</small>`:""}</span>${right||'<span class="chev">&#8250;</span>'}</button>`;
+const row=(a,b,small,right,left)=>`<button class="row" data-a="${a}">${left?`<span class="badge sm">${ic(left)}</span>`:""}<span class="g"><b>${b}</b>${small?`<small>${small}</small>`:""}</span>${right||'<span class="chev">&#8250;</span>'}</button>`;
 const ab=(a,k,txt)=>`<button class="ab" data-a="${a}"><i>${k}</i><span>${txt}</span></button>`;
 const sayBox=(txt,cls)=>{COPY.push(txt);return `<div class="say ${cls||""}">${esc(txt)}</div>`;};
 const copyBtn=()=>`<button class="cp" data-a="copy:${COPY.length-1}">${t(T.copy)}</button>`;
@@ -638,8 +696,8 @@ function render(){
       if(S.cases.length>1)h+=`<button class="btn txt" style="margin-top:0" data-a="clear">${t(T.clear)}</button>`;
     }
     h+=`<h3>${t(T.whoabout)}</h3>`;
-    for(const k in CAT)h+=row("cat:"+k,t(CAT[k].n),t(CAT[k].d));
-    h+=`<h3>${t(TD.home)}</h3>`+row("disc",t(TD.row),S.me?sname(S.me.style):t(TD.row_new));
+    for(const k in CAT)h+=row("cat:"+k,t(CAT[k].n),t(CAT[k].d),"",k);
+    h+=`<h3>${t(TD.home)}</h3>`+row("disc",t(TD.row),S.me?sname(S.me.style):t(TD.row_new),"",S.me?S.me.style:"win");
     h+=`<button class="btn txt" data-a="data">${t(T.data)}</button><p class="mute">${t(T.a2hs)}</p><p class="mute">${t(T.credit)}</p>`;
   }
 
@@ -651,7 +709,7 @@ function render(){
   else if(v==="pause"){
     const s=SIT[V.sit];
     h+=`<span class="tag">${t(HABIT[1])}</span><h2>${t(T.pause)}</h2><p>${t(T.pause_t)}</p>
-    <div class="card"><p class="mute">${t(T.fact)}</p><div class="say">${t(s.fact)}</div><p class="mute">${t(T.lab)}</p><div class="say no" style="margin-bottom:0">${t(s.label)}</div></div>
+    <div class="card"><p class="mute il">${ic("fact")}${t(T.fact)}</p><div class="say">${t(s.fact)}</div><p class="mute il">${ic("label")}${t(T.lab)}</p><div class="say no" style="margin-bottom:0">${t(s.label)}</div></div>
     <p class="mute">${t(T.pause_n)}</p>
     <h3><label for="lbl">${t(T.lbl)}</label></h3><input type="text" id="lbl" maxlength="30" placeholder="${t(T.lbl_p)}" autocomplete="off"><p class="mute" style="margin-top:6px">${t(T.lbl_n)}</p>
     <button class="btn" data-a="start">${t(T.start)}</button>`;
@@ -667,43 +725,43 @@ function render(){
     const cz=CAUSE[C.rank[C.ci]];
     h+=`<span class="tag">${t(HABIT[5])}</span>`;
     if(C.flat&&C.ci===0)h+=`<p class="mute">${t(T.flat)}</p>`;
-    h+=`<div class="card warm"><p class="mute">${t(T.why1)}</p><h2>${t(cz.n)}</h2><p style="margin:0">${t(cz.why)}</p></div>
-    <div class="card"><p class="mute">${t(T.reframe)}</p><p style="margin:0">${t(cz.re)}</p></div>`;
+    h+=`<div class="card warm"><div class="hero" style="margin-bottom:12px">${big(C.rank[C.ci])}<div><p class="mute" style="margin:0">${t(T.why1)}</p><h2 style="margin:0">${t(cz.n)}</h2></div></div><p style="margin:0">${t(cz.why)}</p></div>
+    <div class="card"><p class="mute il">${ic("reframe")}${t(T.reframe)}</p><p style="margin:0">${t(cz.re)}</p></div>`;
     if(C.second&&C.ci===0)h+=`<p class="mute">${t(T.why2)}: <b>${t(CAUSE[C.rank[1]].n)}</b></p>`;
     h+=`<p class="mute">${t(T.guess)}</p><button class="btn" data-a="respond">${t(T.torespond)}</button><button class="btn sec" data-a="nextr">${t(T.other)}</button>`;
   }
 
   else if(v==="calm"){
-    h+=`<span class="tag">${t(HABIT[1])}</span><h2>${t(T.calm)}</h2>${ab("calm:a","A",t(T.calm_a))}${ab("calm:b","B",t(T.calm_b))}`;
+    h+=`${big("calm")}<span class="tag">${t(HABIT[1])}</span><h2>${t(T.calm)}</h2>${ab("calm:a","A",t(T.calm_a))}${ab("calm:b","B",t(T.calm_b))}`;
   }
 
   else if(v==="reset"){
-    h+=`<span class="tag">${t(HABIT[1])}</span><h2>${t(T.reset)}</h2><div class="card"><ul>${T.reset_l.map(x=>`<li>${t(x)}</li>`).join("")}</ul></div>
+    h+=`${big("calm")}<span class="tag">${t(HABIT[1])}</span><h2>${t(T.reset)}</h2><div class="card"><ul>${T.reset_l.map(x=>`<li>${t(x)}</li>`).join("")}</ul></div>
     <button class="btn" data-a="calm:a">${t(T.calmnow)}</button><button class="btn sec" data-a="home">${t(T.later)}</button>`;
   }
 
   else if(v==="step"){
     const st=steps(C), s=st[C.step];
     h+=`<p class="mute">${t(T.step)} ${C.step+1} ${t(T.of)} ${st.length} · ${t(CAUSE[C.rank[C.ci]].n)}</p><div class="prog"><div style="width:${Math.round((C.step+1)/st.length*100)}%"></div></div>
-    <span class="tag">${t(HABIT[s.h])}</span><h2>${t(s.t)}</h2>`;
+    ${big(s.ic)}<span class="tag">${t(HABIT[s.h])}</span><h2>${t(s.t)}</h2>`;
     if(s.say)h+=`<div class="card"><p class="mute">${t(T.sayit)}</p>${sayBox(t(s.x))}${copyBtn()}</div>${/\[/.test(t(s.x))?`<p class="mute">${t(T.brackets)}</p>`:""}`;
     // tip tailored to the other person's conflict style, when it has been set for this case
-    if(s.say&&C.their)h+=`<div class="card warm tipc"><span class="badge sm">${C.their}</span><p><span class="mute">${t(TD.tip)} ${sname(C.their)}</span><br>${t(STYLE[C.their].tips[C.step])}</p></div>`;
+    if(s.say&&C.their)h+=`<div class="card warm tipc">${sb(C.their)}<p><span class="mute">${t(TD.tip)} ${sname(C.their)}</span><br>${t(STYLE[C.their].tips[C.step])}</p></div>`;
     else h+=`<div class="card"><p style="margin:0;font-size:19px">${t(s.x)}</p></div>`;
     h+=`<button class="btn" data-a="next">${t(T.next)}</button>`;
   }
 
   else if(v==="ready"){
     const cz=CAUSE[C.rank[C.ci]], self=isSelf(C);
-    h+=`<h2>${t(T.ready)}</h2><div class="card stop"><p class="lab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg>${t(self?T.avoid_s:T.avoid)}</p><div class="say no" style="margin-bottom:0">${t(cz.avoid)}</div></div>`;
-    if(!self)h+=`<div class="card"><p class="mute">${t(T.asmsg)}</p>${sayBox(t(cz.msg))}${copyBtn()}</div>`;
+    h+=`${big("check")}<h2>${t(T.ready)}</h2><div class="card stop"><p class="lab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg>${t(self?T.avoid_s:T.avoid)}</p><div class="say no" style="margin-bottom:0">${t(cz.avoid)}</div></div>`;
+    if(!self)h+=`<div class="card"><p class="mute il">${ic("msg")}${t(T.asmsg)}</p>${sayBox(t(cz.msg))}${copyBtn()}</div>`;
     // conflict styles: theirs (set per case) and yours (from the test)
-    if(!self)h+=`<div class="card tipc"><span class="badge sm">${C.their||"?"}</span><p><span class="mute">${t(TD.theirs)}</span><br>${C.their?t(STYLE[C.their].n):t(TD.unknown)}</p><button class="cp" data-a="tchange">${t(C.their?TD.change:TD.set)}</button></div>`;
-    if(S.me)h+=`<div class="card tipc"><span class="badge sm">${S.me.style}</span><p><span class="mute">${t(TD.yours)}: ${sname(S.me.style)}</span><br>${t(STYLE[S.me.style].me)}</p></div>`;
+    if(!self)h+=`<div class="card tipc">${sb(C.their)}<p><span class="mute">${t(TD.theirs)}</span><br>${C.their?t(STYLE[C.their].n):t(TD.unknown)}</p><button class="cp" data-a="tchange">${t(C.their?TD.change:TD.set)}</button></div>`;
+    if(S.me)h+=`<div class="card tipc">${sb(S.me.style)}<p><span class="mute">${t(TD.yours)}: ${sname(S.me.style)}</span><br>${t(STYLE[S.me.style].me)}</p></div>`;
     else if(!self)h+=`<div class="card tipc"><span class="badge sm">?</span><p><span class="mute">${t(TD.yours)}</span><br>${t(TD.unknown)}</p><button class="cp" data-a="mchange">${t(TD.set)}</button></div>`;
     // both styles known: what tends to happen between the two, and what to do about it
-    if(!self&&S.me&&C.their)h+=`<div class="card warm"><p class="mute">${t(TD.pair)}</p><div class="tipc" style="margin-bottom:10px"><span class="badge sm">${S.me.style}</span><p class="mute" style="flex:none">${t(TD.you)}</p><span class="badge sm">${C.their}</span><p class="mute">${t(TD.them)}</p></div><p style="margin:0">${t(PAIR[S.me.style][C.their])}</p></div>`;
-    h+=`<div class="card warm"><p class="mute">${t(T.remember)}</p><p style="margin:0">${t(CAT[C.cat].tip)}</p></div>
+    if(!self&&S.me&&C.their)h+=`<div class="card warm"><p class="mute">${t(TD.pair)}</p><div class="tipc" style="margin-bottom:10px">${sb(S.me.style)}<p class="mute" style="flex:none">${t(TD.you)}</p>${sb(C.their)}<p class="mute">${t(TD.them)}</p></div><p style="margin:0">${t(PAIR[S.me.style][C.their])}</p></div>`;
+    h+=`<div class="card warm"><p class="mute il">${ic("bulb")}${t(T.remember)}</p><p style="margin:0">${t(CAT[C.cat].tip)}</p></div>
     <button class="btn" data-a="savego">${t(T.savego)}</button><p class="mute" style="margin-top:10px">${t(self?T.savego_ns:T.savego_n)}</p>`;
   }
 
@@ -735,19 +793,19 @@ function render(){
     const m=S.me, li=a=>`<ul style="margin:0">${a.map(x=>`<li>${t(x)}</li>`).join("")}</ul>`;
     if(!m){
       h+=`<span class="tag">${t(HABIT[4])}</span><h2>${t(TD.intro_h)}</h2><p>${t(TD.intro_t)}</p>
-      <div class="card">${SORD.map(k=>`<div class="srow"><span class="badge sm">${k}</span><p><b>${t(STYLE[k].n)}</b><br><span class="mute">${t(STYLE[k].sh)}</span></p></div>`).join("")}</div>
+      <div class="card">${SORD.map(k=>`<div class="srow">${sb(k)}<p><b>${t(STYLE[k].n)}</b><br><span class="mute">${t(STYLE[k].sh)}</span></p></div>`).join("")}</div>
       <p class="mute">${t(TD.intro_n)}</p><button class="btn" data-a="dstart">${t(TD.start)}</button><p class="mute" style="margin-top:14px">${t(TD.note)}</p>`;
     }else{
       const z=STYLE[m.style], others=m.top.slice(1), lw=m.low.filter(k=>!m.top.includes(k))[0];
-      h+=`<span class="tag">${t(TD.mine)}</span><div class="card"><div class="hero"><span class="badge">${m.style}</span><div><h2>${t(z.n)}</h2><p style="margin:0">${t(z.sh)}</p></div></div>
+      h+=`<span class="tag">${t(TD.mine)}</span><div class="card"><div class="hero">${sb(m.style,1)}<div><h2>${t(z.n)}</h2><p style="margin:0">${t(z.sh)}</p></div></div>
       ${others.length?`<p class="mute" style="margin:12px 0 0">${t(TD.tie)} <b>${others.map(sname).join(", ")}</b></p>`:""}</div>
       ${m.n?`<div class="card"><p class="mute">${t(TD.scores)}</p>${SORD.map(k=>`<div class="meter"><span>${m.top.includes(k)?`<b>${t(STYLE[k].n)}</b>`:t(STYLE[k].n)}</span><div class="bar" role="img" aria-label="${t(STYLE[k].n)}: ${m.n[k]} / ${DMAX}"><div style="width:${Math.round(m.n[k]/DMAX*100)}%"></div></div><span>${m.n[k]}</span></div>`).join("")}</div>`:`<div class="card"><p style="margin:0">${t(TD.picked)}</p><button class="btn" data-a="dstart">${t(TD.start)}</button></div>`}
       <div class="card"><p class="mute">${t(TD.wk)}</p>${li(z.wk)}</div>
       <div class="card"><p class="mute">${t(TD.co)}</p>${li(z.co)}</div>
       <div class="card warm"><p class="mute">${t(TD.me)}</p><p style="margin:0">${t(z.me)}</p></div>`;
-      if(lw)h+=`<div class="card"><p class="mute">${t(TD.low)}</p><div class="tipc" style="margin-bottom:10px"><span class="badge sm">${lw}</span><p><b>${t(STYLE[lw].n)}</b></p></div><p class="mute">${t(TD.low_t)}</p>${li(STYLE[lw].wk)}</div>`;
+      if(lw)h+=`<div class="card"><p class="mute">${t(TD.low)}</p><div class="tipc" style="margin-bottom:10px">${sb(lw)}<p><b>${t(STYLE[lw].n)}</b></p></div><p class="mute">${t(TD.low_t)}</p>${li(STYLE[lw].wk)}</div>`;
       h+=`<p>${t(TD.key)}</p>
-      <h3>${t(TD.wi)}</h3><div class="card">${SORD.map(k=>`<div class="srow"><span class="badge sm">${k}</span><p><b>${t(STYLE[k].n)}</b>${k===m.style?` <span class="mute">(${t(TD.same)})</span>`:""}<br>${t(STYLE[k].wi)}</p></div>`).join("")}</div>
+      <h3>${t(TD.wi)}</h3><div class="card">${SORD.map(k=>`<div class="srow">${sb(k)}<p><b>${t(STYLE[k].n)}</b>${k===m.style?` <span class="mute">(${t(TD.same)})</span>`:""}<br>${t(STYLE[k].wi)}</p></div>`).join("")}</div>
       <button class="btn sec" data-a="dstart">${t(TD.retake)}</button><button class="btn txt" data-a="dclear">${t(TD.clear)}</button><p class="mute">${t(TD.note)}</p>`;
     }
   }
@@ -760,13 +818,13 @@ function render(){
 
   else if(v==="their"){
     h+=`<span class="tag">${t(HABIT[5])}</span><h2>${t(TD.their_h)}</h2><p>${t(TD.their_t)}</p>`;
-    SORD.forEach(k=>{h+=`<button class="row" data-a="their:${k}"><span class="badge sm">${k}</span><span class="g"><b>${t(STYLE[k].n)}</b><small>${t(STYLE[k].sh).replace(/\bI\b/g,"They").replace(/\bMy\b/g,"Their").replace(/\bmy\b/g,"their").replace(/\bSaya\b/g,"Mereka").replace(/\bsaya\b/g,"mereka")}</small></span></button>`;});
+    SORD.forEach(k=>{h+=`<button class="row" data-a="their:${k}">${sb(k)}<span class="g"><b>${t(STYLE[k].n)}</b><small>${t(STYLE[k].sh).replace(/\bI\b/g,"They").replace(/\bMy\b/g,"Their").replace(/\bmy\b/g,"their").replace(/\bSaya\b/g,"Mereka").replace(/\bsaya\b/g,"mereka")}</small></span></button>`;});
     h+=`<button class="btn sec" data-a="tguess">${t(TD.guess)}</button><button class="btn txt" data-a="their:">${t(TD.skip)}</button>`;
   }
 
   else if(v==="mine"){
     h+=`<span class="tag">${t(HABIT[1])}</span><h2>${t(TD.mine_h)}</h2><p>${t(TD.mine_t)}</p>`;
-    SORD.forEach(k=>{h+=`<button class="row" data-a="mine:${k}"><span class="badge sm">${k}</span><span class="g"><b>${t(STYLE[k].n)}</b><small>${t(STYLE[k].sh)}</small></span></button>`;});
+    SORD.forEach(k=>{h+=`<button class="row" data-a="mine:${k}">${sb(k)}<span class="g"><b>${t(STYLE[k].n)}</b><small>${t(STYLE[k].sh)}</small></span></button>`;});
     h+=`<button class="btn sec" data-a="mtest">${t(TD.mine_test)}</button><button class="btn txt" data-a="mine:">${t(TD.skip)}</button>`;
   }
 
