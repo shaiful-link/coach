@@ -163,8 +163,33 @@ const CAT={
  ext:{n:L("Supplier or customer","Pembekal atau pelanggan"),d:L("Outside the company","Di luar syarikat"),tone:"side",
   tip:L("Stay on facts and the agreement. Protect the long-term relationship.","Kekal pada fakta dan persetujuan. Jaga hubungan jangka panjang.")},
  self:{n:L("Myself","Diri sendiri"),d:L("My own habits and reactions","Tabiat dan reaksi saya sendiri"),tone:"self",
-  tip:L("Be as fair to yourself as you would be to a friend.","Berlaku adil kepada diri sendiri seperti kepada seorang kawan.")}
+  tip:L("Be as fair to yourself as you would be to a friend.","Berlaku adil kepada diri sendiri seperti kepada seorang kawan.")},
+ spouse:{n:L("Spouse","Pasangan"),d:L("Husband or wife","Suami atau isteri"),tone:"fam",life:1,
+  tip:L("You are on the same side. The problem is the issue, not your spouse.","Anda berdua di pihak yang sama. Masalahnya ialah isu itu, bukan pasangan anda.")},
+ child:{n:L("Children","Anak"),d:L("My son or daughter","Anak lelaki atau perempuan saya"),tone:"kid",life:1,
+  tip:L("Connect before you correct. A child who feels heard listens better.","Dekati dulu sebelum menegur. Anak yang rasa didengari lebih mudah mendengar.")},
+ parent:{n:L("Parent","Ibu bapa"),d:L("My mother or father","Ibu atau bapa saya"),tone:"elder",life:1,
+  tip:L("Keep your respect and a soft tone, even when you disagree. You can say no gently.","Kekalkan hormat dan nada lembut, walaupun tidak bersetuju. Anda boleh menolak dengan baik.")},
+ sibling:{n:L("Sibling","Adik-beradik"),d:L("My brother or sister","Abang, kakak atau adik saya"),tone:"fam",life:1,
+  tip:L("You share parents and history. Talk about now, not about childhood.","Anda berkongsi ibu bapa dan sejarah. Bincang tentang sekarang, bukan zaman kecil.")},
+ relative:{n:L("Relatives and in-laws","Saudara-mara dan mertua"),d:L("Auntie, uncle, cousin, in-laws","Mak cik, pak cik, sepupu, mertua"),tone:"elder",life:1,
+  tip:L("You will meet them at every kenduri. Protect the relationship while you set your limit.","Anda akan jumpa mereka di setiap kenduri. Jaga hubungan sambil menetapkan batas anda.")},
+ neighbour:{n:L("Neighbour","Jiran"),d:L("People living near me","Orang yang tinggal berdekatan"),tone:"soc",life:1,
+  tip:L("You will live side by side for years. A friendly talk early is better than a complaint later.","Anda akan berjiran bertahun-tahun. Berbincang baik-baik awal lebih elok daripada aduan kemudian.")},
+ friend:{n:L("Friend","Kawan"),d:L("Old school friend or close friend","Kawan lama sekolah atau kawan rapat"),tone:"soc",life:1,
+  tip:L("A real friend can take an honest word, said kindly.","Kawan sejati boleh terima kata jujur yang disampaikan dengan baik.")},
+ surau:{n:L("Surau or masjid","Surau atau masjid"),d:L("Congregation members and committee","Ahli jemaah dan jawatankuasa"),tone:"soc",life:1,
+  tip:L("Everyone is there for the same purpose. Advise in private, with good words.","Semua orang datang dengan tujuan yang sama. Nasihat secara tertutup, dengan kata-kata yang baik.")}
 };
+
+/* Home screen groups: each group lists its categories. "self" opens its situations directly. */
+const GROUP={
+ work:{n:L("At work","Di tempat kerja"),d:L("Colleagues, staff, manager, other teams","Rakan sekerja, staf, ketua, pasukan lain"),cats:["peer","report","manager","dept","ext"]},
+ family:{n:L("Family","Keluarga"),d:L("Spouse, children, parents, siblings, relatives","Pasangan, anak, ibu bapa, adik-beradik, saudara-mara"),cats:["spouse","child","parent","sibling","relative"],
+  note:L("This is for everyday disagreements. If you ever feel unsafe at home, please speak to someone you trust or a professional.","Ini untuk perselisihan harian. Jika anda rasa tidak selamat di rumah, sila berbincang dengan orang yang anda percaya atau pihak profesional.")},
+ community:{n:L("Friends and community","Kawan dan komuniti"),d:L("Neighbours, friends, surau or masjid","Jiran, kawan, surau atau masjid"),cats:["neighbour","friend","surau"]}
+};
+const groupOf=c=>Object.keys(GROUP).find(g=>GROUP[g].cats.includes(c));
 
 /* ---------- 3. Question bank ----------
    qn(question, answerA, pointsA, answerB, pointsB, followUpAfterA)
@@ -198,7 +223,23 @@ const Q={
  sq5:qn(L("Do you know how to do the first step?","Adakah anda tahu cara membuat langkah pertama?"),L("Yes","Ya, tahu"),{},L("Not really","Kurang pasti"),{s_skill:3}),
  sq6:qn(L("Is urgent work pushing out important work?","Adakah kerja segera menolak ke tepi kerja penting?"),L("No","Tidak"),{},L("Yes","Ya"),{s_prior:2,s_goal:1}),
  sq7:qn(L("Does this matter to you personally, or only to others?","Adakah perkara ini penting kepada anda sendiri, atau hanya kepada orang lain?"),L("It matters to me","Penting kepada saya"),{},L("Only to others","Hanya kepada orang lain"),{s_goal:2,s_control:1}),
- sq8:qn(L("When did you last take a proper break?","Bila kali terakhir anda berehat dengan betul?"),L("Recently","Baru-baru ini"),{},L("I can't remember","Tidak ingat"),{s_energy:3})
+ sq8:qn(L("When did you last take a proper break?","Bila kali terakhir anda berehat dengan betul?"),L("Recently","Baru-baru ini"),{},L("I can't remember","Tidak ingat"),{s_energy:3}),
+ /* --- questions for family and community --- */
+ pwho:qn(L("Is this only with you?","Adakah ini dengan anda sahaja?"),L("Only with me","Dengan saya sahaja"),{trust:2,mypart:1},L("With others too","Dengan orang lain juga"),{priorities:1,system:1},"ppast"),
+ ppast:qn(L("Was there a past hurt or argument between you?","Pernahkah ada luka lama atau pertengkaran antara anda berdua?"),L("Yes, there was","Ya, pernah"),{trust:2},L("Not that I know","Setahu saya tiada"),{mypart:2}),
+ pclear:qn(L("Have you told them plainly what you hope for?","Sudahkah anda beritahu dengan jelas apa yang anda harapkan?"),L("Yes, clearly","Ya, dengan jelas"),{},L("I hinted, or assumed they know","Saya beri kiasan, atau anggap mereka tahu"),{unclear:3}),
+ pload:qn(L("What is their situation now?","Bagaimana keadaan mereka sekarang?"),L("Normal","Biasa"),{},L("Tired, stressed or busy with something","Penat, tertekan atau sibuk dengan sesuatu"),{priorities:3}),
+ pbenefit:qn(L("Does this matter to them too?","Adakah perkara ini penting bagi mereka juga?"),L("Yes, to both of us","Ya, bagi kami berdua"),{},L("It mostly matters to me","Lebih penting bagi saya"),{nowin:3}),
+ pable:qn(L("Are they able to do it (age, health, money, know-how)?","Adakah mereka mampu melakukannya (umur, kesihatan, wang, pengetahuan)?"),L("Yes, they are","Ya, mampu"),{},L("Not really, or not sure","Kurang mampu, atau tidak pasti"),{skill:3}),
+ pnew:qn(L("Is this behaviour new?","Adakah kelakuan ini baru?"),L("New, it was fine before","Baru, dulu okey"),{priorities:2,trust:1},L("It has always been like this","Memang begini dari dulu"),{system:2,skill:1,unclear:1}),
+ pcirc:qn(L("Is something outside their control involved (money, time, distance, health)?","Adakah ada perkara di luar kawalan mereka (wang, masa, jarak, kesihatan)?"),L("No","Tiada"),{},L("Yes","Ada"),{system:3}),
+ phow:qn(L("How did you raise it?","Bagaimana anda membangkitkannya?"),L("Calmly, in private, at a good time","Dengan tenang, secara tertutup, pada masa yang sesuai"),{},L("While upset, in front of others, or by message","Semasa marah, di depan orang lain, atau melalui mesej"),{mypart:3}),
+ pagree:qn(L("Did they actually agree, in their own words?","Adakah mereka benar-benar bersetuju, dengan kata-kata mereka sendiri?"),L("Yes, they said yes","Ya, mereka kata ya"),{},L("I assumed, or they stayed quiet","Saya andaikan, atau mereka diam sahaja"),{unclear:2,nowin:1}),
+ plisten:qn(L("Have you asked for their side and really listened?","Sudahkah anda tanya pihak mereka dan benar-benar dengar?"),L("Yes, I have","Sudah"),{},L("Not really","Belum betul-betul"),{mypart:3}),
+ psafe:qn(L("Can they disagree with you without it turning into a fight?","Bolehkah mereka tidak bersetuju dengan anda tanpa menjadi pergaduhan?"),L("Yes","Boleh"),{},L("Probably not","Mungkin tidak"),{trust:3}),
+ pexpect:qn(L("Are you both used to the same way of doing this?","Adakah anda berdua biasa dengan cara yang sama dalam hal ini?"),L("Yes, similar","Ya, lebih kurang sama"),{},L("Different (family, generation or custom)","Berbeza (keluarga, generasi atau adat)"),{unclear:2,system:2}),
+ pcare:qn(L("Could they be doing this out of care or worry?","Mungkinkah mereka buat begini kerana sayang atau risau?"),L("I don't think so","Saya rasa tidak"),{},L("Yes, possibly","Ya, mungkin"),{unclear:3}),
+ pface:qn(L("Would agreeing make them lose face in front of others?","Adakah bersetuju akan membuat mereka malu di depan orang lain?"),L("No","Tidak"),{},L("Yes, it might","Ya, mungkin"),{nowin:3})
 };
 
 /* ---------- 4. Situations ----------
@@ -252,7 +293,40 @@ const SIT={
  s5:sit("self",L("I find it hard to say no","Saya susah nak kata tidak"),L("I accepted four extra requests this week.","Saya terima empat permintaan tambahan minggu ini."),L("I am a pushover.","Saya mudah dipijak."),["sq2", "sq7", "sq4", "sq6"]),
  s6:sit("self",L("I keep avoiding a difficult conversation","Saya asyik mengelak perbualan yang sukar"),L("I postponed this conversation three times.","Saya tangguh perbualan ini tiga kali."),L("I am a coward.","Saya penakut."),["sq5", "sq1", "sq4", "sq3"]),
  s7:sit("self",L("I keep working late","Saya asyik kerja sampai lewat"),L("I left after 8 pm on four days this week.","Saya balik selepas pukul 8 malam empat hari minggu ini."),L("I am bad at my job.","Saya tak pandai buat kerja."),["sq6", "sq2", "sq8", "sq4"]),
- s8:sit("self",L("I take feedback badly","Saya sukar menerima teguran"),L("I went quiet and defensive after the review.","Saya jadi diam dan defensif selepas sesi semakan."),L("I am too sensitive.","Saya terlalu sensitif."),["sq3", "sq7", "sq4", "sq5"])
+ s8:sit("self",L("I take feedback badly","Saya sukar menerima teguran"),L("I went quiet and defensive after the review.","Saya jadi diam dan defensif selepas sesi semakan."),L("I am too sensitive.","Saya terlalu sensitif."),["sq3", "sq7", "sq4", "sq5"]),
+ sp5:sit("spouse",L("We disagree about what my spouse buys","Kami tidak sependapat tentang apa yang pasangan saya beli"),L("Twice this month, my spouse bought something I felt we did not need.","Dua kali bulan ini, pasangan saya membeli sesuatu yang saya rasa tidak perlu."),L("My spouse is wasteful.","Pasangan saya boros."),["pclear", "pexpect", "pbenefit", "phow"]),
+ sp6:sit("spouse",L("We disagree about where to go","Kami tidak sependapat tentang ke mana hendak pergi"),L("We could not agree on where to go for the last two weekends.","Kami tidak dapat bersetuju ke mana hendak pergi pada dua hujung minggu lepas."),L("My spouse never considers what I want.","Pasangan saya tak pernah fikir apa yang saya mahu."),["pclear", "pbenefit", "plisten", "pload"]),
+ sp7:sit("spouse",L("My spouse disagrees with the people I meet","Pasangan saya tidak setuju dengan orang yang saya jumpa"),L("My spouse was unhappy when I went out with my friends twice this month.","Pasangan saya tidak senang bila saya keluar dengan kawan-kawan dua kali bulan ini."),L("My spouse is controlling.","Pasangan saya suka mengawal."),["pcare", "pclear", "pnew", "plisten"]),
+ sp8:sit("spouse",L("Busy on WhatsApp with their siblings' group","Sibuk berWhatsApp dengan kumpulan adik-beradiknya"),L("During dinner, my spouse was replying to the siblings' group for most of the meal.","Semasa makan malam, pasangan saya membalas mesej kumpulan adik-beradik hampir sepanjang masa."),L("Their family matters more than me.","Keluarga dia lebih penting daripada saya."),["pclear", "pnew", "pbenefit", "phow"]),
+ sp9:sit("spouse",L("Busy on WhatsApp with their office group","Sibuk berWhatsApp dengan kumpulan pejabatnya"),L("My spouse was still replying to the office group after 9 pm on three nights this week.","Pasangan saya masih membalas mesej kumpulan pejabat selepas pukul 9 malam pada tiga malam minggu ini."),L("Work matters more than me.","Kerja lebih penting daripada saya."),["pclear", "pload", "pcirc", "phow"]),
+ c1:sit("child",L("Does not listen or follow instructions","Tidak mendengar atau mengikut arahan"),L("I asked three times to tidy the room. It is still not done.","Saya suruh kemas bilik tiga kali. Masih belum dibuat."),L("My child is stubborn.","Anak saya degil."),["pclear", "phow", "pbenefit", "pable"]),
+ c2:sit("child",L("Too much time on the phone or games","Terlalu lama dengan telefon atau permainan"),L("Screen time was five hours yesterday.","Masa skrin semalam ialah lima jam."),L("My child is addicted.","Anak saya ketagih."),["pagree", "pnew", "pcirc", "plisten"]),
+ c3:sit("child",L("School results are dropping","Keputusan sekolah merosot"),L("Two homework assignments were not handed in this week.","Dua kerja rumah tidak dihantar minggu ini."),L("My child is lazy.","Anak saya malas."),["pable", "pnew", "pload", "psafe"]),
+ c4:sit("child",L("Talks back or is rude to me","Menjawab atau biadab dengan saya"),L("My child raised their voice at me twice this week.","Anak saya meninggikan suara kepada saya dua kali minggu ini."),L("My child is disrespectful.","Anak saya kurang ajar."),["pwho", "phow", "plisten", "pnew"]),
+ pa1:sit("parent",L("Compares me with my siblings or others","Membandingkan saya dengan adik-beradik atau orang lain"),L("My parent mentioned my sibling's job twice during my visit.","Ibu bapa saya sebut tentang kerja adik-beradik saya dua kali semasa saya balik."),L("Nothing I do is good enough.","Apa yang saya buat semua tak cukup baik."),["pcare", "pclear", "pexpect", "plisten"]),
+ pa2:sit("parent",L("Interferes in my decisions","Campur tangan dalam keputusan saya"),L("My parent told me how to discipline my child, in front of the child.","Ibu bapa saya tegur cara saya mendidik anak, di depan anak itu."),L("My parent is controlling.","Ibu bapa saya suka mengawal."),["pcare", "pexpect", "pclear", "phow"]),
+ pa3:sit("parent",L("Refuses help or advice","Menolak bantuan atau nasihat"),L("My parent missed the clinic appointment twice.","Ibu bapa saya terlepas temu janji klinik dua kali."),L("My parent is stubborn.","Ibu bapa saya degil."),["pable", "pface", "plisten", "pcirc"]),
+ pa4:sit("parent",L("Feels I do not visit or call enough","Rasa saya jarang balik atau menelefon"),L("My parent said I have not come home for two months.","Ibu bapa saya kata saya sudah dua bulan tidak balik."),L("My parent is demanding.","Ibu bapa saya terlalu menuntut."),["pcare", "pclear", "pcirc", "pnew"]),
+ sb1:sit("sibling",L("Not sharing the care of our parents","Tidak berkongsi tanggungjawab menjaga ibu bapa"),L("I took our parent to the clinic the last four times.","Saya yang bawa ibu bapa ke klinik empat kali terakhir."),L("They do not care about our parents.","Mereka tak ambil berat tentang ibu bapa."),["pclear", "pcirc", "pagree", "pload"]),
+ sb2:sit("sibling",L("Disagreement about family money or property","Tidak sepakat tentang wang atau harta keluarga"),L("We could not agree on how to divide the cost.","Kami tidak dapat bersetuju tentang cara membahagi kos."),L("They are greedy.","Mereka tamak."),["pexpect", "pwho", "plisten", "pface"]),
+ sb3:sit("sibling",L("Borrowed money and has not paid back","Meminjam wang dan belum bayar"),L("The loan from January has not been repaid.","Pinjaman dari bulan Januari belum dibayar."),L("They are irresponsible.","Mereka tak bertanggungjawab."),["pclear", "pable", "pagree", "pface"]),
+ sb4:sit("sibling",L("An old issue, we barely talk","Isu lama, kami hampir tidak bercakap"),L("We have not spoken since last Raya.","Kami tidak bercakap sejak Raya lepas."),L("They do not want a relationship.","Mereka tak mahu berbaik."),["pwho", "psafe", "plisten", "phow"]),
+ rl1:sit("relative",L("Asks personal questions or comments on my life","Bertanya hal peribadi atau mengulas hidup saya"),L("At the kenduri, I was asked about my salary and my weight.","Di kenduri, saya ditanya tentang gaji dan berat badan."),L("They are busybodies.","Mereka penyibuk."),["pcare", "pexpect", "pclear", "pwho"]),
+ rl2:sit("relative",L("In-laws interfere in our household","Mertua campur tangan dalam rumah tangga kami"),L("My in-law changed how we manage the children's routine.","Mertua saya mengubah cara kami menguruskan rutin anak."),L("They do not respect our home.","Mereka tak hormat rumah tangga kami."),["pcare", "pexpect", "pagree", "plisten"]),
+ rl3:sit("relative",L("Gossips or spreads family stories","Mengumpat atau menyebarkan cerita keluarga"),L("A cousin told me what was said about us.","Seorang sepupu beritahu apa yang diperkatakan tentang kami."),L("They are two-faced.","Mereka bermuka-muka."),["pwho", "psafe", "pnew", "phow"]),
+ rl4:sit("relative",L("Expects us to always host, attend or contribute","Menjangka kami sentiasa menjadi tuan rumah, hadir atau menyumbang"),L("We were asked to contribute for the third event this year.","Kami diminta menyumbang untuk majlis ketiga tahun ini."),L("They take us for granted.","Mereka ambil mudah tentang kami."),["pclear", "pexpect", "pface", "pcirc"]),
+ n1:sit("neighbour",L("Noise late at night","Bising pada lewat malam"),L("There was loud music after 11 pm on three nights this week.","Ada muzik kuat selepas pukul 11 malam pada tiga malam minggu ini."),L("They are inconsiderate.","Mereka tak bertimbang rasa."),["pclear", "pnew", "phow", "pcirc"]),
+ n2:sit("neighbour",L("Parks in front of or blocks my gate","Meletak kereta di depan atau menghalang pagar saya"),L("A car blocked my gate twice this week.","Sebuah kereta menghalang pagar saya dua kali minggu ini."),L("They do what they like.","Mereka buat sesuka hati."),["pclear", "pcirc", "pagree", "phow"]),
+ n3:sit("neighbour",L("Rubbish, pets or trees affecting my house","Sampah, haiwan atau pokok mengganggu rumah saya"),L("Rubbish was left near my gate three times this month.","Sampah ditinggalkan berhampiran pagar saya tiga kali bulan ini."),L("They are dirty.","Mereka pengotor."),["pclear", "pable", "pexpect", "pwho"]),
+ n4:sit("neighbour",L("Unfriendly, does not return greetings","Tidak mesra, tidak membalas teguran"),L("I greeted them twice and got no reply.","Saya tegur dua kali dan tiada balasan."),L("They are arrogant.","Mereka sombong."),["pwho", "pnew", "pload", "pexpect"]),
+ f1:sit("friend",L("Borrowed money and has not paid back","Meminjam wang dan belum bayar"),L("The money lent in March has not been returned.","Wang yang dipinjamkan pada bulan Mac belum dipulangkan."),L("They are using me.","Mereka pergunakan saya."),["pclear", "pable", "pagree", "pface"]),
+ f2:sit("friend",L("Keeps pushing me to buy or join something","Asyik mendesak saya membeli atau menyertai sesuatu"),L("Three messages this month were about joining their business.","Tiga mesej bulan ini tentang menyertai perniagaan mereka."),L("They only see me as a customer.","Mereka nampak saya sebagai pelanggan sahaja."),["pclear", "pcirc", "pwho", "pcare"]),
+ f3:sit("friend",L("Left me out or stopped replying","Meminggirkan saya atau berhenti membalas"),L("I was not told about the reunion, and my last two messages have no reply.","Saya tidak diberitahu tentang reunion, dan dua mesej terakhir saya tiada balasan."),L("They have forgotten me.","Mereka dah lupakan saya."),["pwho", "pnew", "pload", "plisten"]),
+ f4:sit("friend",L("Jokes about me in the group chat","Bergurau tentang saya dalam kumpulan sembang"),L("They joked about my job in the group chat twice.","Mereka bergurau tentang kerja saya dalam kumpulan sembang dua kali."),L("They look down on me.","Mereka pandang rendah pada saya."),["pclear", "pexpect", "pwho", "phow"]),
+ su1:sit("surau",L("Disagreement in the committee","Perselisihan dalam jawatankuasa"),L("My proposal was rejected in the meeting without discussion.","Cadangan saya ditolak dalam mesyuarat tanpa perbincangan."),L("They only listen to their own group.","Mereka dengar kumpulan sendiri sahaja."),["pwho", "phow", "pface", "plisten"]),
+ su2:sit("surau",L("Corrected or criticised me in front of others","Menegur atau mengkritik saya di depan orang lain"),L("After prayers, someone corrected me in front of the congregation.","Selepas solat, seseorang menegur saya di depan jemaah."),L("They think they are better than me.","Mereka rasa mereka lebih baik."),["pcare", "pexpect", "pwho", "pnew"]),
+ su3:sit("surau",L("The same few people do all the work","Orang yang sama sahaja buat semua kerja"),L("Only three of ten people turned up for the gotong-royong.","Hanya tiga daripada sepuluh orang hadir gotong-royong."),L("They are not sincere.","Mereka tak ikhlas."),["pclear", "pload", "pbenefit", "pagree"]),
+ su5:sit("surau",L("Complains that I did not join them","Mengadu saya tidak turut serta bersama mereka"),L("Someone remarked twice that I was not at the last two programmes.","Seseorang menegur dua kali bahawa saya tidak hadir dua program terakhir."),L("They are judging me.","Mereka menghakimi saya."),["pcare", "pclear", "pcirc", "plisten"])
 };
 
 /* Spoken lines (open, win, avoid, msg, need, next) use a normal Malaysian office register: not textbook, not pasar. */
@@ -268,7 +342,19 @@ const CAUSE={
   win:L("Let's write it down: what, by when, and who. That way nobody has to chase.","Apa kata kita tulis: apa, bila dan siapa. Jadi tak ada siapa perlu kejar."),
   avoid:L("I already told you.","Saya dah beritahu tadi."),
   msg:L("Hi, I think I wasn't very clear earlier. I need [what] by [when], for [why]. Is that okay? Let me know if anything is unclear.","Hai, saya rasa saya kurang jelas tadi. Saya perlukan [apa] sebelum [bila], untuk [sebab]. Boleh ke? Beritahu saya kalau ada yang kurang jelas."),
-  retry:L("Put it in writing: one line each for what, when and who. Ask them to reply with what they will do.","Tulis secara bertulis: satu baris untuk apa, bila dan siapa. Minta mereka balas dengan apa yang mereka akan buat.")},
+  retry:L("Put it in writing: one line each for what, when and who. Ask them to reply with what they will do.","Tulis secara bertulis: satu baris untuk apa, bila dan siapa. Minta mereka balas dengan apa yang mereka akan buat."),
+  /* wording for family and community cases */
+  p:{n:L("Unspoken expectation","Harapan yang tidak disebut"),
+   why:L("They may not know what you hope for. With people close to us, we often assume they should already understand.","Mereka mungkin tidak tahu apa yang anda harapkan. Dengan orang yang rapat, kita selalu anggap mereka sepatutnya sudah faham."),
+   re:L("Not 'they don't care', but 'I have not said clearly what I hope for'.","Bukan 'mereka tak peduli', tetapi 'saya belum nyatakan dengan jelas apa yang saya harapkan'."),
+   open:{fam:L("I realise I never really told you what I was hoping for. Can I explain?","Saya sedar saya tak pernah betul-betul beritahu apa yang saya harapkan. Boleh saya terangkan?"),
+         kid:L("I think I was not clear about what I expect. Can you tell me what you understood?","[Ayah/Mak] rasa [Ayah/Mak] kurang jelas tentang apa yang diharapkan. Cuba beritahu, apa yang kamu faham?"),
+         elder:L("I may have misunderstood. Could you tell me again what you hope from me?","Mungkin saya tersalah faham. Boleh beritahu sekali lagi apa yang diharapkan daripada saya?"),
+         soc:L("I may not have explained myself well. Can I share what I was hoping for?","Mungkin saya kurang jelas. Boleh saya kongsi apa yang saya harapkan?")},
+   win:L("Let's agree on what each of us will do, so nobody has to guess.","Jom kita setuju apa yang masing-masing akan buat, supaya tak ada siapa perlu meneka."),
+   avoid:L("You should know without me telling you.","Takkan itu pun nak kena beritahu."),
+   msg:L("Salam, I think I never said this clearly. What I am hoping for is [what], because [why]. Can we talk about it?","Salam, saya rasa saya tak pernah cakap dengan jelas. Saya berharap [apa], sebab [sebab]. Boleh kita bincang?"),
+   retry:L("Say it again in one simple sentence, then ask them to tell you what they heard. Agree on one small thing to try this week.","Sebut semula dalam satu ayat mudah, kemudian minta mereka beritahu apa yang mereka dengar. Setuju satu perkara kecil untuk dicuba minggu ini.")}},
  priorities:{n:L("Competing priorities","Keutamaan bertembung"),
   why:L("They may not be refusing you. Something else, often from their own boss, comes first.","Mereka mungkin bukan menolak anda. Ada perkara lain, selalunya daripada ketua mereka sendiri, yang didahulukan."),
   re:L("Not 'they ignore me', but 'my request is losing to another priority'.","Bukan 'mereka abaikan saya', tetapi 'permintaan saya kalah kepada keutamaan lain'."),
@@ -278,7 +364,19 @@ const CAUSE={
   win:L("If I prepare [part] first, would that make it faster for you? Or which date is realistic?","Kalau saya sediakan [bahagian] dulu, lebih cepat tak untuk awak? Atau tarikh mana yang realistik?"),
   avoid:L("It only takes five minutes.","Lima minit saja."),
   msg:L("Hi, I know you're busy. I need [what] by [when]. If that date is difficult, which date works for you? I can prepare [part] first to speed things up.","Hai, saya tahu awak sibuk. Saya perlukan [apa] sebelum [bila]. Kalau tarikh itu susah, tarikh mana yang sesuai? Saya boleh sediakan [bahagian] dulu supaya lebih cepat."),
-  retry:L("Ask which date they can commit to, and take the smallest useful piece first. If it truly cannot fit, agree together who should decide the priority.","Tanya tarikh mana yang mereka boleh janji, dan ambil bahagian terkecil yang berguna dahulu. Jika memang tidak muat, setuju bersama siapa yang patut tentukan keutamaan.")},
+  retry:L("Ask which date they can commit to, and take the smallest useful piece first. If it truly cannot fit, agree together who should decide the priority.","Tanya tarikh mana yang mereka boleh janji, dan ambil bahagian terkecil yang berguna dahulu. Jika memang tidak muat, setuju bersama siapa yang patut tentukan keutamaan."),
+  /* wording for family and community cases */
+  p:{n:L("Tired or pulled elsewhere","Penat atau ada hal lain"),
+   why:L("They may not be ignoring you. Work, money worries, health or other people may be taking their energy right now.","Mereka mungkin bukan mengabaikan anda. Kerja, masalah wang, kesihatan atau orang lain mungkin sedang menghabiskan tenaga mereka."),
+   re:L("Not 'I am not important to them', but 'they have little left to give right now'.","Bukan 'saya tak penting bagi mereka', tetapi 'mereka tak banyak tenaga yang tinggal sekarang'."),
+   open:{fam:L("You look tired lately. What has been weighing on you?","Awak nampak penat kebelakangan ini. Apa yang sedang membebankan awak?"),
+         kid:L("You seem to have a lot going on. What is taking most of your time and energy now?","Nampak macam banyak perkara yang kamu fikirkan. Apa yang paling banyak ambil masa dan tenaga kamu sekarang?"),
+         elder:L("I know there is a lot on your mind. Is anything worrying you these days?","Saya tahu banyak perkara yang difikirkan. Ada apa-apa yang merisaukan kebelakangan ini?"),
+         soc:L("I know you are busy. Is this a bad time, or is there a better time to talk?","Saya tahu masing-masing sibuk. Sekarang kurang sesuai ke, atau ada masa yang lebih baik untuk berbincang?")},
+   win:L("What if I take [part] and you take [part]? Or tell me a time that suits you better.","Macam mana kalau saya ambil [bahagian] dan awak ambil [bahagian]? Atau beritahu masa yang lebih sesuai."),
+   avoid:L("You always have time for everything else.","Untuk benda lain ada pula masa."),
+   msg:L("Salam, I know you have a lot going on. When you have time, I would like to talk about [what]. Would [day] be okay?","Salam, saya tahu banyak urusan sekarang. Bila ada masa, saya nak berbincang tentang [apa]. [Hari] boleh tak?"),
+   retry:L("Pick a better moment: not when they are tired, hungry or rushing. Ask for a small part first, and offer to carry part of the load.","Pilih masa yang lebih baik: bukan ketika mereka penat, lapar atau tergesa-gesa. Minta bahagian kecil dulu, dan tawarkan untuk pikul sebahagian beban.")}},
  nowin:{n:L("No win for them","Tiada manfaat untuk mereka"),
   why:L("The task helps you but costs them time or risk. People put effort where they see a benefit.","Tugasan itu membantu anda tetapi memakan masa atau risiko mereka. Orang beri usaha di tempat mereka nampak manfaat."),
   re:L("Not 'they are selfish', but 'I have not shown what is in it for them'.","Bukan 'mereka pentingkan diri', tetapi 'saya belum tunjuk apa manfaatnya untuk mereka'."),
@@ -288,7 +386,19 @@ const CAUSE={
   win:L("How about this: you get [benefit], and I get [what I need]. Does that work?","Macam mana kalau begini: awak dapat [manfaat], saya dapat [apa yang saya perlukan]. Okey tak?"),
   avoid:L("It's your job.","Ini memang kerja awak."),
   msg:L("Hi, I understand [what] is extra work for you. I'd like to find a way that helps you too, for example [benefit]. Can we talk for 10 minutes?","Hai, saya faham [apa] kerja tambahan untuk awak. Saya nak cari cara yang membantu awak juga, contohnya [manfaat]. Boleh kita bincang 10 minit?"),
-  retry:L("Ask what they are measured on and link your request to it. If there is truly no benefit for them, ask for less, or let both managers set the priority.","Tanya apa yang mereka diukur dan kaitkan permintaan anda dengannya. Jika memang tiada manfaat untuk mereka, kurangkan permintaan, atau biar kedua-dua pengurus tentukan keutamaan.")},
+  retry:L("Ask what they are measured on and link your request to it. If there is truly no benefit for them, ask for less, or let both managers set the priority.","Tanya apa yang mereka diukur dan kaitkan permintaan anda dengannya. Jika memang tiada manfaat untuk mereka, kurangkan permintaan, atau biar kedua-dua pengurus tentukan keutamaan."),
+  /* wording for family and community cases */
+  p:{n:L("It matters less to them","Kurang penting bagi mereka"),
+   why:L("This matters a lot to you but not to them, or agreeing would cost them something, such as comfort, pride or face.","Perkara ini sangat penting bagi anda tetapi tidak bagi mereka, atau bersetuju akan merugikan mereka dari segi keselesaan, maruah atau air muka."),
+   re:L("Not 'they are selfish', but 'I have not shown why this matters, or what they gain'.","Bukan 'mereka pentingkan diri', tetapi 'saya belum tunjuk kenapa ini penting, atau apa yang mereka dapat'."),
+   open:{fam:L("I know this may not seem important to you. Can I tell you why it matters so much to me?","Saya tahu ini mungkin nampak tak penting bagi awak. Boleh saya beritahu kenapa ia sangat penting bagi saya?"),
+         kid:L("I know you would rather do something else. Let me explain why this matters, then I want to hear your side.","[Ayah/Mak] tahu kamu lebih suka buat benda lain. Biar [Ayah/Mak] terangkan kenapa ini penting, lepas itu [Ayah/Mak] nak dengar pandangan kamu."),
+         elder:L("I understand we see this differently. May I share why this is important to me?","Saya faham pandangan kita berbeza. Boleh saya kongsi kenapa perkara ini penting bagi saya?"),
+         soc:L("I know this is a small thing for you, but it affects me quite a lot. Can I explain?","Saya tahu ini mungkin perkara kecil, tapi ia agak memberi kesan kepada saya. Boleh saya terangkan?")},
+   win:L("What would make this easier or fairer for you? I am willing to adjust on my side too.","Apa yang boleh buat perkara ini lebih mudah atau adil? Saya pun sedia ubah di pihak saya."),
+   avoid:L("You only think about yourself.","Fikir diri sendiri saja."),
+   msg:L("Salam, I know [what] may not seem important, but it means a lot to me because [why]. Can we find a way that works for both of us?","Salam, saya tahu [apa] mungkin nampak tak penting, tapi ia sangat bermakna bagi saya sebab [sebab]. Boleh kita cari cara yang sesuai untuk kedua-dua pihak?"),
+   retry:L("Find out what matters to them and connect your request to it. Let them keep their dignity: offer a way to agree without looking like they lost.","Ketahui apa yang penting bagi mereka dan kaitkan permintaan anda dengannya. Jaga maruah mereka: tawarkan cara untuk bersetuju tanpa nampak seperti kalah.")}},
  trust:{n:L("Trust or a past issue","Isu kepercayaan atau kisah lama"),
   why:L("The problem may be between the two of you, not the task. A past incident or low trust makes people hold back.","Masalahnya mungkin antara anda berdua, bukan tugasan itu. Kejadian lama atau kurang percaya membuat orang menahan diri."),
   re:L("Not 'they are difficult', but 'something between us needs repair'.","Bukan 'mereka susah', tetapi 'ada sesuatu antara kami yang perlu dibaiki'."),
@@ -298,7 +408,19 @@ const CAUSE={
   win:L("Tell me one thing I could do differently. I'll also share one thing that would help me.","Beritahu satu perkara yang saya boleh ubah. Saya juga akan kongsi satu perkara yang boleh membantu saya."),
   avoid:L("What's your problem with me?","Apa masalah awak dengan saya?"),
   msg:L("Hi, I feel things haven't been smooth between us and I'd like to fix that. Are you free for a coffee, about 15 minutes?","Hai, saya rasa hubungan kerja kita kurang lancar dan saya nak perbaikinya. Awak free tak untuk minum kopi, dalam 15 minit?"),
-  retry:L("Do not push for an answer in one talk. Keep one small promise to them this week, then ask again. Trust returns through small kept promises.","Jangan desak jawapan dalam satu perbualan. Tunaikan satu janji kecil kepada mereka minggu ini, kemudian tanya semula. Kepercayaan pulih melalui janji kecil yang ditunaikan.")},
+  retry:L("Do not push for an answer in one talk. Keep one small promise to them this week, then ask again. Trust returns through small kept promises.","Jangan desak jawapan dalam satu perbualan. Tunaikan satu janji kecil kepada mereka minggu ini, kemudian tanya semula. Kepercayaan pulih melalui janji kecil yang ditunaikan."),
+  /* wording for family and community cases */
+  p:{n:L("Past hurt","Luka lama"),
+   why:L("Something from the past may still hurt: words said in anger, a broken promise, or feeling treated unfairly. Until it is acknowledged, small issues keep turning big.","Sesuatu dari masa lalu mungkin masih terasa: kata-kata semasa marah, janji yang tidak ditunaikan, atau rasa dilayan tidak adil. Selagi ia tidak diakui, isu kecil akan terus menjadi besar."),
+   re:L("Not 'they are difficult', but 'something between us has not healed'.","Bukan 'mereka susah', tetapi 'ada sesuatu antara kami yang belum sembuh'."),
+   open:{fam:L("I feel there is something between us that has not been settled. If I hurt you, I want to know. Can we talk?","Saya rasa ada sesuatu antara kita yang belum selesai. Kalau saya pernah lukakan hati awak, saya nak tahu. Boleh kita berbincang?"),
+         kid:L("I think I may have hurt you with something I said or did. I want to listen. Will you tell me?","[Ayah/Mak] rasa mungkin ada kata-kata atau perbuatan [Ayah/Mak] yang lukakan hati kamu. [Ayah/Mak] nak dengar. Boleh ceritakan?"),
+         elder:L("If I have said or done anything that hurt you, I am sorry. I would like to make things right.","Kalau ada kata-kata atau perbuatan saya yang mengguris hati, saya minta maaf. Saya nak perbaiki keadaan."),
+         soc:L("I feel things have not been the same between us. If I did something wrong, I would like to know and make it right.","Saya rasa hubungan kita tak macam dulu. Kalau saya ada buat silap, saya nak tahu dan perbaikinya.")},
+   win:L("Tell me one thing I can do to make it better. I will also share one thing that would help me.","Beritahu satu perkara yang saya boleh buat untuk perbaiki keadaan. Saya juga akan kongsi satu perkara yang boleh membantu saya."),
+   avoid:L("You always bring up old stories.","Asyik ungkit cerita lama."),
+   msg:L("Salam, I have been thinking about us. If I have hurt you, I am sorry. Can we meet and talk?","Salam, saya ada terfikir tentang kita. Kalau saya ada mengguris hati, saya minta maaf. Boleh kita jumpa dan berbincang?"),
+   retry:L("Do not push for forgiveness in one talk. Apologise for your part without adding 'but'. Then show it through small, steady actions.","Jangan desak kemaafan dalam satu perbualan. Minta maaf atas bahagian anda tanpa menambah 'tapi'. Kemudian tunjukkan melalui tindakan kecil yang berterusan.")}},
  skill:{n:L("Skill, confidence or information gap","Jurang kemahiran, keyakinan atau maklumat"),
   why:L("They may want to do it but not know how, or be afraid of doing it wrong. Many people hide this rather than ask.","Mereka mungkin mahu buat tetapi tidak tahu caranya, atau takut tersalah. Ramai orang menyembunyikannya daripada bertanya."),
   re:L("Not 'they are lazy', but 'they may be stuck and not saying so'.","Bukan 'mereka malas', tetapi 'mereka mungkin tersekat dan tidak memberitahu'."),
@@ -308,7 +430,19 @@ const CAUSE={
   win:L("Let's do the first one together, then you try the next one and I'll check. Okay?","Kita buat yang pertama sama-sama, lepas itu awak cuba yang seterusnya dan saya semak. Okey?"),
   avoid:L("It's easy, anyone can do it.","Senang saja, semua orang boleh buat."),
   msg:L("Hi, about [what]: if any part is unclear or new to you, just let me know. I can go through the first one with you.","Hai, tentang [apa]: kalau ada bahagian yang kurang jelas atau baru bagi awak, beritahu saya. Saya boleh buat yang pertama bersama awak."),
-  retry:L("Break it into a smaller first step and show an example of a finished one. Check after the first step, not at the deadline.","Pecahkan kepada langkah pertama yang lebih kecil dan tunjuk satu contoh yang sudah siap. Semak selepas langkah pertama, bukan pada tarikh akhir.")},
+  retry:L("Break it into a smaller first step and show an example of a finished one. Check after the first step, not at the deadline.","Pecahkan kepada langkah pertama yang lebih kecil dan tunjuk satu contoh yang sudah siap. Semak selepas langkah pertama, bukan pada tarikh akhir."),
+  /* wording for family and community cases */
+  p:{n:L("Not able yet","Belum mampu"),
+   why:L("They may want to, but cannot yet: because of age, health, money, know-how or confidence. Many people hide this out of pride or embarrassment.","Mereka mungkin mahu, tetapi belum mampu: kerana umur, kesihatan, wang, pengetahuan atau keyakinan. Ramai orang menyembunyikannya kerana maruah atau malu."),
+   re:L("Not 'they refuse', but 'they may need help and are not saying it'.","Bukan 'mereka enggan', tetapi 'mereka mungkin perlukan bantuan dan tidak memberitahu'."),
+   open:{fam:L("Is there any part of this that is hard for you? I would rather help than argue.","Ada bahagian yang susah untuk awak? Saya lebih rela tolong daripada bertengkar."),
+         kid:L("Which part is hard for you? Show me, and we will work it out together.","Bahagian mana yang susah? Tunjukkan, kita selesaikan sama-sama."),
+         elder:L("Is any part of this difficult now? I would be glad to help, in whatever way is comfortable for you.","Ada bahagian yang sukar sekarang? Saya sedia membantu, ikut cara yang selesa."),
+         soc:L("Is there anything making this difficult on your side? Maybe I can help.","Ada apa-apa yang menyukarkan? Mungkin saya boleh bantu.")},
+   win:L("Let's do the first one together, then you try the next one.","Kita buat yang pertama sama-sama, lepas itu cuba yang seterusnya."),
+   avoid:L("Even this you cannot do?","Benda macam ni pun tak boleh buat?"),
+   msg:L("Salam, about [what]: if any part is difficult, please tell me. I would be glad to help.","Salam, tentang [apa]: kalau ada bahagian yang sukar, beritahu saya. Saya sedia membantu."),
+   retry:L("Make the first step smaller and do it together once. Praise the effort, not only the result.","Kecilkan langkah pertama dan buat bersama sekali. Puji usahanya, bukan hasilnya sahaja.")}},
  system:{n:L("System or process barrier","Halangan sistem atau proses"),
   why:L("The person may be willing, but the process, tool, access or approval is in the way. Anyone in that seat would behave the same.","Orang itu mungkin sanggup, tetapi proses, alat, akses atau kelulusan menjadi penghalang. Sesiapa di tempat itu akan berkelakuan sama."),
   re:L("Not 'they are slow', but 'the system makes this hard to do'.","Bukan 'mereka lambat', tetapi 'sistem menyukarkan perkara ini'."),
@@ -318,7 +452,19 @@ const CAUSE={
   win:L("If we fix this together, it saves both of us time every time. Who else should we involve?","Kalau kita selesaikan sama-sama, kita berdua jimat masa setiap kali. Siapa lagi yang perlu kita libatkan?"),
   avoid:L("Just find a way.","Cari jalan sendiri."),
   msg:L("Hi, I think [what] is stuck somewhere in the process. Where does it stop on your side? I'd like to help clear it.","Hai, saya rasa [apa] tersekat di mana-mana dalam proses. Di pihak awak, ia terhenti di mana? Saya nak bantu selesaikan."),
-  retry:L("Go through the steps together and mark where it stops. Take that one blocker to the process owner, with an example.","Lalui langkah-langkah itu bersama dan tandakan di mana ia terhenti. Bawa satu halangan itu kepada pemilik proses, dengan contoh.")},
+  retry:L("Go through the steps together and mark where it stops. Take that one blocker to the process owner, with an example.","Lalui langkah-langkah itu bersama dan tandakan di mana ia terhenti. Bawa satu halangan itu kepada pemilik proses, dengan contoh."),
+  /* wording for family and community cases */
+  p:{n:L("Circumstances or habit","Keadaan atau kebiasaan"),
+   why:L("The cause may be the situation, not the person: money, time, distance, health, or simply the way they were raised and have always done it.","Puncanya mungkin keadaan, bukan orangnya: wang, masa, jarak, kesihatan, atau sekadar cara mereka dibesarkan dan kebiasaan dari dulu."),
+   re:L("Not 'they are doing this to me', but 'the situation or an old habit is in the way'.","Bukan 'mereka sengaja buat begini pada saya', tetapi 'keadaan atau kebiasaan lama yang menghalang'."),
+   open:{fam:L("I think it is our situation that makes this hard, not you. What is getting in the way?","Saya rasa keadaan kita yang menyukarkan, bukan awak. Apa yang menjadi halangan?"),
+         kid:L("What makes this hard to do? Let's look at what gets in the way.","Apa yang buat perkara ini susah? Jom kita tengok apa yang menghalang."),
+         elder:L("I understand this is how it has always been done. Can I share what is different for us now?","Saya faham memang begini caranya dari dulu. Boleh saya kongsi apa yang berbeza untuk kami sekarang?"),
+         soc:L("Maybe there is something about the situation I do not know. What makes it difficult?","Mungkin ada sesuatu tentang keadaan ini yang saya tak tahu. Apa yang menyukarkan?")},
+   win:L("If we change one thing about the situation together, it gets easier for both of us. What can we change?","Kalau kita ubah satu perkara tentang keadaan ini bersama, ia jadi lebih mudah untuk kedua-dua pihak. Apa yang boleh kita ubah?"),
+   avoid:L("That is just an excuse.","Itu alasan saja."),
+   msg:L("Salam, I think the situation is what makes [what] difficult, and it is nobody's fault. Can we look at it together?","Salam, saya rasa keadaan yang menyukarkan [apa], bukan salah sesiapa. Boleh kita tengok bersama?"),
+   retry:L("Change the situation instead of pushing the person: the time, the place, the routine, or who helps. Habits change slowly, so agree on one small change.","Ubah keadaan, bukan desak orangnya: masa, tempat, rutin, atau siapa yang membantu. Kebiasaan berubah perlahan, jadi setuju satu perubahan kecil.")}},
  mypart:{n:L("My own part","Bahagian saya sendiri"),
   why:L("How, when or where you asked may be part of it. A rushed message, a late request or a sharp tone can create resistance.","Cara, masa atau tempat anda meminta mungkin sebahagian puncanya. Mesej tergesa-gesa, permintaan lewat atau nada keras boleh menimbulkan penolakan."),
   re:L("Not 'what is wrong with them', but 'what can I change in how I ask'.","Bukan 'apa masalah mereka', tetapi 'apa yang saya boleh ubah dalam cara saya meminta'."),
@@ -328,7 +474,19 @@ const CAUSE={
   win:L("Let me know the best way and time to bring requests to you, and I'll follow that.","Beritahu saya cara dan masa yang paling sesuai untuk saya kemukakan permintaan, dan saya akan ikut."),
   avoid:L("I'm sorry, but you also...","Saya minta maaf, tapi awak pun..."),
   msg:L("Hi, sorry, my earlier request was a bit rushed. To be clear: I need [what] by [when] because [why]. What do you think?","Hai, maaf, permintaan saya tadi agak tergesa-gesa. Supaya jelas: saya perlukan [apa] sebelum [bila] kerana [sebab]. Apa pendapat awak?"),
-  retry:L("Change one thing: the timing, the channel or the amount of notice. Ask them directly how they prefer to be asked.","Ubah satu perkara: masa, saluran atau tempoh notis. Tanya terus bagaimana mereka lebih suka diminta.")},
+  retry:L("Change one thing: the timing, the channel or the amount of notice. Ask them directly how they prefer to be asked.","Ubah satu perkara: masa, saluran atau tempoh notis. Tanya terus bagaimana mereka lebih suka diminta."),
+  /* wording for family and community cases */
+  p:{n:L("My own part","Bahagian saya sendiri"),
+   why:L("How, when or where you raised it may be part of it. Raising it while upset, in front of others, or with words like 'always' and 'never' makes people defend themselves.","Cara, masa atau tempat anda membangkitkannya mungkin sebahagian puncanya. Membangkitkan semasa marah, di depan orang lain, atau dengan perkataan 'selalu' dan 'tak pernah' membuat orang mempertahankan diri."),
+   re:L("Not 'what is wrong with them', but 'what can I change in how I bring it up'.","Bukan 'apa masalah mereka', tetapi 'apa yang saya boleh ubah dalam cara saya membangkitkannya'."),
+   open:{fam:L("I am sorry for how I said it the other day. Can I try again, calmly?","Saya minta maaf atas cara saya cakap hari itu. Boleh saya cuba sekali lagi, dengan tenang?"),
+         kid:L("I was angry when I spoke to you, and that was not fair. Can we start again?","[Ayah/Mak] marah masa bercakap dengan kamu, dan itu tak adil. Boleh kita mula semula?"),
+         elder:L("I am sorry if my tone was not right the other day. I did not mean to be rude. May I explain again?","Saya minta maaf kalau nada saya kurang sopan hari itu. Saya tak berniat biadab. Boleh saya terangkan semula?"),
+         soc:L("I am sorry for how I raised it earlier. Can we talk about it again, properly?","Saya minta maaf atas cara saya bangkitkan perkara itu tadi. Boleh kita bincang semula dengan baik?")},
+   win:L("Tell me the best time and way to bring things up with you, and I will follow that.","Beritahu masa dan cara yang paling sesuai untuk saya bangkitkan sesuatu, dan saya akan ikut."),
+   avoid:L("I am sorry, but you started it.","Saya minta maaf, tapi awak yang mula dulu."),
+   msg:L("Salam, I am sorry for how I said things earlier. What I meant was [what], because [why]. Can we talk again?","Salam, saya minta maaf atas cara saya bercakap tadi. Maksud saya ialah [apa], sebab [sebab]. Boleh kita bincang semula?"),
+   retry:L("Change one thing: the time, the place or your first sentence. Talk in private, when both are calm, and start with what you appreciate about them.","Ubah satu perkara: masa, tempat atau ayat pertama anda. Berbincang secara tertutup, ketika kedua-dua tenang, dan mula dengan apa yang anda hargai tentang mereka.")}},
 
  /* ---------- 6. Causes for "Myself": steps are [habit number, title, what to do] ---------- */
  s_goal:{n:L("Unclear end result","Hasil akhir tidak jelas"),
@@ -378,6 +536,8 @@ const CAUSE={
   retry:L("Ask for a worked example, or do the first one together with someone. Asking early costs less than failing late.","Minta satu contoh yang sudah siap, atau buat yang pertama bersama seseorang. Bertanya awal lebih murah daripada gagal lewat.")}
 };
 /* Order used to break ties, and the fallback when no answer points anywhere */
+/* Cause text for a case: family and community cases use the "p" wording of the same cause */
+const cau=(c,k)=>{const z=CAUSE[k];return z.p&&CAT[c.cat].life?Object.assign({},z,z.p):z;};
 const ORDER=["unclear","priorities","nowin","trust","skill","system","mypart"], DEF=["mypart","trust","priorities"];
 const SORDER=["s_goal","s_prior","s_energy","s_control","s_skill"], SDEF=["s_energy","s_control","s_prior"];
 
@@ -391,7 +551,20 @@ const TONE={
        esc:L("With your own staff, clarify before you escalate. Put the expectation in writing with dates, review it weekly, and offer support. If the pattern continues, talk to HR about the proper next step.","Dengan staf sendiri, jelaskan dahulu sebelum bawa ke atas. Tulis jangkaan dengan tarikh, semak setiap minggu, dan tawarkan sokongan. Jika corak itu berterusan, bincang dengan HR tentang langkah seterusnya yang betul.")},
  up:{need:L("To deliver [goal], I need your [decision or support] on [what] by [when].","Untuk capai [matlamat], saya perlukan [keputusan atau sokongan] tentang [apa] sebelum [bila]."),
      next:L("So I'll proceed with [option] and update you on [day]. Is that right?","Jadi saya teruskan dengan [pilihan] dan beri update pada [hari]. Betul ya?"),
-     esc:L("Going above your manager is the last resort. First ask once more with facts and options. If it still blocks important work, ask a trusted senior person or HR for advice, and tell your manager that you are doing so.","Pergi ke pihak lebih atas ialah pilihan terakhir. Mula-mula, minta sekali lagi dengan fakta dan pilihan. Jika ia masih menghalang kerja penting, minta nasihat orang kanan yang dipercayai atau HR, dan beritahu ketua anda bahawa anda berbuat demikian.")}
+     esc:L("Going above your manager is the last resort. First ask once more with facts and options. If it still blocks important work, ask a trusted senior person or HR for advice, and tell your manager that you are doing so.","Pergi ke pihak lebih atas ialah pilihan terakhir. Mula-mula, minta sekali lagi dengan fakta dan pilihan. Jika ia masih menghalang kerja penting, minta nasihat orang kanan yang dipercayai atau HR, dan beritahu ketua anda bahawa anda berbuat demikian.")},
+ /* family and community */
+ fam:{need:L("What I am hoping for is [what]. It matters to me because [why].","Apa yang saya harapkan ialah [apa]. Ia penting bagi saya sebab [sebab]."),
+      next:L("So can we try [action] starting [when], and see how it goes?","Jadi boleh kita cuba [tindakan] mulai [bila], dan tengok macam mana?"),
+      esc:L("If you have tried twice and it still hurts the relationship, involve one person you both respect, such as an elder in the family or a counsellor. Tell the other person first. The aim is to help you both, not to take sides.","Jika anda sudah cuba dua kali dan ia masih menjejaskan hubungan, libatkan seorang yang dihormati oleh kedua-dua pihak, seperti orang tua dalam keluarga atau kaunselor. Beritahu pihak satu lagi dahulu. Tujuannya membantu kedua-dua pihak, bukan menyebelahi sesiapa.")},
+ kid:{need:L("What I need from you is [what]. It matters because [why].","[Ayah/Mak] nak minta [apa]. Ia penting sebab [sebab]."),
+      next:L("So we agree: [action], starting [when]. What should happen if it is not done?","Jadi kita setuju: [tindakan], mulai [bila]. Kalau tak dibuat, apa yang patut berlaku?"),
+      esc:L("With children, being consistent matters more than being strict. Agree the rule with your spouse first, so you both say the same thing. If the issue continues or you are worried, talk to the class teacher or the school counsellor.","Dengan anak, konsisten lebih penting daripada garang. Setuju peraturan dengan pasangan dahulu, supaya kedua-dua berkata perkara yang sama. Jika isu berterusan atau anda risau, berbincang dengan guru kelas atau kaunselor sekolah.")},
+ elder:{need:L("If it is okay, I would like to ask for one thing: [what]. It would help me because [why].","Kalau boleh, saya nak minta satu perkara: [apa]. Ia membantu saya sebab [sebab]."),
+      next:L("So I will [my action], and I hope [their action] is okay with you. I will check with you again on [day].","Jadi saya akan [tindakan saya], dan saya harap [tindakan mereka] tidak menjadi masalah. Saya akan tanya khabar semula pada [hari]."),
+      esc:L("With elders, avoid confronting them again and again. Ask a sibling or a relative they respect to help carry the message. Keep your manners throughout. You can hold your position without raising your voice.","Dengan orang tua, elakkan bersemuka berulang kali. Minta adik-beradik atau saudara yang mereka hormati bantu sampaikan. Jaga adab sepanjang masa. Anda boleh berpegang pada pendirian tanpa meninggikan suara.")},
+ soc:{need:L("I would like to ask for [what], because [why]. Would that be okay?","Saya nak minta [apa], sebab [sebab]. Boleh tak?"),
+      next:L("So we agree on [action] from [when]. Thank you, I appreciate it.","Jadi kita setuju [tindakan] mulai [bila]. Terima kasih, saya hargainya."),
+      esc:L("If a friendly talk twice does not work, bring it to the right channel: the residents' committee for neighbours, or the surau committee for surau matters. Tell the person first. For safety matters, go to the authorities.","Jika dua kali berbincang baik-baik tidak berjaya, bawa ke saluran yang betul: jawatankuasa penduduk untuk hal jiran, atau jawatankuasa surau untuk hal surau. Beritahu orang itu dahulu. Untuk hal keselamatan, rujuk pihak berkuasa.")}
 };
 
 /* ---------- 8. Fixed screen text ---------- */
@@ -601,6 +774,19 @@ const ICON={
  AV:"<path d='M19 20V9A5 5 0 0 0 9 9v10'/><path d='M5 15.5l4 4 4-4'/>",
  AC:"<path d='M5 21V4'/><path d='M5 5c3-2 6 2 9 0s5-1 5-1v9s-2-1-5 1-6-2-9 0'/>"
 };
+Object.assign(ICON,{
+ work:"<rect x='3' y='7' width='18' height='13' rx='2'/><path d='M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18'/>",
+ family:"<path d='M3 11l9-8 9 8v10H3z'/><path d='M12 17.5s-3-1.8-3-4a1.7 1.7 0 0 1 3-1 1.7 1.7 0 0 1 3 1c0 2.2-3 4-3 4z'/>",
+ spouse:"<path d='M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z'/>",
+ child:"<circle cx='12' cy='8' r='4'/><path d='M7 21v-3a5 5 0 0 1 10 0v3'/><path d='M10.5 8.5h.01M13.5 8.5h.01'/>",
+ parent:"<circle cx='10' cy='5.5' r='2.8'/><path d='M10 8.5v6.5l-2.5 6M10 15l2.5 6'/><path d='M10 11l5 2.5V21'/>",
+ sibling:"<circle cx='7.5' cy='8' r='2.8'/><circle cx='16.5' cy='8' r='2.8'/><path d='M2.5 20c0-3 2.2-5 5-5s5 2 5 5'/><path d='M11.5 20c0-3 2.2-5 5-5s5 2 5 5'/>",
+ relative:"<circle cx='12' cy='7' r='2.8'/><circle cx='5' cy='10' r='2'/><circle cx='19' cy='10' r='2'/><path d='M7 20c0-3 2.2-5 5-5s5 2 5 5'/><path d='M1.5 19c0-2.2 1.5-3.8 3.5-3.8M22.5 19c0-2.2-1.5-3.8-3.5-3.8'/>",
+ neighbour:"<path d='M2 11l5-4.5 5 4.5v9H2z'/><path d='M12 11l5-4.5 5 4.5v9H12'/><path d='M6 20v-4h2v4M16 20v-4h2v4'/>",
+ friend:"<path d='M3 5h11v8H8l-3 3v-3H3z'/><path d='M17 10h4v7h-2v2.5L16.5 17H11v-1'/>",
+ surau:"<path d='M5 21v-8a7 7 0 0 1 14 0v8'/><path d='M3 21h18'/><path d='M10 21v-4a2 2 0 0 1 4 0v4'/><path d='M12 6V4'/><path d='M13.2 1a1.6 1.6 0 1 0 0 2.6'/>"
+});
+ICON.community=ICON.relative;
 ICON.s_prior=ICON.priorities;ICON.s_skill=ICON.skill;ICON.target=ICON.s_goal;
 const ic=n=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]||""}</svg>`;
 const big=n=>`<span class="bigic">${ic(n)}</span>`;                                        // large round icon above a heading
@@ -617,6 +803,7 @@ let C=null;                      // current case
 let COPY=[];                     // texts for the copy buttons on this screen
 try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&Array.isArray(r.cases))S=r;}catch(e){}
 if(S.me&&!(STYLE[S.me.style]&&Array.isArray(S.me.top)&&Array.isArray(S.me.low)))delete S.me;   // drop a result saved in an older format
+S.cases=S.cases.filter(c=>c&&SIT[c.sit]&&CAT[c.cat]);   // drop saved cases whose situation no longer exists
 S.cases.forEach(c=>{if(c.their&&!STYLE[c.their])delete c.their;});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
 const t=x=>x[S.lang==="bm"?1:0];
@@ -646,7 +833,7 @@ function rank(c){
 }
 /* ---------- Response steps for the current cause ---------- */
 function steps(c){
-  const cz=CAUSE[c.rank[c.ci]], tone=CAT[c.cat].tone;
+  const cz=cau(c,c.rank[c.ci]), tone=CAT[c.cat].tone;
   if(tone==="self")return cz.steps.map(s=>({h:s[0],t:s[1],x:s[2],say:false,ic:HIC[s[0]]}));
   return [{h:5,t:T.s_open,x:cz.open[tone],say:true,ic:"ear"},{h:2,t:T.s_need,x:TONE[tone].need,say:true,ic:"target"},
           {h:4,t:T.s_win,x:cz.win,say:true,ic:"win"},{h:3,t:T.s_next,x:TONE[tone].next,say:true,ic:"next"}];
@@ -672,7 +859,7 @@ const copyBtn=()=>`<button class="cp" data-a="copy:${COPY.length-1}">${t(T.copy)
 const fmtDate=ts=>new Date(ts).toLocaleDateString(S.lang==="bm"?"ms-MY":"en-GB",{day:"numeric",month:"short"});
 
 /* Which section each screen belongs to (sets the background colour) */
-const SEC={home:"home",cat:"home",pause:"q",q:"q",why:"why",calm:"respond",reset:"respond",step:"respond",ready:"respond",react:"follow",retry:"follow",good:"follow",data:"data",disc:"style",dq:"style",their:"style",tq:"style",mine:"style"};
+const SEC={home:"home",grp:"home",cat:"home",pause:"q",q:"q",why:"why",calm:"respond",reset:"respond",step:"respond",ready:"respond",react:"follow",retry:"follow",good:"follow",data:"data",disc:"style",dq:"style",their:"style",tq:"style",mine:"style"};
 function render(){
   COPY=[];let h="";const v=V.name;
   document.documentElement.lang=S.lang==="bm"?"ms":"en";
@@ -696,9 +883,17 @@ function render(){
       if(S.cases.length>1)h+=`<button class="btn txt" style="margin-top:0" data-a="clear">${t(T.clear)}</button>`;
     }
     h+=`<h3>${t(T.whoabout)}</h3>`;
-    for(const k in CAT)h+=row("cat:"+k,t(CAT[k].n),t(CAT[k].d),"",k);
+    for(const g in GROUP)h+=row("grp:"+g,t(GROUP[g].n),t(GROUP[g].d),"",g);
+    h+=row("cat:self",t(CAT.self.n),t(CAT.self.d),"","self");
     h+=`<h3>${t(TD.home)}</h3>`+row("disc",t(TD.row),S.me?sname(S.me.style):t(TD.row_new),"",S.me?S.me.style:"win");
     h+=`<button class="btn txt" data-a="data">${t(T.data)}</button><p class="mute">${t(T.a2hs)}</p><p class="mute">${t(T.credit)}</p>`;
+  }
+
+  else if(v==="grp"){
+    const g=GROUP[V.grp];
+    h+=`<span class="tag">${t(g.n)}</span><h2>${t(T.whoabout)}</h2>`;
+    g.cats.forEach(k=>{h+=row("cat:"+k,t(CAT[k].n),t(CAT[k].d),"",k);});
+    if(g.note)h+=`<p class="mute">${t(g.note)}</p>`;
   }
 
   else if(v==="cat"){
@@ -722,12 +917,12 @@ function render(){
   }
 
   else if(v==="why"){
-    const cz=CAUSE[C.rank[C.ci]];
+    const cz=cau(C,C.rank[C.ci]);
     h+=`<span class="tag">${t(HABIT[5])}</span>`;
     if(C.flat&&C.ci===0)h+=`<p class="mute">${t(T.flat)}</p>`;
     h+=`<div class="card warm"><div class="hero" style="margin-bottom:12px">${big(C.rank[C.ci])}<div><p class="mute" style="margin:0">${t(T.why1)}</p><h2 style="margin:0">${t(cz.n)}</h2></div></div><p style="margin:0">${t(cz.why)}</p></div>
     <div class="card"><p class="mute il">${ic("reframe")}${t(T.reframe)}</p><p style="margin:0">${t(cz.re)}</p></div>`;
-    if(C.second&&C.ci===0)h+=`<p class="mute">${t(T.why2)}: <b>${t(CAUSE[C.rank[1]].n)}</b></p>`;
+    if(C.second&&C.ci===0)h+=`<p class="mute">${t(T.why2)}: <b>${t(cau(C,C.rank[1]).n)}</b></p>`;
     h+=`<p class="mute">${t(T.guess)}</p><button class="btn" data-a="respond">${t(T.torespond)}</button><button class="btn sec" data-a="nextr">${t(T.other)}</button>`;
   }
 
@@ -742,7 +937,7 @@ function render(){
 
   else if(v==="step"){
     const st=steps(C), s=st[C.step];
-    h+=`<p class="mute">${t(T.step)} ${C.step+1} ${t(T.of)} ${st.length} · ${t(CAUSE[C.rank[C.ci]].n)}</p><div class="prog"><div style="width:${Math.round((C.step+1)/st.length*100)}%"></div></div>
+    h+=`<p class="mute">${t(T.step)} ${C.step+1} ${t(T.of)} ${st.length} · ${t(cau(C,C.rank[C.ci]).n)}</p><div class="prog"><div style="width:${Math.round((C.step+1)/st.length*100)}%"></div></div>
     ${big(s.ic)}<span class="tag">${t(HABIT[s.h])}</span><h2>${t(s.t)}</h2>`;
     if(s.say)h+=`<div class="card"><p class="mute">${t(T.sayit)}</p>${sayBox(t(s.x))}${copyBtn()}</div>${/\[/.test(t(s.x))?`<p class="mute">${t(T.brackets)}</p>`:""}`;
     // tip tailored to the other person's conflict style, when it has been set for this case
@@ -752,7 +947,7 @@ function render(){
   }
 
   else if(v==="ready"){
-    const cz=CAUSE[C.rank[C.ci]], self=isSelf(C);
+    const cz=cau(C,C.rank[C.ci]), self=isSelf(C);
     h+=`${big("check")}<h2>${t(T.ready)}</h2><div class="card stop"><p class="lab"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg>${t(self?T.avoid_s:T.avoid)}</p><div class="say no" style="margin-bottom:0">${t(cz.avoid)}</div></div>`;
     if(!self)h+=`<div class="card"><p class="mute il">${ic("msg")}${t(T.asmsg)}</p>${sayBox(t(cz.msg))}${copyBtn()}</div>`;
     // conflict styles: theirs (set per case) and yours (from the test)
@@ -767,7 +962,7 @@ function render(){
 
   else if(v==="react"){
     const self=isSelf(C);
-    h+=`<p class="mute">${esc(C.label||t(SIT[C.sit].n))} · ${t(CAUSE[C.rank[C.ci]].n)}</p><h2>${t(self?T.react_s:T.react)}</h2>
+    h+=`<p class="mute">${esc(C.label||t(SIT[C.sit].n))} · ${t(cau(C,C.rank[C.ci]).n)}</p><h2>${t(self?T.react_s:T.react)}</h2>
     ${ab("react:a","A",t(self?T.react_sa:T.react_a))}${ab("react:b","B",t(self?T.react_sb:T.react_b))}
     <button class="btn txt" data-a="again">${t(T.again)}</button><button class="btn txt" data-a="del:${C.id}">${t(T.del)}</button>`;
   }
@@ -776,12 +971,12 @@ function render(){
     const self=isSelf(C);
     h+=`<span class="tag">${t(HABIT[7])}</span><h2>${t(self?T.st_resolved:T.good)}</h2>
     <div class="card">${self?`<p style="margin:0">${t(T.good_s)}</p>`:`<ul style="margin:0">${T.good_l.map(x=>`<li>${t(x)}</li>`).join("")}</ul>`}</div>
-    <p class="mute">${t(T.why1)}: <b>${t(CAUSE[C.rank[C.ci]].n)}</b></p>
+    <p class="mute">${t(T.why1)}: <b>${t(cau(C,C.rank[C.ci]).n)}</b></p>
     <button class="btn" data-a="home">${t(T.home)}</button><button class="btn txt" data-a="del:${C.id}">${t(T.del)}</button>`;
   }
 
   else if(v==="retry"){
-    const cz=CAUSE[C.rank[C.ci]], self=isSelf(C), nx=CAUSE[C.rank[(C.ci+1)%C.rank.length]];
+    const cz=cau(C,C.rank[C.ci]), self=isSelf(C), nx=cau(C,C.rank[(C.ci+1)%C.rank.length]);
     h+=`<span class="tag">${t(HABIT[self?1:5])}</span><h2>${t(self?T.retry_s:T.retry)}</h2><div class="card"><p style="margin:0">${t(cz.retry)}</p></div>`;
     if(V.esc)h+=`<div class="card warm"><p class="mute">${t(T.esc)}</p><p style="margin:0">${t(TONE[CAT[C.cat].tone].esc)}</p></div>`;
     h+=`<button class="btn" data-a="nextr">${t(T.nextr)}: ${t(nx.n)}</button>`;
@@ -862,6 +1057,7 @@ function act(a){
     case "lang": S.lang=S.lang==="bm"?"en":"bm";save();render();break;
     case "home": save();C=null;go("home");break;
     case "data": go("data");break;
+    case "grp": V={name:"grp",grp:arg};render();break;
     case "cat": V={name:"cat",cat:arg};render();break;
     case "sit": V={name:"pause",sit:arg,cat:SIT[arg].c};render();break;
     case "start":                                  // create and save a new case
@@ -921,7 +1117,8 @@ function act(a){
 /* ---------- Back button: one step back on every screen ---------- */
 function back(){
   const v=V.name;
-  if(v==="cat"||v==="data"||v==="react"||v==="good"||v==="disc")return act("home");
+  if(v==="cat"&&groupOf(V.cat)){V={name:"grp",grp:groupOf(V.cat)};return render();}
+  if(v==="cat"||v==="grp"||v==="data"||v==="react"||v==="good"||v==="disc")return act("home");
   if(v==="dq"){if(V.ans.length){V.ans.pop();return render();}if(V.ret&&C)return goCase();return go("disc");}
   if(v==="mine"){C.step=-2;return goCase();}
   if(v==="their"){C.stage="why";return goCase();}
