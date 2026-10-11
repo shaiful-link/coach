@@ -165,6 +165,7 @@ const CAT={
  self:{n:L("Myself","Diri sendiri"),d:L("My own habits and reactions","Tabiat dan reaksi saya sendiri"),tone:"self",
   tip:L("Be as fair to yourself as you would be to a friend.","Berlaku adil kepada diri sendiri seperti kepada seorang kawan.")},
  spouse:{n:L("Spouse","Pasangan"),d:L("Husband or wife","Suami atau isteri"),tone:"fam",life:1,
+  note:L("Common situations for many couples, worded for either partner. It works best when both of you look at it together.","Situasi biasa bagi ramai pasangan, ditulis untuk mana-mana pihak. Lebih baik jika anda berdua melihatnya bersama."),
   tip:L("You are on the same side. The problem is the issue, not your spouse.","Anda berdua di pihak yang sama. Masalahnya ialah isu itu, bukan pasangan anda.")},
  child:{n:L("Children","Anak"),d:L("My son or daughter","Anak lelaki atau perempuan saya"),tone:"kid",life:1,
   tip:L("Connect before you correct. A child who feels heard listens better.","Dekati dulu sebelum menegur. Anak yang rasa didengari lebih mudah mendengar.")},
@@ -294,11 +295,16 @@ const SIT={
  s6:sit("self",L("I keep avoiding a difficult conversation","Saya asyik mengelak perbualan yang sukar"),L("I postponed this conversation three times.","Saya tangguh perbualan ini tiga kali."),L("I am a coward.","Saya penakut."),["sq5", "sq1", "sq4", "sq3"]),
  s7:sit("self",L("I keep working late","Saya asyik kerja sampai lewat"),L("I left after 8 pm on four days this week.","Saya balik selepas pukul 8 malam empat hari minggu ini."),L("I am bad at my job.","Saya tak pandai buat kerja."),["sq6", "sq2", "sq8", "sq4"]),
  s8:sit("self",L("I take feedback badly","Saya sukar menerima teguran"),L("I went quiet and defensive after the review.","Saya jadi diam dan defensif selepas sesi semakan."),L("I am too sensitive.","Saya terlalu sensitif."),["sq3", "sq7", "sq4", "sq5"]),
- sp5:sit("spouse",L("We disagree about what my spouse buys","Kami tidak sependapat tentang apa yang pasangan saya beli"),L("Twice this month, my spouse bought something I felt we did not need.","Dua kali bulan ini, pasangan saya membeli sesuatu yang saya rasa tidak perlu."),L("My spouse is wasteful.","Pasangan saya boros."),["pclear", "pexpect", "pbenefit", "phow"]),
- sp6:sit("spouse",L("We disagree about where to go","Kami tidak sependapat tentang ke mana hendak pergi"),L("We could not agree on where to go for the last two weekends.","Kami tidak dapat bersetuju ke mana hendak pergi pada dua hujung minggu lepas."),L("My spouse never considers what I want.","Pasangan saya tak pernah fikir apa yang saya mahu."),["pclear", "pbenefit", "plisten", "pload"]),
- sp7:sit("spouse",L("My spouse disagrees with the people I meet","Pasangan saya tidak setuju dengan orang yang saya jumpa"),L("My spouse was unhappy when I went out with my friends twice this month.","Pasangan saya tidak senang bila saya keluar dengan kawan-kawan dua kali bulan ini."),L("My spouse is controlling.","Pasangan saya suka mengawal."),["pcare", "pclear", "pnew", "plisten"]),
- sp8:sit("spouse",L("Busy on WhatsApp with their siblings' group","Sibuk berWhatsApp dengan kumpulan adik-beradiknya"),L("During dinner, my spouse was replying to the siblings' group for most of the meal.","Semasa makan malam, pasangan saya membalas mesej kumpulan adik-beradik hampir sepanjang masa."),L("Their family matters more than me.","Keluarga dia lebih penting daripada saya."),["pclear", "pnew", "pbenefit", "phow"]),
- sp9:sit("spouse",L("Busy on WhatsApp with their office group","Sibuk berWhatsApp dengan kumpulan pejabatnya"),L("My spouse was still replying to the office group after 9 pm on three nights this week.","Pasangan saya masih membalas mesej kumpulan pejabat selepas pukul 9 malam pada tiga malam minggu ini."),L("Work matters more than me.","Kerja lebih penting daripada saya."),["pclear", "pload", "pcirc", "phow"]),
+ sp10:sit("spouse",L("We disagree about a purchase","Kami tidak sependapat tentang satu pembelian"),L("We disagreed about one purchase twice this month.","Kami tidak sependapat tentang satu pembelian dua kali bulan ini."),L("We never see things the same way.","Kami tak pernah sependapat."),["pclear", "pexpect", "pbenefit", "phow"]),
+ sp11:sit("spouse",L("We disagree about where to go or how to spend the weekend","Kami tidak sependapat ke mana hendak pergi atau cara mengisi hujung minggu"),L("We could not agree on a plan for the last two weekends.","Kami tidak dapat bersetuju tentang rancangan untuk dua hujung minggu lepas."),L("What I want does not matter.","Kehendak saya tak penting."),["pclear", "pbenefit", "plisten", "pload"]),
+ sp12:sit("spouse",L("We disagree about time with friends","Kami tidak sependapat tentang masa bersama kawan"),L("One of us went out with friends twice this month, and the other was unhappy.","Salah seorang keluar dengan kawan dua kali bulan ini, dan seorang lagi tidak senang."),L("I am not trusted.","Saya tak dipercayai."),["pcare", "pclear", "pnew", "plisten"]),
+ sp13:sit("spouse",L("One of us is often on the phone when we are together","Salah seorang selalu dengan telefon ketika bersama"),L("During dinner, one of us was on the phone for most of the meal.","Semasa makan malam, salah seorang dengan telefon hampir sepanjang masa."),L("I am less important than the phone.","Saya kurang penting daripada telefon."),["pclear", "pload", "pnew", "phow"]),
+ sp14:sit("spouse",L("We disagree about time spent on a hobby","Kami tidak sependapat tentang masa untuk hobi"),L("One of us was out fishing, cycling, hiking or playing futsal on three of the last four weekends.","Salah seorang keluar memancing, berbasikal, mendaki atau bermain futsal pada tiga daripada empat hujung minggu lepas."),L("The hobby comes before the family.","Hobi lebih utama daripada keluarga."),["pclear", "pbenefit", "pagree", "plisten"]),
+ sp15:sit("spouse",L("We live apart on weekdays (PJJ) and weekends feel strained","Kami berjauhan pada hari bekerja (PJJ) dan hujung minggu terasa tegang"),L("We met on two weekends this month, and both ended in an argument.","Kami berjumpa dua hujung minggu bulan ini, dan kedua-duanya berakhir dengan pertengkaran."),L("This arrangement is not working.","Cara hidup begini tak menjadi."),["pload", "pcirc", "pclear", "phow"]),
+ sp16:sit("spouse",L("Shift work or OT leaves little time together","Kerja syif atau OT menyebabkan kurang masa bersama"),L("We had dinner together once this week because of shift and OT.","Kami makan malam bersama sekali sahaja minggu ini kerana syif dan OT."),L("Work always comes first.","Kerja sentiasa didahulukan."),["pcirc", "pload", "pclear", "pagree"]),
+ sp17:sit("spouse",L("Whose kampung for Raya","Balik kampung siapa untuk Raya"),L("We have not agreed where to spend the first day of Raya.","Kami belum bersetuju di mana hendak beraya pada hari pertama."),L("My side of the family never gets a fair turn.","Keluarga sebelah saya tak pernah dapat giliran yang adil."),["pexpect", "pface", "plisten", "pagree"]),
+ sp18:sit("spouse",L("A job transfer or promotion that means moving","Pertukaran kerja atau kenaikan pangkat yang perlu berpindah"),L("One of us received a transfer offer, and we have not agreed what to do.","Salah seorang menerima tawaran pertukaran, dan kami belum bersetuju apa yang perlu dibuat."),L("My career is the one that always gives way.","Kerjaya saya yang selalu perlu mengalah."),["pcirc", "pbenefit", "plisten", "pclear"]),
+ sp19:sit("spouse",L("My spouse is upset with me and I am not sure why","Pasangan saya terasa hati dengan saya dan saya tidak pasti sebabnya"),L("My spouse has been quiet with me for three days.","Pasangan saya mendiamkan diri dengan saya selama tiga hari."),L("I am being punished.","Saya sedang dihukum."),["plisten", "pload", "pnew", "phow"]),
  c1:sit("child",L("Does not listen or follow instructions","Tidak mendengar atau mengikut arahan"),L("I asked three times to tidy the room. It is still not done.","Saya suruh kemas bilik tiga kali. Masih belum dibuat."),L("My child is stubborn.","Anak saya degil."),["pclear", "phow", "pbenefit", "pable"]),
  c2:sit("child",L("Too much time on the phone or games","Terlalu lama dengan telefon atau permainan"),L("Screen time was five hours yesterday.","Masa skrin semalam ialah lima jam."),L("My child is addicted.","Anak saya ketagih."),["pagree", "pnew", "pcirc", "plisten"]),
  c3:sit("child",L("School results are dropping","Keputusan sekolah merosot"),L("Two homework assignments were not handed in this week.","Dua kerja rumah tidak dihantar minggu ini."),L("My child is lazy.","Anak saya malas."),["pable", "pnew", "pload", "psafe"]),
@@ -576,7 +582,8 @@ const T={
  h_q:L("Answering questions","Sedang menjawab soalan"), h_why:L("See the likely reason","Lihat punca yang mungkin"), h_respond:L("Preparing the response","Menyediakan respons"), h_react:L("Tell me how it went","Beritahu bagaimana ia berjalan"), h_done:L("Closed","Ditutup"),
  pause:L("Pause first","Berhenti sejenak"),
  pause_t:L("Before the questions, separate what happened from what you think it means.","Sebelum soalan, asingkan apa yang berlaku daripada apa yang anda fikir maksudnya."),
- fact:L("Fact","Fakta"), lab:L("Label","Label"),
+ purpose:L("For learning and self-reflection only. This is not counselling or professional advice. For serious matters, please see a qualified counsellor or professional.","Untuk pembelajaran dan muhasabah diri sahaja. Ini bukan kaunseling atau nasihat profesional. Untuk perkara serius, sila rujuk kaunselor atau profesional bertauliah."),
+ fact:L("Fact","Fakta"), lab:L("Label: what I may think in the moment","Label: apa yang mungkin terlintas di fikiran"),
  pause_n:L("A fact can be checked. A label is a judgement, and it closes the door to finding out why.","Fakta boleh disemak. Label ialah penghakiman, dan ia menutup pintu untuk mencari punca."),
  lbl:L("Name this case (optional)","Namakan kes ini (pilihan)"), lbl_p:L("e.g. Report data, AZ","cth. Data laporan, AZ"),
  lbl_n:L("Use initials or a nickname, not a full name.","Guna singkatan atau nama panggilan, bukan nama penuh."),
@@ -871,7 +878,7 @@ function render(){
   const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
 
   if(v==="home"){
-    h+=`<h2>${t(T.intro)}</h2>`;
+    h+=`<h2>${t(T.intro)}</h2><p class="mute">${t(T.purpose)}</p>`;
     if(S.cases.length){
       h+=`<h3>${t(T.mine)}</h3>`;
       S.cases.slice().sort((a,b)=>b.ts-a.ts).forEach(c=>{
@@ -899,6 +906,7 @@ function render(){
   else if(v==="cat"){
     h+=`<span class="tag">${t(CAT[V.cat].n)}</span><h2>${t(T.pick)}</h2>`;
     for(const k in SIT)if(SIT[k].c===V.cat)h+=row("sit:"+k,t(SIT[k].n));
+    if(CAT[V.cat].note)h+=`<p class="mute">${t(CAT[V.cat].note)}</p>`;
   }
 
   else if(v==="pause"){
